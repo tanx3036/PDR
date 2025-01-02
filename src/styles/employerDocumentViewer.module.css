@@ -1,0 +1,173 @@
+.container {
+    @apply flex min-h-screen bg-gray-50;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    @apply w-80 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0;
+}
+
+.sidebarHeader {
+    @apply p-4 border-b border-gray-200;
+}
+
+.logoContainer {
+    @apply flex items-center space-x-2 mb-4;
+}
+
+.logoIcon {
+    @apply w-6 h-6 text-purple-600;
+}
+
+.logoText {
+    @apply text-lg font-semibold text-purple-600;
+}
+
+.searchContainer {
+    @apply relative;
+}
+
+.searchIcon {
+    @apply w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400;
+}
+
+.searchInput {
+    @apply w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+    placeholder-gray-400;
+}
+
+/* Document List Styles */
+.docList {
+    @apply flex-1 overflow-y-auto p-2;
+}
+
+.categoryGroup {
+    @apply mb-2;
+}
+
+.categoryHeader {
+    @apply flex items-center px-2 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded cursor-pointer;
+}
+
+.chevronIcon {
+    @apply w-4 h-4 mr-1 text-gray-400;
+}
+
+.categoryName {
+    @apply font-medium;
+}
+
+.categoryDocs {
+    @apply ml-6 space-y-1 mt-1;
+}
+
+.docItem {
+    @apply flex items-center w-full px-2 py-1.5 text-sm text-gray-700 hover:bg-purple-50 rounded
+    transition-colors duration-150 focus:outline-none focus:bg-purple-50;
+}
+
+.docItem.selected {
+    @apply bg-purple-100 text-purple-700;
+}
+
+.docIcon {
+    @apply w-4 h-4 mr-2 flex-shrink-0;
+}
+
+.docName {
+    @apply truncate text-left;
+}
+
+/* Main Content Styles */
+.mainContent {
+    @apply flex-1 p-6;
+}
+
+.docHeader {
+    @apply mb-6;
+}
+
+.docTitle {
+    @apply text-2xl font-bold text-gray-900;
+}
+
+.summaryContainer {
+    @apply bg-white rounded-lg shadow-sm p-6 mb-6;
+}
+
+.summaryHeader {
+    @apply flex items-center mb-4;
+}
+
+.summaryIcon {
+    @apply w-6 h-6 text-purple-600 mr-2;
+}
+
+.summaryTitle {
+    @apply text-lg font-semibold text-gray-900;
+}
+
+.summaryText {
+    @apply text-gray-600 leading-relaxed;
+}
+
+.pdfContainer {
+    @apply bg-white rounded-lg shadow-sm p-4 h-[calc(100vh-20rem)];
+}
+
+.pdfViewer {
+    @apply w-full h-full border-0;
+}
+
+/* Interactive States */
+.docItem:hover .docIcon {
+    @apply text-purple-600;
+}
+
+.docItem.selected .docIcon {
+    @apply text-purple-600;
+}
+
+/* Scrollbar Styles */
+.docList {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.gray.300') theme('colors.gray.100');
+}
+
+.docList::-webkit-scrollbar {
+    @apply w-2;
+}
+
+.docList::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+}
+
+.docList::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        @apply w-64;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        @apply flex-col;
+    }
+
+    .sidebar {
+        @apply w-full h-auto relative;
+    }
+
+    .mainContent {
+        @apply p-4;
+    }
+
+    .pdfContainer {
+        @apply h-[calc(100vh-24rem)];
+    }
+}

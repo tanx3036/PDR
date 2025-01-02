@@ -2,8 +2,10 @@
 import React from 'react';
 import { Upload, FileText, BarChart, Brain } from 'lucide-react';
 import styles from '../../../styles/employerhome.module.css';
+import {useRouter} from "next/navigation";
 
 const HomeScreen = () => {
+    const router = useRouter();
     const menuOptions = [
         {
             icon: <Upload className={styles.menuIcon} />,
@@ -15,7 +17,7 @@ const HomeScreen = () => {
             icon: <FileText className={styles.menuIcon} />,
             title: "View Documents",
             description: "Browse and manage your uploaded documents",
-            path: "/documents"
+            path: "/employer/documents"
         },
         {
             icon: <BarChart className={styles.menuIcon} />,
@@ -28,6 +30,7 @@ const HomeScreen = () => {
     const handleNavigation = (path : string) => {
         // Navigation logic will go here
         console.log(`Navigating to: ${path}`);
+        router.push(path)
     };
 
     return (
@@ -37,7 +40,7 @@ const HomeScreen = () => {
                 <div className={styles.navContent}>
                     <div className={styles.logoContainer}>
                         <Brain className={styles.logoIcon} />
-                        <span className={styles.logoText}>DocuMind AI</span>
+                        <span className={styles.logoText}>PDR AI</span>
                     </div>
                     <button className={styles.profileButton}>Profile</button>
                 </div>
@@ -46,7 +49,7 @@ const HomeScreen = () => {
             {/* Welcome Section */}
             <main className={styles.main}>
                 <div className={styles.welcomeSection}>
-                    <h1 className={styles.welcomeTitle}>Welcome to DocuMind AI</h1>
+                    <h1 className={styles.welcomeTitle}>Welcome to PDR AI</h1>
                     <p className={styles.welcomeText}>
                         Your intelligent document management assistant. Choose an option below to get started.
                     </p>

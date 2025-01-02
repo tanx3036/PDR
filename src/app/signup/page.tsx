@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { Briefcase, Users, ArrowRight, Brain } from 'lucide-react';
+import { useRouter } from 'next/navigation'; // <-- Use 'next/navigation'
 import styles from '../../styles/signup.module.css';
-import Link from 'next/link'
 
 interface RoleCardProps {
     title: string;
@@ -26,9 +26,7 @@ const RoleCard: React.FC<RoleCardProps> = ({
         role="button"
         tabIndex={0}
     >
-        <div className={styles.iconWrapper}>
-            {icon}
-        </div>
+        <div className={styles.iconWrapper}>{icon}</div>
         <h2 className={styles.cardTitle}>{title}</h2>
         <p className={styles.cardDescription}>{description}</p>
     </div>
@@ -36,11 +34,13 @@ const RoleCard: React.FC<RoleCardProps> = ({
 
 const RoleSelection: React.FC = () => {
     const [selectedRole, setSelectedRole] = useState<'employer' | 'employee' | null>(null);
+    const router = useRouter(); // Now from 'next/navigation'
 
-    const handleContinue = () => {
-        if (selectedRole) {
-            // Navigation logic here
-            console.log(`Continuing as ${selectedRole}`);
+    const handleContinue = async () => {
+        if (selectedRole === 'employee') {
+            router.push('/unavailable');
+        } else {
+            router.push('/signup/employer');
         }
     };
 
@@ -59,9 +59,7 @@ const RoleSelection: React.FC = () => {
             <main className={styles.main}>
                 <div className={styles.contentWrapper}>
                     <h1 className={styles.title}>Choose Your Role</h1>
-                    <p className={styles.subtitle}>
-                        Select how you will be using PDR AI
-                    </p>
+                    <p className={styles.subtitle}>Select how you will be using PDR AI</p>
 
                     <div className={styles.cardsContainer}>
                         <RoleCard
@@ -79,17 +77,14 @@ const RoleSelection: React.FC = () => {
                             onClick={() => setSelectedRole('employee')}
                         />
                     </div>
-                    <Link href="/unavailable">
-                        <button
-                            className={`${styles.continueButton} ${selectedRole ? styles.active : ''}`}
-                            onClick={handleContinue}
-                            disabled={!selectedRole}
-                        >
-                            Continue
-                            <ArrowRight className={styles.buttonIcon} />
-                        </button>
-                    </Link>
-
+                    <button
+                        className={`${styles.continueButton} ${selectedRole ? styles.active : ''}`}
+                        onClick={handleContinue}
+                        disabled={!selectedRole}
+                    >
+                        Continue
+                        <ArrowRight className={styles.buttonIcon} />
+                    </button>
                 </div>
             </main>
         </div>
