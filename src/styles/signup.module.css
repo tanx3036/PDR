@@ -1,0 +1,103 @@
+
+.container {
+    @apply min-h-screen bg-gray-50;
+}
+
+.navbar {
+    @apply bg-white border-b border-gray-200;
+}
+
+.navContent {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center;
+}
+
+.logoContainer {
+    @apply flex items-center;
+}
+
+.logoIcon {
+    @apply w-8 h-8 text-purple-600;
+}
+
+.logoText {
+    @apply ml-2 text-xl font-bold text-black;
+}
+
+.main {
+    @apply flex items-center justify-center min-h-[calc(100vh-4rem)] px-4;
+}
+
+.contentWrapper {
+    @apply max-w-3xl w-full py-12;
+}
+
+.title {
+    @apply text-3xl font-bold text-center text-gray-900 mb-3;
+}
+
+.subtitle {
+    @apply text-lg text-center text-gray-600 mb-12;
+}
+
+.cardsContainer {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-8;
+}
+
+.roleCard {
+    @apply bg-white p-6 rounded-lg border-2 border-gray-200 cursor-pointer
+    transition-all duration-200 hover:border-purple-300 hover:shadow-md;
+}
+
+.roleCard.selected {
+    @apply border-purple-600 bg-purple-50;
+}
+
+.iconWrapper {
+    @apply mb-4 p-3 bg-purple-100 rounded-lg inline-block;
+}
+
+.cardIcon {
+    @apply w-8 h-8 text-purple-600;
+}
+
+.cardTitle {
+    @apply text-xl font-semibold text-gray-900 mb-2;
+}
+
+.cardDescription {
+    @apply text-gray-600 text-sm;
+}
+
+.continueButton {
+    @apply w-full flex items-center justify-center px-6 py-3 rounded-lg
+    text-gray-400 bg-gray-100 cursor-not-allowed
+    transition-all duration-200 font-medium;
+}
+
+.continueButton.active {
+    @apply bg-purple-600 text-white cursor-pointer hover:bg-purple-700;
+}
+
+.buttonIcon {
+    @apply ml-2 w-5 h-5;
+}
+
+/* Interactive States */
+.roleCard:focus {
+    @apply outline-none ring-2 ring-purple-500 ring-opacity-50;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .contentWrapper {
+        @apply py-8;
+    }
+
+    .title {
+        @apply text-2xl;
+    }
+
+    .subtitle {
+        @apply text-base mb-8;
+    }
+}
