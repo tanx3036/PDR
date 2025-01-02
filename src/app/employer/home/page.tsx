@@ -25,7 +25,7 @@ const HomeScreen = () => {
         }
     ];
 
-    const handleNavigation = (path) => {
+    const handleNavigation = (path : string) => {
         // Navigation logic will go here
         console.log(`Navigating to: ${path}`);
     };
