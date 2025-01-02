@@ -34,3 +34,6 @@ export const posts = createTable(
     nameIndex: index("name_idx").on(example.name),
   })
 );
+
+
+

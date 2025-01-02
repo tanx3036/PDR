@@ -1,0 +1,152 @@
+.btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center;
+}
+
+.btn-primary {
+    @apply bg-purple-600 text-white hover:bg-purple-700;
+}
+
+.btn-ghost {
+    @apply bg-transparent text-gray-600 hover:text-purple-600;
+}
+
+.btn-outline {
+    @apply border-2 border-purple-600 text-purple-600 hover:bg-purple-50;
+}
+
+.btn-lg {
+    @apply px-8 py-4 text-lg;
+}
+
+/* Custom Base Styles */
+.documind-container {
+    @apply min-h-screen bg-white;
+}
+
+/* Navigation Styles */
+.nav-container {
+    @apply bg-white border-b border-gray-200;
+}
+
+.nav-content {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.nav-wrapper {
+    @apply flex justify-between h-16 items-center;
+}
+
+.logo-container {
+    @apply flex items-center;
+}
+
+.logo-text {
+    @apply ml-2 text-xl font-bold text-black;
+}
+
+.nav-links {
+    @apply flex items-center space-x-4;
+}
+
+/* Hero Section Styles */
+.hero-section {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20;
+}
+
+.hero-content {
+    @apply text-center;
+}
+
+.hero-title {
+    @apply text-5xl font-bold text-black mb-6;
+}
+
+.hero-description {
+    @apply text-xl text-gray-600 mb-8 max-w-3xl mx-auto;
+}
+
+.hero-buttons {
+    @apply flex justify-center space-x-4;
+}
+
+.primary-button {
+    @apply bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg;
+}
+
+.secondary-button {
+    @apply border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-6 text-lg;
+}
+
+/* Features Section Styles */
+.features-section {
+    @apply bg-gray-50 py-20;
+}
+
+.features-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.features-title {
+    @apply text-3xl font-bold text-center text-black mb-12;
+}
+
+.features-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+}
+
+/* Feature Card Styles */
+.feature-card {
+    @apply bg-white p-6 rounded-lg shadow-sm border border-gray-200;
+}
+
+.feature-icon {
+    @apply mb-4;
+}
+
+.feature-title {
+    @apply text-xl font-semibold text-black mb-2;
+}
+
+.feature-description {
+    @apply text-gray-600;
+}
+
+/* Benefits Section Styles */
+.benefits-section {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20;
+}
+
+.benefits-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-12 items-center;
+}
+
+.benefits-title {
+    @apply text-3xl font-bold text-black mb-6;
+}
+
+.benefits-list {
+    @apply space-y-4;
+}
+
+.benefit-item {
+    @apply flex items-center space-x-2;
+}
+
+.benefit-text {
+    @apply text-gray-600;
+}
+
+/* Demo Container Styles */
+.demo-container {
+    @apply bg-purple-100 rounded-lg p-8;
+}
+
+
+/* Icon Styles */
+.icon-purple {
+    @apply w-8 h-8 text-purple-600;
+}
+
+.icon-check {
+    @apply w-5 h-5 text-purple-600;
+}
