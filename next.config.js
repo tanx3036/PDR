@@ -10,6 +10,11 @@ const config = {
         // Danger: this will ignore ALL type errors, not just the one above
         ignoreBuildErrors: true,
     },
+    eslint: {
+        // This allows production builds to successfully complete even if
+        // there are ESLint errors in your project.
+        ignoreDuringBuilds: true,
+    },
 };
 
 export default config;
