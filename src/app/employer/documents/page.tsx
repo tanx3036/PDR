@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { FileText, Search, Brain, ChevronRight, ChevronDown } from 'lucide-react';
 import styles from '../../../styles/employerDocumentViewer.module.css';
+import Link from "next/link";
 
 // Mock data for documents
 const documents = [
@@ -58,10 +59,15 @@ const DocumentViewer: React.FC = () => {
             {/* Side Navigation */}
             <aside className={styles.sidebar}>
                 <div className={styles.sidebarHeader}>
-                    <div className={styles.logoContainer}>
-                        <Brain className={styles.logoIcon} />
-                        <span className={styles.logoText}>PDR AI</span>
-                    </div>
+                    <Link href='/employer/home'>
+                        <button className={styles.logoContainer}>
+                            <Brain className={styles.logoIcon} />
+                            <span className={styles.logoText}>PDR AI</span>
+                        </button>
+                    </Link>
+
+
+
                     {/* Search Bar */}
                     <div className={styles.searchContainer}>
                         <Search className={styles.searchIcon} />
