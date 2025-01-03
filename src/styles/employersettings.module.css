@@ -1,0 +1,25 @@
+.settingsContainer {
+    @apply max-w-xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-sm border border-gray-200;
+}
+
+.settingsTitle {
+    @apply text-2xl font-bold text-gray-900 mb-6;
+}
+
+.formGroup {
+    @apply mb-4;
+}
+
+.label {
+    @apply block mb-1 text-gray-700;
+}
+
+.input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md
+    focus:border-purple-500 focus:ring-purple-500 transition-colors;
+}
+
+.saveButton {
+    @apply mt-4 px-4 py-2 rounded-md bg-purple-600 text-white
+    hover:bg-purple-700 transition-colors;
+}

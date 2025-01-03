@@ -3,6 +3,7 @@ import React from 'react';
 import { Upload, FileText, BarChart, Brain } from 'lucide-react';
 import styles from '../../../styles/employerhome.module.css';
 import {useRouter} from "next/navigation";
+import ProfileDropdown from "~/app/employer/_components/ProfileDropdown";
 
 const HomeScreen = () => {
     const router = useRouter();
@@ -11,7 +12,7 @@ const HomeScreen = () => {
             icon: <Upload className={styles.menuIcon} />,
             title: "Upload Documents",
             description: "Add new documents to the database for AI analysis",
-            path: "/upload"
+            path: "/employer/upload"
         },
         {
             icon: <FileText className={styles.menuIcon} />,
@@ -23,7 +24,7 @@ const HomeScreen = () => {
             icon: <BarChart className={styles.menuIcon} />,
             title: "Document Statistics",
             description: "View analytics and insights about document usage",
-            path: "/statistics"
+            path: "/employer/statistics"
         }
     ];
 
@@ -42,7 +43,7 @@ const HomeScreen = () => {
                         <Brain className={styles.logoIcon} />
                         <span className={styles.logoText}>PDR AI</span>
                     </div>
-                    <button className={styles.profileButton}>Profile</button>
+                    <ProfileDropdown />
                 </div>
             </nav>
 

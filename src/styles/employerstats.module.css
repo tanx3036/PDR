@@ -1,0 +1,164 @@
+.container {
+    @apply max-w-7xl mx-auto p-6 space-y-6;
+}
+
+/* Header Styles */
+.header {
+    @apply flex justify-between items-start mb-8;
+}
+
+.title {
+    @apply text-2xl font-bold text-gray-900;
+}
+
+.subtitle {
+    @apply text-gray-600 mt-1;
+}
+
+.filters {
+    @apply flex space-x-4;
+}
+
+.searchWrapper {
+    @apply relative;
+}
+
+.searchIcon {
+    @apply absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400;
+}
+
+.searchInput {
+    @apply pl-10 pr-4 py-2 border border-gray-300 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+    placeholder-gray-400 w-64;
+}
+
+.timeframeSelect {
+    @apply px-4 py-2 border border-gray-300 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+    bg-white text-gray-700;
+}
+
+/* Overview Cards */
+.overviewCards {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-8;
+}
+
+.card {
+    @apply bg-white rounded-lg p-6 border border-gray-200;
+}
+
+.cardContent {
+    @apply flex justify-between items-start mb-4;
+}
+
+.cardLabel {
+    @apply text-gray-600 text-sm;
+}
+
+.cardValue {
+    @apply text-2xl font-bold text-gray-900 mt-1;
+}
+
+.cardIcon {
+    @apply w-8 h-8 text-purple-600;
+}
+
+.cardTrend {
+    @apply flex items-center text-sm text-green-600;
+}
+
+.trendIcon {
+    @apply w-4 h-4 mr-1;
+}
+
+/* Chart Styles */
+.chartCard {
+    @apply bg-white rounded-lg p-6 border border-gray-200;
+}
+
+.chartTitle {
+    @apply text-lg font-semibold text-gray-900 mb-4;
+}
+
+.chart {
+    @apply h-[300px];
+}
+
+/* Document List Styles */
+.documentList {
+    @apply bg-white rounded-lg border border-gray-200;
+}
+
+.sectionTitle {
+    @apply text-lg font-semibold text-gray-900 p-6 border-b border-gray-200;
+}
+
+.table {
+    @apply divide-y divide-gray-200;
+}
+
+.tableHeader {
+    @apply grid grid-cols-5 gap-4 px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.tableRow {
+    @apply grid grid-cols-5 gap-4 px-6 py-4 hover:bg-gray-50;
+}
+
+.tableCell {
+    @apply text-sm text-gray-900;
+}
+
+.documentCell {
+    @apply flex items-center space-x-2;
+}
+
+.documentIcon {
+    @apply w-5 h-5 text-gray-400;
+}
+
+.trendCell {
+    @apply text-green-600 font-medium;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        @apply flex-col space-y-4;
+    }
+
+    .filters {
+        @apply flex-col space-y-2 space-x-0;
+    }
+
+    .searchInput {
+        @apply w-full;
+    }
+
+    .timeframeSelect {
+        @apply w-full;
+    }
+
+    .tableHeader, .tableRow {
+        @apply grid-cols-3;
+    }
+
+    .tableCell:nth-child(4),
+    .tableCell:nth-child(5) {
+        @apply hidden;
+    }
+}
+
+/* Interactive States */
+.searchInput:hover, .timeframeSelect:hover {
+    @apply border-purple-300;
+}
+
+.card:hover {
+    @apply shadow-md;
+}
+
+.tableRow:hover .documentIcon {
+    @apply text-purple-600;
+}
