@@ -38,7 +38,7 @@ const RoleSelection: React.FC = () => {
 
     const handleContinue = async () => {
         if (selectedRole === 'employee') {
-            router.push('/unavailable');
+            router.push('/signup/employee');
         } else {
             router.push('/signup/employer');
         }

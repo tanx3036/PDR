@@ -10,7 +10,7 @@ const documents = [
         id: 1,
         name: 'Apple Financial Report Q1 2025',
         category: 'Financial',
-        aiSummary: 'This financial report shows a 15% increase in revenue for Q4 2024. Key highlights include expansion into new markets, improved profit margins, and successful cost reduction initiatives.',
+        aiSummary: 'Apple Inc. reported strong financial results for Q4 2023, with total net sales of $119.58 billion, driven by growth in services revenue ($23.12 billion) and iPhone sales ($69.70 billion). Net income rose to $33.92 billion, reflecting a higher gross margin of $54.86 billion and effective cost management. The company improved its cash position to $41.97 billion while returning $23.97 billion to shareholders through dividends and stock repurchases. With steady growth across all regions and increased shareholder equity to $74.10 billion, Apple demonstrated robust performance and financial stability during the quarter.',
         url: 'https://utfs.io/f/zllPuoqtDQmMunOGjZkCWhtoxfrJp6Db5dHg8iIVBLawUOs2'
     },
     {
