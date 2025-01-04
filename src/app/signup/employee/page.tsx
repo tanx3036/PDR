@@ -60,7 +60,7 @@ const EmployeeSignIn: React.FC = () => {
 
             // On success, redirect or route accordingly
             // For now, let's just route to a placeholder
-            router.push("/employee/home");
+            router.push("/employee/documents");
         }
     };
 

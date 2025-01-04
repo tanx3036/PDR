@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 import { Eye, EyeOff, Building, Brain, Lock, Users } from "lucide-react";
-import {useRouter} from "next/navigation";
 // Import your CSS Module (with Tailwind's @apply rules)
 import styles from "../../../styles/EmployerSignup.module.css";
 
-interface FormData {
+interface SignUpFormData {
     companyName: string;
     managerPasscode: string;
     managerPasscodeConfirm: string;
@@ -15,7 +16,7 @@ interface FormData {
     staffCount: string;
 }
 
-interface FormErrors {
+interface SignUpFormErrors {
     companyName?: string;
     managerPasscode?: string;
     managerPasscodeConfirm?: string;
@@ -24,16 +25,22 @@ interface FormErrors {
     staffCount?: string;
 }
 
-interface SignInData {
+interface SignInFormData {
     companyName: string;
     managerPasscode: string;
 }
 
+interface SignInFormErrors {
+    companyName?: string;
+    managerPasscode?: string;
+}
+
 const EmployerSignup: React.FC = () => {
     const router = useRouter();
+    const { userId } = useAuth();
 
-
-    const [formData, setFormData] = useState<FormData>({
+    // Sign Up State
+    const [signUpFormData, setSignUpFormData] = useState<SignUpFormData>({
         companyName: "",
         managerPasscode: "",
         managerPasscodeConfirm: "",
@@ -42,111 +49,140 @@ const EmployerSignup: React.FC = () => {
         staffCount: "",
     });
 
-    const [errors, setErrors] = useState<FormErrors>({});
-    const [showPasswords, setShowPasswords] = useState({
+    const [signUpErrors, setSignUpErrors] = useState<SignUpFormErrors>({});
+
+    // Sign In State
+    const [signInFormData, setSignInFormData] = useState<SignInFormData>({
+        companyName: "",
+        managerPasscode: "",
+    });
+
+    const [signInErrors, setSignInErrors] = useState<SignInFormErrors>({});
+
+    // Form Toggle
+    const [isSignIn, setIsSignIn] = useState(false);
+
+    // Eye-Icon Visibility Toggles
+    const [showSignInPassword, setShowSignInPassword] = useState(false);
+    const [showSignUpPasswords, setShowSignUpPasswords] = useState({
         manager: false,
         managerConfirm: false,
         employee: false,
         employeeConfirm: false,
     });
 
-    // Validation
-    const validateForm = (): boolean => {
-        const newErrors: FormErrors = {};
-
-        if (!formData.companyName.trim()) {
-            newErrors.companyName = "Company name is required";
-        }
-        if (formData.managerPasscode.length < 8) {
-            newErrors.managerPasscode = "Manager passcode must be at least 8 characters";
-        }
-        if (formData.managerPasscode !== formData.managerPasscodeConfirm) {
-            newErrors.managerPasscodeConfirm = "Manager passcodes do not match";
-        }
-        if (formData.employeePasscode.length < 8) {
-            newErrors.employeePasscode = "Employee passcode must be at least 8 characters";
-        }
-        if (formData.employeePasscode !== formData.employeePasscodeConfirm) {
-            newErrors.employeePasscodeConfirm = "Employee passcodes do not match";
-        }
-        if (!formData.staffCount) {
-            newErrors.staffCount = "Please enter approximate staff count";
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    // Submit sign-up form
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (validateForm()) {
-            console.log("Form submitted:", formData);
-            router.push("/employer/home")
-        }
-    };
-
-    // Handle sign-up input changes
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        // Clear error when user starts typing
-        if (errors[name as keyof FormErrors]) {
-            setErrors((prev) => ({ ...prev, [name]: undefined }));
-        }
-    };
-
-    const [isSignIn, setIsSignIn] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-
-    // Sign-in form state
-    const [signInData, setSignInData] = useState<SignInData>({
-        companyName: "",
-        managerPasscode: "",
-    });
-
-    const [signInErrors, setSignInErrors] = useState<Partial<SignInData>>({});
-
-    // Potential sign-up data from a previous component usage
-    const [signUpData, setSignUpData] = useState({
-        companyName: "",
-        managerPasscode: "",
-        managerPasscodeConfirm: "",
-        employeePasscode: "",
-        employeePasscodeConfirm: "",
-        staffCount: "",
-    });
-
-    // Submit sign-in form
-    const handleSignIn = (e: React.FormEvent) => {
-        e.preventDefault();
-        const errors: Partial<SignInData> = {};
-
-        if (!signInData.companyName.trim()) {
-            errors.companyName = "Company name is required";
-        }
-        if (!signInData.managerPasscode) {
-            errors.managerPasscode = "Manager passcode is required";
-        }
-
-        setSignInErrors(errors);
-
-        if (Object.keys(errors).length === 0) {
-            console.log("Signing in with:", signInData);
-            // Handle sign-in logic
-        }
-    };
-
-    // Handle sign-in input changes
+    // -------------------------------
+    // Sign In
+    // -------------------------------
     const handleSignInChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setSignInData((prev) => ({ ...prev, [name]: value }));
-        // Clear error when user starts typing
-        if (signInErrors[name as keyof SignInData]) {
+        setSignInFormData((prev) => ({ ...prev, [name]: value }));
+
+        // Clear error on user input
+        if (signInErrors[name as keyof SignInFormErrors]) {
             setSignInErrors((prev) => ({ ...prev, [name]: undefined }));
         }
     };
 
+    const validateSignInForm = (): boolean => {
+        const errors: SignInFormErrors = {};
+
+        if (!signInFormData.companyName.trim()) {
+            errors.companyName = "Company name is required";
+        }
+        if (!signInFormData.managerPasscode) {
+            errors.managerPasscode = "Manager passcode is required";
+        }
+
+        setSignInErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    const submitSignIn = async () => {
+        if (!userId) return;
+        await fetch("/api/signup/employer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: userId,
+                employerPasskey: signInFormData.managerPasscode,
+            }),
+        });
+        router.push("/employer/home");
+    };
+
+    const handleSignInSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validateSignInForm()) return;
+        await submitSignIn();
+    };
+
+    // -------------------------------
+    // Sign Up
+    // -------------------------------
+    const handleSignUpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setSignUpFormData((prev) => ({ ...prev, [name]: value }));
+
+        // Clear error on user input
+        if (signUpErrors[name as keyof SignUpFormErrors]) {
+            setSignUpErrors((prev) => ({ ...prev, [name]: undefined }));
+        }
+    };
+
+    const validateSignUpForm = (): boolean => {
+        const errors: SignUpFormErrors = {};
+
+        if (!signUpFormData.companyName.trim()) {
+            errors.companyName = "Company name is required";
+        }
+        if (signUpFormData.managerPasscode.length < 8) {
+            errors.managerPasscode = "Manager passcode must be at least 8 characters";
+        }
+        if (signUpFormData.managerPasscode !== signUpFormData.managerPasscodeConfirm) {
+            errors.managerPasscodeConfirm = "Manager passcodes do not match";
+        }
+        if (signUpFormData.employeePasscode.length < 8) {
+            errors.employeePasscode = "Employee passcode must be at least 8 characters";
+        }
+        if (
+            signUpFormData.employeePasscode !== signUpFormData.employeePasscodeConfirm
+        ) {
+            errors.employeePasscodeConfirm = "Employee passcodes do not match";
+        }
+        if (!signUpFormData.staffCount) {
+            errors.staffCount = "Please enter approximate staff count";
+        }
+
+        setSignUpErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    const submitSignUp = async () => {
+        if (!userId) return;
+        await fetch("/api/signup/employerCompany", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: userId,
+                companyName: signUpFormData.companyName,
+                employerPasskey: signUpFormData.managerPasscode,
+                employeePasskey: signUpFormData.employeePasscode,
+                numberOfEmployees: signUpFormData.staffCount,
+            }),
+        });
+        router.push("/employer/home");
+    };
+
+    const handleSignUpSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validateSignUpForm()) return;
+        await submitSignUp();
+    };
+
+    // -------------------------------
+    // Render
+    // -------------------------------
     return (
         <div className={styles.container}>
             {/* Navbar */}
@@ -167,14 +203,18 @@ const EmployerSignup: React.FC = () => {
                     <div className={styles.authToggle}>
                         <button
                             type="button"
-                            className={`${styles.toggleButton} ${!isSignIn ? styles.active : ""}`}
+                            className={`${styles.toggleButton} ${
+                                !isSignIn ? styles.active : ""
+                            }`}
                             onClick={() => setIsSignIn(false)}
                         >
                             Sign Up
                         </button>
                         <button
                             type="button"
-                            className={`${styles.toggleButton} ${isSignIn ? styles.active : ""}`}
+                            className={`${styles.toggleButton} ${
+                                isSignIn ? styles.active : ""
+                            }`}
                             onClick={() => setIsSignIn(true)}
                         >
                             Sign In
@@ -192,8 +232,10 @@ const EmployerSignup: React.FC = () => {
 
                     {/* Sign In / Sign Up forms */}
                     {isSignIn ? (
+                        // -------------------------------
                         // Sign In Form
-                        <form onSubmit={handleSignIn} className={styles.form}>
+                        // -------------------------------
+                        <form onSubmit={handleSignInSubmit} className={styles.form}>
                             {/* Company Name */}
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>Company Name</label>
@@ -202,7 +244,7 @@ const EmployerSignup: React.FC = () => {
                                     <input
                                         type="text"
                                         name="companyName"
-                                        value={signInData.companyName}
+                                        value={signInFormData.companyName}
                                         onChange={handleSignInChange}
                                         className={styles.input}
                                         placeholder="Enter company name"
@@ -219,9 +261,9 @@ const EmployerSignup: React.FC = () => {
                                 <div className={styles.inputWrapper}>
                                     <Lock className={styles.inputIcon} />
                                     <input
-                                        type={showPassword ? "text" : "password"}
+                                        type={showSignInPassword ? "text" : "password"}
                                         name="managerPasscode"
-                                        value={signInData.managerPasscode}
+                                        value={signInFormData.managerPasscode}
                                         onChange={handleSignInChange}
                                         className={styles.input}
                                         placeholder="Enter manager passcode"
@@ -229,9 +271,9 @@ const EmployerSignup: React.FC = () => {
                                     <button
                                         type="button"
                                         className={styles.eyeButton}
-                                        onClick={() => setShowPassword(!showPassword)}
+                                        onClick={() => setShowSignInPassword(!showSignInPassword)}
                                     >
-                                        {showPassword ? (
+                                        {showSignInPassword ? (
                                             <EyeOff className={styles.eyeIcon} />
                                         ) : (
                                             <Eye className={styles.eyeIcon} />
@@ -239,7 +281,9 @@ const EmployerSignup: React.FC = () => {
                                     </button>
                                 </div>
                                 {signInErrors.managerPasscode && (
-                                    <span className={styles.error}>{signInErrors.managerPasscode}</span>
+                                    <span className={styles.error}>
+                    {signInErrors.managerPasscode}
+                  </span>
                                 )}
                             </div>
 
@@ -248,8 +292,10 @@ const EmployerSignup: React.FC = () => {
                             </button>
                         </form>
                     ) : (
+                        // -------------------------------
                         // Sign Up Form
-                        <form onSubmit={handleSubmit} className={styles.form}>
+                        // -------------------------------
+                        <form onSubmit={handleSignUpSubmit} className={styles.form}>
                             {/* Company Name */}
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>Company Name</label>
@@ -258,14 +304,14 @@ const EmployerSignup: React.FC = () => {
                                     <input
                                         type="text"
                                         name="companyName"
-                                        value={formData.companyName}
-                                        onChange={handleChange}
+                                        value={signUpFormData.companyName}
+                                        onChange={handleSignUpChange}
                                         className={styles.input}
                                         placeholder="Enter company name"
                                     />
                                 </div>
-                                {errors.companyName && (
-                                    <span className={styles.error}>{errors.companyName}</span>
+                                {signUpErrors.companyName && (
+                                    <span className={styles.error}>{signUpErrors.companyName}</span>
                                 )}
                             </div>
 
@@ -275,10 +321,10 @@ const EmployerSignup: React.FC = () => {
                                 <div className={styles.inputWrapper}>
                                     <Lock className={styles.inputIcon} />
                                     <input
-                                        type={showPasswords.manager ? "text" : "password"}
+                                        type={showSignUpPasswords.manager ? "text" : "password"}
                                         name="managerPasscode"
-                                        value={formData.managerPasscode}
-                                        onChange={handleChange}
+                                        value={signUpFormData.managerPasscode}
+                                        onChange={handleSignUpChange}
                                         className={styles.input}
                                         placeholder="Enter manager passcode"
                                     />
@@ -286,21 +332,23 @@ const EmployerSignup: React.FC = () => {
                                         type="button"
                                         className={styles.eyeButton}
                                         onClick={() =>
-                                            setShowPasswords((prev) => ({
+                                            setShowSignUpPasswords((prev) => ({
                                                 ...prev,
                                                 manager: !prev.manager,
                                             }))
                                         }
                                     >
-                                        {showPasswords.manager ? (
+                                        {showSignUpPasswords.manager ? (
                                             <EyeOff className={styles.eyeIcon} />
                                         ) : (
                                             <Eye className={styles.eyeIcon} />
                                         )}
                                     </button>
                                 </div>
-                                {errors.managerPasscode && (
-                                    <span className={styles.error}>{errors.managerPasscode}</span>
+                                {signUpErrors.managerPasscode && (
+                                    <span className={styles.error}>
+                    {signUpErrors.managerPasscode}
+                  </span>
                                 )}
                             </div>
 
@@ -310,10 +358,10 @@ const EmployerSignup: React.FC = () => {
                                 <div className={styles.inputWrapper}>
                                     <Lock className={styles.inputIcon} />
                                     <input
-                                        type={showPasswords.managerConfirm ? "text" : "password"}
+                                        type={showSignUpPasswords.managerConfirm ? "text" : "password"}
                                         name="managerPasscodeConfirm"
-                                        value={formData.managerPasscodeConfirm}
-                                        onChange={handleChange}
+                                        value={signUpFormData.managerPasscodeConfirm}
+                                        onChange={handleSignUpChange}
                                         className={styles.input}
                                         placeholder="Re-enter manager passcode"
                                     />
@@ -321,21 +369,23 @@ const EmployerSignup: React.FC = () => {
                                         type="button"
                                         className={styles.eyeButton}
                                         onClick={() =>
-                                            setShowPasswords((prev) => ({
+                                            setShowSignUpPasswords((prev) => ({
                                                 ...prev,
                                                 managerConfirm: !prev.managerConfirm,
                                             }))
                                         }
                                     >
-                                        {showPasswords.managerConfirm ? (
+                                        {showSignUpPasswords.managerConfirm ? (
                                             <EyeOff className={styles.eyeIcon} />
                                         ) : (
                                             <Eye className={styles.eyeIcon} />
                                         )}
                                     </button>
                                 </div>
-                                {errors.managerPasscodeConfirm && (
-                                    <span className={styles.error}>{errors.managerPasscodeConfirm}</span>
+                                {signUpErrors.managerPasscodeConfirm && (
+                                    <span className={styles.error}>
+                    {signUpErrors.managerPasscodeConfirm}
+                  </span>
                                 )}
                             </div>
 
@@ -345,10 +395,10 @@ const EmployerSignup: React.FC = () => {
                                 <div className={styles.inputWrapper}>
                                     <Lock className={styles.inputIcon} />
                                     <input
-                                        type={showPasswords.employee ? "text" : "password"}
+                                        type={showSignUpPasswords.employee ? "text" : "password"}
                                         name="employeePasscode"
-                                        value={formData.employeePasscode}
-                                        onChange={handleChange}
+                                        value={signUpFormData.employeePasscode}
+                                        onChange={handleSignUpChange}
                                         className={styles.input}
                                         placeholder="Enter employee passcode"
                                     />
@@ -356,21 +406,23 @@ const EmployerSignup: React.FC = () => {
                                         type="button"
                                         className={styles.eyeButton}
                                         onClick={() =>
-                                            setShowPasswords((prev) => ({
+                                            setShowSignUpPasswords((prev) => ({
                                                 ...prev,
                                                 employee: !prev.employee,
                                             }))
                                         }
                                     >
-                                        {showPasswords.employee ? (
+                                        {showSignUpPasswords.employee ? (
                                             <EyeOff className={styles.eyeIcon} />
                                         ) : (
                                             <Eye className={styles.eyeIcon} />
                                         )}
                                     </button>
                                 </div>
-                                {errors.employeePasscode && (
-                                    <span className={styles.error}>{errors.employeePasscode}</span>
+                                {signUpErrors.employeePasscode && (
+                                    <span className={styles.error}>
+                    {signUpErrors.employeePasscode}
+                  </span>
                                 )}
                             </div>
 
@@ -380,10 +432,10 @@ const EmployerSignup: React.FC = () => {
                                 <div className={styles.inputWrapper}>
                                     <Lock className={styles.inputIcon} />
                                     <input
-                                        type={showPasswords.employeeConfirm ? "text" : "password"}
+                                        type={showSignUpPasswords.employeeConfirm ? "text" : "password"}
                                         name="employeePasscodeConfirm"
-                                        value={formData.employeePasscodeConfirm}
-                                        onChange={handleChange}
+                                        value={signUpFormData.employeePasscodeConfirm}
+                                        onChange={handleSignUpChange}
                                         className={styles.input}
                                         placeholder="Re-enter employee passcode"
                                     />
@@ -391,41 +443,45 @@ const EmployerSignup: React.FC = () => {
                                         type="button"
                                         className={styles.eyeButton}
                                         onClick={() =>
-                                            setShowPasswords((prev) => ({
+                                            setShowSignUpPasswords((prev) => ({
                                                 ...prev,
                                                 employeeConfirm: !prev.employeeConfirm,
                                             }))
                                         }
                                     >
-                                        {showPasswords.employeeConfirm ? (
+                                        {showSignUpPasswords.employeeConfirm ? (
                                             <EyeOff className={styles.eyeIcon} />
                                         ) : (
                                             <Eye className={styles.eyeIcon} />
                                         )}
                                     </button>
                                 </div>
-                                {errors.employeePasscodeConfirm && (
-                                    <span className={styles.error}>{errors.employeePasscodeConfirm}</span>
+                                {signUpErrors.employeePasscodeConfirm && (
+                                    <span className={styles.error}>
+                    {signUpErrors.employeePasscodeConfirm}
+                  </span>
                                 )}
                             </div>
 
                             {/* Staff Count */}
                             <div className={styles.formGroup}>
-                                <label className={styles.label}>Approximate Number of Staff</label>
+                                <label className={styles.label}>
+                                    Approximate Number of Staff
+                                </label>
                                 <div className={styles.inputWrapper}>
                                     <Users className={styles.inputIcon} />
                                     <input
                                         type="number"
                                         name="staffCount"
-                                        value={formData.staffCount}
-                                        onChange={handleChange}
+                                        value={signUpFormData.staffCount}
+                                        onChange={handleSignUpChange}
                                         className={styles.input}
                                         placeholder="Enter staff count"
                                         min="1"
                                     />
                                 </div>
-                                {errors.staffCount && (
-                                    <span className={styles.error}>{errors.staffCount}</span>
+                                {signUpErrors.staffCount && (
+                                    <span className={styles.error}>{signUpErrors.staffCount}</span>
                                 )}
                             </div>
 

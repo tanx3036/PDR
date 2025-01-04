@@ -3,11 +3,11 @@
 
 import { sql } from "drizzle-orm";
 import {
-  index,
-  integer,
-  pgTableCreator,
-  timestamp,
-  varchar,
+    index,
+    integer, pgTable,
+    pgTableCreator, serial,
+    timestamp,
+    varchar,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -18,22 +18,46 @@ import {
  */
 export const createTable = pgTableCreator((name) => `pdr_ai_v2_${name}`);
 
-export const posts = createTable(
-  "post",
-  {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    name: varchar("name", { length: 256 }),
+
+export const users = createTable("users", {
+    id: serial("id").primaryKey(),
+    userId: varchar("userId", {  length: 256 }).notNull(),
+    companyId: varchar("companyId", {  length: 256 }).notNull(),
+    role: varchar("role", {  length: 256 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
+        () => new Date()
     ),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
-);
 
+});
 
+export const company = createTable('company', {
+    id: serial("id").primaryKey(),
+    name: varchar("name", {  length: 256 }).notNull(),
+    employerpasskey: varchar("employerPasskey", {  length: 256 }).notNull(),
+    employeepasskey: varchar("employeePasskey", {  length: 256 }).notNull(),
+    numberOfEmployees: varchar("numberOfEmployees",{  length: 256 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+        () => new Date()
+    ),
+});
+
+export const document = createTable('document', {
+    id: serial("id").primaryKey(),
+    url: varchar("url", {  length: 256 }).notNull(),
+    category: varchar("url", {  length: 256 }).notNull(),
+    title: varchar("title", {  length: 256 }).notNull(),
+    companyId: varchar("company id", {  length: 256 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+        () => new Date()
+    ),
+});
 
