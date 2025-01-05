@@ -1,69 +1,100 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, EyeOff, Lock, Building, Brain } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+import { Eye, EyeOff, Lock, Building, Brain } from "lucide-react";
 import styles from "../../../styles/employeesignin.module.css";
 
-interface SignInData {
+interface EmployeeSignInFormData {
     companyName: string;
     employeePasscode: string;
 }
 
-interface SignInErrors {
+interface EmployeeSignInFormErrors {
     companyName?: string;
     employeePasscode?: string;
 }
 
 const EmployeeSignIn: React.FC = () => {
     const router = useRouter();
-    const [showPassword, setShowPassword] = useState(false);
+    const { userId } = useAuth();
 
-    // Sign-in form state
-    const [signInData, setSignInData] = useState<SignInData>({
-        companyName: "",
-        employeePasscode: "",
-    });
+    // Form data state
+    const [employeeSignInFormData, setEmployeeSignInFormData] =
+        useState<EmployeeSignInFormData>({
+            companyName: "",
+            employeePasscode: "",
+        });
 
     // Error state
-    const [signInErrors, setSignInErrors] = useState<SignInErrors>({});
+    const [employeeSignInFormErrors, setEmployeeSignInFormErrors] =
+        useState<EmployeeSignInFormErrors>({});
 
-    // Handle sign-in input changes
+    // Toggle for password visibility
+    const [showPassword, setShowPassword] = useState(false);
+
+    // -------------------------------
+    // Handle changes in form inputs
+    // -------------------------------
     const handleSignInChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setSignInData((prev) => ({ ...prev, [name]: value }));
+        setEmployeeSignInFormData((prev) => ({ ...prev, [name]: value }));
 
-        // Clear error when user starts typing
-        if (signInErrors[name as keyof SignInErrors]) {
-            setSignInErrors((prev) => ({ ...prev, [name]: undefined }));
+        // Clear the error on user input
+        if (employeeSignInFormErrors[name as keyof EmployeeSignInFormErrors]) {
+            setEmployeeSignInFormErrors((prev) => ({ ...prev, [name]: undefined }));
         }
     };
 
-    // Validate and submit sign-in form
-    const handleSignIn = (e: React.FormEvent) => {
+    // -------------------------------
+    // Validate the form
+    // -------------------------------
+    const validateSignInForm = (): boolean => {
+        const newErrors: EmployeeSignInFormErrors = {};
+
+        if (!employeeSignInFormData.companyName.trim()) {
+            newErrors.companyName = "Company name is required";
+        }
+
+        if (!employeeSignInFormData.employeePasscode.trim()) {
+            newErrors.employeePasscode = "Employee passcode is required";
+        }
+
+        setEmployeeSignInFormErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    // -------------------------------
+    // Submit the sign-in to the backend
+    // -------------------------------
+    const submitSignIn = async () => {
+        if (!userId) return;
+
+        await fetch("/api/signup/employee", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId,
+                employeePasskey: employeeSignInFormData.employeePasscode,
+            }),
+        });
+        // Redirect to an appropriate route after successful sign-in
+        router.push("/employee/documents");
+    };
+
+    // -------------------------------
+    // Handle form submission
+    // -------------------------------
+    const handleSignInSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        const errors: SignInErrors = {};
-
-        if (!signInData.companyName.trim()) {
-            errors.companyName = "Company name is required";
-        }
-        if (!signInData.employeePasscode.trim()) {
-            errors.employeePasscode = "Employee passcode is required";
-        }
-
-        setSignInErrors(errors);
-
-        if (Object.keys(errors).length === 0) {
-            // Handle sign-in logic (e.g. call API)
-            console.log("Employee signing in with:", signInData);
-
-            // On success, redirect or route accordingly
-            // For now, let's just route to a placeholder
-            router.push("/employee/documents");
-        }
+        if (!validateSignInForm()) return;
+        await submitSignIn();
     };
 
+    // -------------------------------
+    // Component Render
+    // -------------------------------
     return (
         <div className={styles.container}>
             {/* Navbar */}
@@ -80,9 +111,11 @@ const EmployeeSignIn: React.FC = () => {
             <main className={styles.main}>
                 <div className={styles.formContainer}>
                     <h1 className={styles.title}>Employee Sign In</h1>
-                    <p className={styles.subtitle}>Access your employee account below</p>
+                    <p className={styles.subtitle}>
+                        Access your employee account below
+                    </p>
 
-                    <form onSubmit={handleSignIn} className={styles.form}>
+                    <form onSubmit={handleSignInSubmit} className={styles.form}>
                         {/* Company Name */}
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Company Name</label>
@@ -91,14 +124,16 @@ const EmployeeSignIn: React.FC = () => {
                                 <input
                                     type="text"
                                     name="companyName"
-                                    value={signInData.companyName}
+                                    value={employeeSignInFormData.companyName}
                                     onChange={handleSignInChange}
                                     className={styles.input}
                                     placeholder="Enter company name"
                                 />
                             </div>
-                            {signInErrors.companyName && (
-                                <span className={styles.error}>{signInErrors.companyName}</span>
+                            {employeeSignInFormErrors.companyName && (
+                                <span className={styles.error}>
+                  {employeeSignInFormErrors.companyName}
+                </span>
                             )}
                         </div>
 
@@ -110,7 +145,7 @@ const EmployeeSignIn: React.FC = () => {
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     name="employeePasscode"
-                                    value={signInData.employeePasscode}
+                                    value={employeeSignInFormData.employeePasscode}
                                     onChange={handleSignInChange}
                                     className={styles.input}
                                     placeholder="Enter employee passcode"
@@ -127,8 +162,10 @@ const EmployeeSignIn: React.FC = () => {
                                     )}
                                 </button>
                             </div>
-                            {signInErrors.employeePasscode && (
-                                <span className={styles.error}>{signInErrors.employeePasscode}</span>
+                            {employeeSignInFormErrors.employeePasscode && (
+                                <span className={styles.error}>
+                  {employeeSignInFormErrors.employeePasscode}
+                </span>
                             )}
                         </div>
 

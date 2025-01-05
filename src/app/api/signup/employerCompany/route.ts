@@ -1,7 +1,6 @@
 import {db} from "~/server/db";
 import {company, users} from "~/server/db/schema";
 import {NextResponse} from "next/server";
-import {eq} from "drizzle-orm/index";
 import console from "console";
 
 
