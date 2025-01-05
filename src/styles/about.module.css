@@ -1,0 +1,154 @@
+
+.container {
+    @apply min-h-screen bg-gray-50;
+}
+
+/* Navigation */
+.navbar {
+    @apply bg-white border-b border-gray-200;
+}
+
+.navContent {
+    @apply max-w-7xl mx-auto px-6 py-4 flex justify-between items-center;
+}
+
+.logoWrapper {
+    @apply flex items-center space-x-2;
+}
+
+.logoIcon {
+    @apply w-8 h-8 text-purple-600;
+}
+
+.logoText {
+    @apply text-xl font-bold text-purple-600;
+}
+
+.homeButton {
+    @apply flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg
+    hover:bg-purple-700 transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2;
+}
+
+.homeIcon {
+    @apply w-5 h-5 mr-2;
+}
+
+/* Main Content */
+.main {
+    @apply max-w-7xl mx-auto px-6 py-12;
+}
+
+/* Header Section */
+.header {
+    @apply text-center mb-16;
+}
+
+.title {
+    @apply text-4xl font-bold text-gray-900 mb-4;
+}
+
+.subtitle {
+    @apply text-xl text-gray-600 max-w-2xl mx-auto;
+}
+
+/* Team Grid */
+.teamGrid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-12 mb-16;
+}
+
+/* Member Card */
+.memberCard {
+    @apply bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200
+    hover:shadow-md transition-shadow duration-200;
+}
+
+.memberImageContainer {
+    @apply relative bg-gray-100;
+    padding-top: 75%; /* 4:3 Aspect Ratio */
+}
+
+.memberImage {
+    @apply absolute top-0 left-0 w-full h-full object-cover;
+}
+
+.memberInfo {
+    @apply p-6;
+}
+
+.memberName {
+    @apply text-2xl font-bold text-gray-900 mb-1;
+}
+
+.memberRole {
+    @apply text-purple-600 font-medium mb-4;
+}
+
+.memberDescription {
+    @apply text-gray-600 mb-6 leading-relaxed;
+}
+
+/* Social Links */
+.socialLinks {
+    @apply flex space-x-4;
+}
+
+.socialLink {
+    @apply p-2 text-gray-600 hover:text-purple-600 rounded-full
+    hover:bg-purple-50 transition-colors duration-200;
+}
+
+.socialIcon {
+    @apply w-5 h-5;
+}
+
+/* Mission Section */
+.missionSection {
+    @apply bg-white rounded-lg shadow-sm p-8 border border-gray-200 max-w-3xl mx-auto;
+}
+
+.missionTitle {
+    @apply text-2xl font-bold text-gray-900 mb-4;
+}
+
+.missionText {
+    @apply text-gray-600 leading-relaxed;
+}
+
+/* Hover Effects */
+.memberCard:hover .memberName {
+    @apply text-purple-600;
+}
+
+.socialLink:focus {
+    @apply outline-none ring-2 ring-purple-500 ring-offset-2;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .title {
+        @apply text-3xl;
+    }
+
+    .subtitle {
+        @apply text-lg;
+    }
+
+    .memberName {
+        @apply text-xl;
+    }
+
+    .missionSection {
+        @apply p-6;
+    }
+}
+
+@media (max-width: 640px) {
+    .main {
+        @apply px-4 py-8;
+    }
+
+    .teamGrid {
+        @apply gap-8;
+    }
+}

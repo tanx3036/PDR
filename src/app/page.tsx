@@ -40,7 +40,7 @@ export default function HomePage() {
                                 </Link>
 
                                 {/* Link to /about page */}
-                                <Link href="/unavailable">
+                                <Link href="/about">
                                     <button className={`${styles.btn} ${styles["btn-ghost"]}`}>
                                         About
                                     </button>
