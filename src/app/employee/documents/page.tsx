@@ -15,6 +15,7 @@ import styles from '../../../styles/employeeDocumentViewer.module.css';
 import {SignIn, SignOutButton, useAuth, UserButton} from "@clerk/nextjs";
 import LoadingDoc from "~/app/employee/documents/loading-doc";
 
+
 // Mock data for documents
 interface DocumentType {
     id: number;

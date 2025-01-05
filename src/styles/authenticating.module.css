@@ -1,0 +1,60 @@
+.container {
+    @apply min-h-screen bg-gray-50 flex items-center justify-center;
+}
+
+.content {
+    @apply flex flex-col items-center p-8;
+}
+
+.logoWrapper {
+    @apply flex items-center space-x-2 mb-8;
+}
+
+.logoIcon {
+    @apply w-10 h-10 text-purple-600;
+}
+
+.logoText {
+    @apply text-2xl font-bold text-purple-600;
+}
+
+.loadingContainer {
+    @apply flex flex-col items-center mb-4;
+}
+
+.loadingText {
+    @apply text-2xl font-semibold text-gray-900 mt-4;
+}
+
+.message {
+    @apply text-gray-600;
+}
+
+/* Loading Animation */
+.dots {
+    @apply flex space-x-2;
+}
+
+.dot {
+    @apply w-3 h-3 bg-purple-600 rounded-full;
+    animation: pulse 1.4s infinite ease-in-out;
+}
+
+.dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes pulse {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

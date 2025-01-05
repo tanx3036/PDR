@@ -1,12 +1,57 @@
 "use client"
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Upload, FileText, BarChart, Brain } from 'lucide-react';
 import styles from '../../../styles/employerhome.module.css';
 import {useRouter} from "next/navigation";
 import ProfileDropdown from "~/app/employer/_components/ProfileDropdown";
+import { useAuth} from "@clerk/nextjs";
+import LoadingPage from "~/app/_components/loading";
 
 const HomeScreen = () => {
     const router = useRouter();
+
+    //check if authorized. If not authorized as employer, return home
+    const { isLoaded, userId } = useAuth();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!isLoaded) return;
+        // If there is no user at all, send them home
+        if (!userId) {
+            router.push("/");
+            return;
+        }
+
+        // Check if the user’s role is employer
+        const checkEmployerRole = async () => {
+            try {
+                const response = await fetch("/api/employerAuth", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId }),
+                });
+                if (!response.ok) {
+                    // If the endpoint returns an error, also redirect
+                    router.push("/");
+                    return;
+                }
+
+            } catch (error) {
+                console.error("Error checking employer role:", error);
+                // If there is any error, also redirect or handle appropriately
+                router.push("/");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        checkEmployerRole();
+    }, [userId, router]);
+
+    if(loading){
+        return <LoadingPage />;
+    }
+
     const menuOptions = [
         {
             icon: <Upload className={styles.menuIcon} />,
