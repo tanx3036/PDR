@@ -52,7 +52,7 @@ const HomeScreen = () => {
                 <div className={styles.welcomeSection}>
                     <h1 className={styles.welcomeTitle}>Welcome to PDR AI</h1>
                     <p className={styles.welcomeText}>
-                        Your intelligent document management assistant. Choose an option below to get started.
+                        Your AI integrated document management assistant and interpreter. Choose an option below to get started.
                     </p>
                 </div>
 
