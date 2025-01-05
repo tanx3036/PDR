@@ -3,11 +3,14 @@ import React, {useEffect, useState} from 'react';
 import { FileText, Search, Brain, ChevronRight, ChevronDown } from 'lucide-react';
 import styles from '../../../styles/employerDocumentViewer.module.css';
 import Link from "next/link";
+import {useAuth} from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import LoadingDoc from "~/app/employer/documents/loading-doc";
 
 
 interface DocumentType {
     id: number;
-    name: string;        // or "title" if your DB uses that
+    title: string;
     category: string;
     aiSummary?: string;  // optional if some documents don't have an AI summary
     url: string;
@@ -22,41 +25,51 @@ interface CategoryGroup {
 
 
 const DocumentViewer: React.FC = () => {
+    const router = useRouter();
     const [documents, setDocuments] = useState<DocumentType[]>([]);
     const [selectedDoc, setSelectedDoc] = useState<DocumentType | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const { userId } = useAuth();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // If userId is not yet available, skip the fetch
+        if (!userId) return;
+
         const fetchDocuments = async () => {
             try {
-                const response = await fetch("/api/fetchDocument");
+                const response = await fetch("/api/fetchDocument", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId }),
+                });
+
                 if (!response.ok) {
                     throw new Error("Failed to fetch documents");
                 }
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 const data: DocumentType[] = await response.json();
 
+
                 setDocuments(data);
-                // Optionally select the first document to show by default
-                if (data.length > 0) {
-                    setSelectedDoc(data[0]);
-                }
             } catch (error) {
                 console.error("Error fetching documents:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchDocuments();
-    }, []);
+    }, [userId]); // re-run when userId becomes available
 
 
-    // Group documents by category
+
+// Group documents by category
     const categories: CategoryGroup[] = Object.values(
         documents.reduce((acc: { [key: string]: CategoryGroup }, doc) => {
             // OPTIONAL: Filter by searchTerm if you want to hide docs that don't match
             // For example, match on doc.name or doc.aiSummary
             if (
-                !doc.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                !doc.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
                 !(doc.aiSummary || "").toLowerCase().includes(searchTerm.toLowerCase())
             ) {
                 return acc; // skip this doc if it doesn't match search
@@ -73,6 +86,14 @@ const DocumentViewer: React.FC = () => {
             return acc;
         }, {})
     );
+
+    if (!userId) {
+        return <LoadingDoc />;
+    }
+
+    if (loading) {
+        return <LoadingDoc />;
+    }
 
 
     return (
@@ -123,7 +144,7 @@ const DocumentViewer: React.FC = () => {
                                             }`}
                                         >
                                             <FileText className={styles.docIcon} />
-                                            <span className={styles.docName}>{doc.name}</span>
+                                            <span className={styles.docName}>{doc.title}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -139,7 +160,7 @@ const DocumentViewer: React.FC = () => {
                     <>
                         {/* Document Title */}
                         <div className={styles.docHeader}>
-                            <h1 className={styles.docTitle}>{selectedDoc.name}</h1>
+                            <h1 className={styles.docTitle}>{selectedDoc.title}</h1>
                         </div>
 
                         {/* AI Summary (if present) */}
@@ -158,7 +179,7 @@ const DocumentViewer: React.FC = () => {
                             <iframe
                                 src={selectedDoc.url}
                                 className={styles.pdfViewer}
-                                title={selectedDoc.name}
+                                title={selectedDoc.title}
                             />
                         </div>
                     </>

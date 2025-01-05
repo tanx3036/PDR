@@ -171,3 +171,24 @@
         @apply h-[calc(100vh-24rem)];
     }
 }
+
+/* Reuse your container layout */
+.loadingContainer {
+    @apply flex min-h-screen bg-gray-50;
+}
+
+.mainLoadingContent {
+    @apply flex-1 flex items-center justify-center p-6;
+}
+
+.loadingContent {
+    @apply flex flex-col items-center justify-center;
+}
+
+.loadingIcon {
+    @apply w-12 h-12 text-purple-600 mb-4 animate-spin;
+}
+
+.loadingText {
+    @apply text-lg text-gray-700 font-medium;
+}

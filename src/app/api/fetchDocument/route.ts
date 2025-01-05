@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import * as console from "console";
 
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
     try {
         const { userId } = await request.json();
 
@@ -15,6 +15,9 @@ export async function GET(request: Request) {
             .from(users)
             .where(eq(users.userId, userId));
 
+        console.log("use info", userInfo)
+        console.log("user id", userId)
+
         if (!userInfo) {
             return NextResponse.json(
                 { error: "Invalid user." },
@@ -23,7 +26,7 @@ export async function GET(request: Request) {
         }
 
         // 2) Retrieve the user's companyId from userInfo
-        const { companyId } = userInfo;
+        const companyId = userInfo.companyId;
 
         // 3) Select all documents that have the same companyId
         const docs = await db
