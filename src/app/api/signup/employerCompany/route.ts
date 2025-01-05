@@ -27,7 +27,7 @@ export async function POST(request: Request) {
         await db.insert(users).values({
             userId,
             companyId,
-            role: "employer",
+            role: "fetchDocument",
         });
 
         return NextResponse.json({ success: true });

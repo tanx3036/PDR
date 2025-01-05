@@ -108,7 +108,7 @@ const EmployerSignup: React.FC = () => {
                 employerPasskey: signInFormData.managerPasscode,
             }),
         });
-        router.push("/employer/home");
+        router.push("/fetchDocument/home");
     };
 
     const handleSignInSubmit = async (e: React.FormEvent) => {
@@ -171,7 +171,7 @@ const EmployerSignup: React.FC = () => {
                 numberOfEmployees: signUpFormData.staffCount,
             }),
         });
-        router.push("/employer/home");
+        router.push("/fetchDocument/home");
     };
 
     const handleSignUpSubmit = async (e: React.FormEvent) => {

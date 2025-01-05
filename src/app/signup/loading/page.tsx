@@ -19,7 +19,7 @@ export default async function LoadingPage() {
     // 3) Redirect accordingly
     if (!existingUser) {
         redirect("/signup");
-    } else if (existingUser.role === "employer") {
+    } else if (existingUser.role === "fetchDocument") {
         redirect("/employer/home");
     } else {
         redirect("/employee/home");

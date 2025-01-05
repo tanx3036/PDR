@@ -4,21 +4,27 @@ import React, { useState } from "react";
 import { UploadDropzone } from "~/app/utils/uploadthing"; // Adjust import path to your project structure
 import { FileText, Calendar, FolderPlus, Plus } from "lucide-react";
 import styles from "../../../styles/employerupload.module.css";
+import {useAuth} from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 interface UploadFormData {
     title: string;
     category: string;
     uploadDate: string;
     fileUrl: string | null; // Store the uploaded file URL
+    fileName: string;
 }
 
 const DocumentUpload: React.FC = () => {
+    const auth = useAuth();
+    const router = useRouter();
 
     const [formData, setFormData] = useState<UploadFormData>({
         title: "",
         category: "",
         uploadDate: new Date().toISOString().split("T")[0],
         fileUrl: null, // Initially no file URL
+        fileName: "",
     });
 
     const [errors, setErrors] = useState<Partial<UploadFormData>>({});
@@ -80,12 +86,20 @@ const DocumentUpload: React.FC = () => {
 
         console.log("Uploading document to server with data:", formData);
 
-        // TODO: Make your server POST request here, e.g.:
-        // await fetch("/api/document/create", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify(formData),
-        // });
+        const response = await fetch("/api/uploadDocument", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+              userId: auth.userId,
+              documentName: formData.title,
+              documentCategory: formData.category,
+              documentUrl: formData.fileUrl,
+          }),
+        });
+        console.log(response)
+
+        router.push("/fetchDocument/documents")
+
 
         // Reset the form or redirect
     };
@@ -104,7 +118,6 @@ const DocumentUpload: React.FC = () => {
             {/* Upload Form */}
             <form onSubmit={handleSubmit} className={styles.form}>
                 {/* File Upload Area */}
-                <div className={styles.uploadArea}>
                     {/* UploadDropzone from UploadThing */}
                     {!formData.fileUrl ? (
                         <UploadDropzone
@@ -112,18 +125,18 @@ const DocumentUpload: React.FC = () => {
                             onClientUploadComplete={(res) => {
                                 if (!res || !res.length) return;
                                 const fileUrl = res[0].url;
-
-                                setFormData((prev) => ({ ...prev, fileUrl: fileUrl }));
-                                console.log(formData)
+                                const fileName = res[0].name;
+                                setFormData((prev) => ({ ...prev, fileUrl: fileUrl, fileName: fileName}));
                             }}
                             onUploadError={(error) => {
                                 console.error("Upload Error:", error);
                             }}
+                            style={{ width: "100%", height: "100%" }}
                         />
                     ) : (
                         <div className={styles.fileInfo}>
                             <FileText className={styles.fileIcon} />
-                            <span className={styles.fileName}>PDF uploaded!</span>
+                            <span className={styles.fileName}>{formData.fileName}</span>
                             <button
                                 type="button"
                                 onClick={() => setFormData((prev) => ({ ...prev, fileUrl: null }))}
@@ -133,7 +146,6 @@ const DocumentUpload: React.FC = () => {
                             </button>
                         </div>
                     )}
-                </div>
                 {errors.fileUrl && <span className={styles.error}>{errors.fileUrl}</span>}
 
                 {/* Document Details */}

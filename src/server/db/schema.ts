@@ -50,7 +50,7 @@ export const company = createTable('company', {
 export const document = createTable('document', {
     id: serial("id").primaryKey(),
     url: varchar("url", {  length: 256 }).notNull(),
-    category: varchar("url", {  length: 256 }).notNull(),
+    category: varchar("category", {  length: 256 }).notNull(),
     title: varchar("title", {  length: 256 }).notNull(),
     companyId: varchar("company id", {  length: 256 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })

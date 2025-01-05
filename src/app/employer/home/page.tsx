@@ -12,19 +12,19 @@ const HomeScreen = () => {
             icon: <Upload className={styles.menuIcon} />,
             title: "Upload Documents",
             description: "Add new documents to the database for AI analysis",
-            path: "/employer/upload"
+            path: "/fetchDocument/upload"
         },
         {
             icon: <FileText className={styles.menuIcon} />,
             title: "View Documents",
             description: "Browse and manage your uploaded documents",
-            path: "/employer/documents"
+            path: "/fetchDocument/documents"
         },
         {
             icon: <BarChart className={styles.menuIcon} />,
             title: "Document Statistics",
             description: "View analytics and insights about document usage",
-            path: "/employer/statistics"
+            path: "/fetchDocument/statistics"
         }
     ];
 

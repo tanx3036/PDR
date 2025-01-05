@@ -1,22 +1,22 @@
 import { NextResponse } from "next/server";
 import { db } from "../../../server/db/index";
-import { company, document } from "../../../server/db/schema";
+import { company, document,users } from "../../../server/db/schema";
 import { eq } from "drizzle-orm";
 import * as console from "console";
 
 export async function POST(request: Request) {
     try {
-        const { userId, employerPasskey, documentName, documentUrl, documentCategory } = await request.json();
+        const { userId, documentName, documentUrl, documentCategory } = await request.json();
 
-        // 1) Validate the employerPasskey / find the company
-        const [existingCompany] = await db
+        // 1) Find the user in the database
+        const [userInfo] = await db
             .select()
-            .from(company)
-            .where(eq(company.employerpasskey, employerPasskey));
+            .from(users)
+            .where(eq(users.userId, userId));
 
-        if (!existingCompany) {
+        if (!userInfo) {
             return NextResponse.json(
-                { error: "Invalid employer passkey." },
+                { error: "Invalid user." },
                 { status: 400 }
             );
         }
@@ -28,8 +28,7 @@ export async function POST(request: Request) {
                 url: documentUrl,
                 category: documentCategory,
                 title: documentName,
-                companyId: existingCompany.id.toString(), // or existingCompany.id if already a string
-                // createdAt / updatedAt are handled automatically if your schema defaults are set
+                companyId: userInfo.companyId, // company that the user works at
             })
             .returning(); // Return the inserted record for confirmation
 

@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
         if (!existingCompany) {
             return NextResponse.json(
-                {error: "Invalid employer passkey."},
+                {error: "Invalid fetchDocument passkey."},
                 {status: 400}
             );
         }
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
         await db.insert(users).values({
             userId,
             companyId,
-            role: "employer",
+            role: "fetchDocument",
         });
 
     }

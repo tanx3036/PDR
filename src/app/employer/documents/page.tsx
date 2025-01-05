@@ -1,52 +1,72 @@
 "use client"
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { FileText, Search, Brain, ChevronRight, ChevronDown } from 'lucide-react';
 import styles from '../../../styles/employerDocumentViewer.module.css';
 import Link from "next/link";
 
-// Mock data for documents
-const documents = [
-    {
-        id: 1,
-        name: 'Apple Financial Report Q1 2025',
-        category: 'Financial',
-        aiSummary: 'Apple Inc. reported strong financial results for Q4 2023, with total net sales of $119.58 billion, driven by growth in services revenue ($23.12 billion) and iPhone sales ($69.70 billion). Net income rose to $33.92 billion, reflecting a higher gross margin of $54.86 billion and effective cost management. The company improved its cash position to $41.97 billion while returning $23.97 billion to shareholders through dividends and stock repurchases. With steady growth across all regions and increased shareholder equity to $74.10 billion, Apple demonstrated robust performance and financial stability during the quarter.',
-        url: 'https://utfs.io/f/zllPuoqtDQmMunOGjZkCWhtoxfrJp6Db5dHg8iIVBLawUOs2'
-    },
-    {
-        id: 2,
-        name: 'Employee Handbook 2025.pdf',
-        category: 'HR',
-        aiSummary: 'Updated employee handbook for 2025 includes new remote work policies, revised benefits package, and updated compliance requirements. Major changes focus on flexible working arrangements and mental health support.',
-        url: '/documents/handbook.pdf'
-    },
-    {
-        id: 3,
-        name: 'Project Roadmap 2025.pdf',
-        category: 'Planning',
-        aiSummary: 'Strategic roadmap outlining key initiatives for 2025. Focuses on digital transformation, customer experience enhancement, and sustainability goals. Timeline includes quarterly milestones and resource allocation.',
-        url: '/documents/roadmap.pdf'
-    }
-];
 
-interface Category {
-    name: string;
-    isOpen: boolean;
-    documents: typeof documents;
+interface DocumentType {
+    id: number;
+    name: string;        // or "title" if your DB uses that
+    category: string;
+    aiSummary?: string;  // optional if some documents don't have an AI summary
+    url: string;
 }
 
+
+interface CategoryGroup {
+    name: string;
+    isOpen: boolean;
+    documents: DocumentType[];
+}
+
+
 const DocumentViewer: React.FC = () => {
-    const [selectedDoc, setSelectedDoc] = useState(documents[0]);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [documents, setDocuments] = useState<DocumentType[]>([]);
+    const [selectedDoc, setSelectedDoc] = useState<DocumentType | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        const fetchDocuments = async () => {
+            try {
+                const response = await fetch("/api/fetchDocument");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch documents");
+                }
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                const data: DocumentType[] = await response.json();
+
+                setDocuments(data);
+                // Optionally select the first document to show by default
+                if (data.length > 0) {
+                    setSelectedDoc(data[0]);
+                }
+            } catch (error) {
+                console.error("Error fetching documents:", error);
+            }
+        };
+
+        fetchDocuments();
+    }, []);
+
 
     // Group documents by category
-    const categories: Category[] = Object.values(
-        documents.reduce((acc: { [key: string]: Category }, doc) => {
+    const categories: CategoryGroup[] = Object.values(
+        documents.reduce((acc: { [key: string]: CategoryGroup }, doc) => {
+            // OPTIONAL: Filter by searchTerm if you want to hide docs that don't match
+            // For example, match on doc.name or doc.aiSummary
+            if (
+                !doc.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                !(doc.aiSummary || "").toLowerCase().includes(searchTerm.toLowerCase())
+            ) {
+                return acc; // skip this doc if it doesn't match search
+            }
+
             if (!acc[doc.category]) {
                 acc[doc.category] = {
                     name: doc.category,
-                    isOpen: true,
-                    documents: []
+                    isOpen: true, // or false if you prefer them collapsed initially
+                    documents: [],
                 };
             }
             acc[doc.category].documents.push(doc);
@@ -54,19 +74,18 @@ const DocumentViewer: React.FC = () => {
         }, {})
     );
 
+
     return (
         <div className={styles.container}>
             {/* Side Navigation */}
             <aside className={styles.sidebar}>
                 <div className={styles.sidebarHeader}>
-                    <Link href='/employer/home'>
+                    <Link href="/employer/home">
                         <button className={styles.logoContainer}>
                             <Brain className={styles.logoIcon} />
                             <span className={styles.logoText}>PDR AI</span>
                         </button>
                     </Link>
-
-
 
                     {/* Search Bar */}
                     <div className={styles.searchContainer}>
@@ -100,7 +119,7 @@ const DocumentViewer: React.FC = () => {
                                             key={doc.id}
                                             onClick={() => setSelectedDoc(doc)}
                                             className={`${styles.docItem} ${
-                                                selectedDoc.id === doc.id ? styles.selected : ''
+                                                selectedDoc && selectedDoc.id === doc.id ? styles.selected : ""
                                             }`}
                                         >
                                             <FileText className={styles.docIcon} />
@@ -123,14 +142,16 @@ const DocumentViewer: React.FC = () => {
                             <h1 className={styles.docTitle}>{selectedDoc.name}</h1>
                         </div>
 
-                        {/* AI Summary */}
-                        <div className={styles.summaryContainer}>
-                            <div className={styles.summaryHeader}>
-                                <Brain className={styles.summaryIcon} />
-                                <h2 className={styles.summaryTitle}>AI Summary</h2>
+                        {/* AI Summary (if present) */}
+                        {selectedDoc.aiSummary && (
+                            <div className={styles.summaryContainer}>
+                                <div className={styles.summaryHeader}>
+                                    <Brain className={styles.summaryIcon} />
+                                    <h2 className={styles.summaryTitle}>AI Summary</h2>
+                                </div>
+                                <p className={styles.summaryText}>{selectedDoc.aiSummary}</p>
                             </div>
-                            <p className={styles.summaryText}>{selectedDoc.aiSummary}</p>
-                        </div>
+                        )}
 
                         {/* PDF Viewer */}
                         <div className={styles.pdfContainer}>
