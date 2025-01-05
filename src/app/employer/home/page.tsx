@@ -18,6 +18,7 @@ const HomeScreen = () => {
         if (!isLoaded) return;
         // If there is no user at all, send them home
         if (!userId) {
+            window.alert("Authentication failed! No user found.");
             router.push("/");
             return;
         }
@@ -32,6 +33,7 @@ const HomeScreen = () => {
                 });
                 if (!response.ok) {
                     // If the endpoint returns an error, also redirect
+                    window.alert("Authentication failed! You are not an employer.");
                     router.push("/");
                     return;
                 }
@@ -39,6 +41,7 @@ const HomeScreen = () => {
             } catch (error) {
                 console.error("Error checking employer role:", error);
                 // If there is any error, also redirect or handle appropriately
+                window.alert("Authentication failed! You are not an employer.");
                 router.push("/");
             } finally {
                 setLoading(false);

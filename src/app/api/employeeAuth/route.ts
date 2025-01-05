@@ -22,8 +22,8 @@ export async function POST(request: Request) {
         }
 
         // You could also do a server-side check here; for example:
-        if (userInfo.role !== "employer") {
-          return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+        if (userInfo.role !== "employee") {
+            return NextResponse.json({ error: "Not authorized" }, { status: 403 });
         }
 
         // Return role only if found

@@ -58,6 +58,7 @@ const DocumentViewer: React.FC = () => {
 
         // No user => redirect home
         if (!userId) {
+            window.alert("Authentication failed! No user found.");
             router.push("/");
             return;
         }
@@ -71,18 +72,13 @@ const DocumentViewer: React.FC = () => {
                 });
                 if (!response.ok) {
                     // Not an employer or user not found => redirect
-                    router.push("/");
-                    return;
-                }
-
-                // Optionally parse role to confirm "employer"
-                const role = await response.json();
-                if (role !== "employer") {
+                    window.alert("Authentication failed! You are not an employer.");
                     router.push("/");
                     return;
                 }
             } catch (error) {
                 console.error("Error checking employer role:", error);
+                window.alert("Authentication failed! You are not an employer.");
                 router.push("/");
             } finally {
                 setRoleLoading(false);
