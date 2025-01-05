@@ -1,6 +1,6 @@
 "use client"
 import React, {useEffect, useState} from 'react';
-import { FileText, Search, Brain, ChevronRight, ChevronDown } from 'lucide-react';
+import {FileText, Search, Brain, ChevronRight, ChevronDown, Home} from 'lucide-react';
 import styles from '../../../styles/employerDocumentViewer.module.css';
 import Link from "next/link";
 import {useAuth} from "@clerk/nextjs";
@@ -152,6 +152,21 @@ const DocumentViewer: React.FC = () => {
                         </div>
                     ))}
                 </nav>
+
+
+
+
+
+                { /* Home Button */ }
+                <div className={styles.sidebarFooter}>
+                    <Link href="/employer/home">
+                        <button className={styles.homeButton}>
+                            <Home className={styles.homeIcon} />
+                            <span>Home</span>
+                        </button>
+                    </Link>
+                </div>
+
             </aside>
 
             {/* Main Content */}
@@ -173,6 +188,14 @@ const DocumentViewer: React.FC = () => {
                                 <p className={styles.summaryText}>{selectedDoc.aiSummary}</p>
                             </div>
                         )}
+
+                            <div className={styles.summaryContainer}>
+                                <div className={styles.summaryHeader}>
+                                    <Brain className={styles.summaryIcon} />
+                                    <h2 className={styles.summaryTitle}>AI Summary</h2>
+                                </div>
+                                <p className={styles.summaryText}>AI Summary currently unavailable.</p>
+                            </div>
 
                         {/* PDF Viewer */}
                         <div className={styles.pdfContainer}>
