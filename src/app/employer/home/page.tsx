@@ -48,9 +48,6 @@ const HomeScreen = () => {
         checkEmployerRole();
     }, [userId, router]);
 
-    if(loading){
-        return <LoadingPage />;
-    }
 
     const menuOptions = [
         {
@@ -78,6 +75,11 @@ const HomeScreen = () => {
         console.log(`Navigating to: ${path}`);
         router.push(path)
     };
+
+    if(loading){
+        return <LoadingPage />;
+    }
+
 
     return (
         <div className={styles.container}>

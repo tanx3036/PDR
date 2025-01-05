@@ -1,21 +1,28 @@
-"use client"
-import React, {useEffect, useState} from 'react';
-import {FileText, Search, Brain, ChevronRight, ChevronDown, Home} from 'lucide-react';
-import styles from '../../../styles/employerDocumentViewer.module.css';
+"use client";
+import React, { useEffect, useState } from "react";
+import {
+    FileText,
+    Search,
+    Brain,
+    ChevronRight,
+    ChevronDown,
+    Home,
+} from "lucide-react";
+import styles from "../../../styles/employerDocumentViewer.module.css";
 import Link from "next/link";
-import {useAuth} from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import LoadingDoc from "~/app/employer/documents/loading-doc";
+import LoadingPage from "~/app/_components/loading";
 
-
+/** Types **/
 interface DocumentType {
     id: number;
     title: string;
     category: string;
-    aiSummary?: string;  // optional if some documents don't have an AI summary
+    aiSummary?: string;
     url: string;
 }
-
 
 interface CategoryGroup {
     name: string;
@@ -23,62 +30,126 @@ interface CategoryGroup {
     documents: DocumentType[];
 }
 
-
 const DocumentViewer: React.FC = () => {
     const router = useRouter();
+    const { isLoaded, userId } = useAuth();
+
+    // 1) Role-check loading
+    const [roleLoading, setRoleLoading] = useState(true);
+
+    // 2) Document-fetch loading
+    const [docsLoading, setDocsLoading] = useState(false);
+
+    // 3) Document data
     const [documents, setDocuments] = useState<DocumentType[]>([]);
     const [selectedDoc, setSelectedDoc] = useState<DocumentType | null>(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    const { userId } = useAuth();
-    const [loading, setLoading] = useState(true);
 
+    // 4) Search
+    const [searchTerm, setSearchTerm] = useState("");
+
+    /**
+     * ROLE CHECK
+     * - Wait for Clerk to load
+     * - If no userId, redirect
+     * - Otherwise, verify role
+     */
     useEffect(() => {
-        // If userId is not yet available, skip the fetch
+        if (!isLoaded) return; // Wait until Clerk is fully ready
+
+        // No user => redirect home
+        if (!userId) {
+            router.push("/");
+            return;
+        }
+
+        const checkEmployerRole = async () => {
+            try {
+                const response = await fetch("/api/employerAuth", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId }),
+                });
+                if (!response.ok) {
+                    // Not an employer or user not found => redirect
+                    router.push("/");
+                    return;
+                }
+
+                // Optionally parse role to confirm "employer"
+                const role = await response.json();
+                if (role !== "employer") {
+                    router.push("/");
+                    return;
+                }
+            } catch (error) {
+                console.error("Error checking employer role:", error);
+                router.push("/");
+            } finally {
+                setRoleLoading(false);
+            }
+        };
+
+        checkEmployerRole();
+    }, [isLoaded, userId, router]);
+
+    // If still checking role, show general loading
+
+
+    /**
+     * DOCUMENT FETCH
+     * - Only call once we know user is an employer
+     */
+    useEffect(() => {
         if (!userId) return;
 
         const fetchDocuments = async () => {
             try {
+                setDocsLoading(true);
+
                 const response = await fetch("/api/fetchDocument", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ userId }),
                 });
-
                 if (!response.ok) {
                     throw new Error("Failed to fetch documents");
                 }
+
                 const data: DocumentType[] = await response.json();
-
-
                 setDocuments(data);
             } catch (error) {
                 console.error("Error fetching documents:", error);
             } finally {
-                setLoading(false);
+                setDocsLoading(false);
             }
         };
 
         fetchDocuments();
-    }, [userId]); // re-run when userId becomes available
+    }, [userId]);
+
+    // If documents are still loading, show doc-specific loader
 
 
-
-// Group documents by category
+    /**
+     * GROUPING DOCS BY CATEGORY
+     * + Basic search filtering
+     */
     const categories: CategoryGroup[] = Object.values(
         documents.reduce((acc: { [key: string]: CategoryGroup }, doc) => {
-            // OPTIONAL: Filter by searchTerm if you want to hide docs that don't match
-            // For example, match on doc.name or doc.aiSummary
+            // Filter by search term on title or AI summary
             if (
                 !doc.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                !(doc.aiSummary || "").toLowerCase().includes(searchTerm.toLowerCase())
+                !(doc.aiSummary || "")
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
             ) {
-                return acc; // skip this doc if it doesn't match search
+                return acc;
             }
 
             if (!acc[doc.category]) {
                 acc[doc.category] = {
                     name: doc.category,
-                    isOpen: true, // or false if you prefer them collapsed initially
+                    isOpen: true, // or false if you want them collapsed initially
                     documents: [],
                 };
             }
@@ -87,15 +158,13 @@ const DocumentViewer: React.FC = () => {
         }, {})
     );
 
-    if (!userId) {
-        return <LoadingDoc />;
+    if (roleLoading) {
+        return <LoadingPage />;
     }
+    else if (docsLoading){
+            return <LoadingDoc />;
 
-    if (loading) {
-        return <LoadingDoc />;
     }
-
-
     return (
         <div className={styles.container}>
             {/* Side Navigation */}
@@ -140,7 +209,7 @@ const DocumentViewer: React.FC = () => {
                                             key={doc.id}
                                             onClick={() => setSelectedDoc(doc)}
                                             className={`${styles.docItem} ${
-                                                selectedDoc && selectedDoc.id === doc.id ? styles.selected : ""
+                                                selectedDoc?.id === doc.id ? styles.selected : ""
                                             }`}
                                         >
                                             <FileText className={styles.docIcon} />
@@ -153,11 +222,7 @@ const DocumentViewer: React.FC = () => {
                     ))}
                 </nav>
 
-
-
-
-
-                { /* Home Button */ }
+                {/* Home Button */}
                 <div className={styles.sidebarFooter}>
                     <Link href="/employer/home">
                         <button className={styles.homeButton}>
@@ -166,7 +231,6 @@ const DocumentViewer: React.FC = () => {
                         </button>
                     </Link>
                 </div>
-
             </aside>
 
             {/* Main Content */}
@@ -178,8 +242,8 @@ const DocumentViewer: React.FC = () => {
                             <h1 className={styles.docTitle}>{selectedDoc.title}</h1>
                         </div>
 
-                        {/* AI Summary (if present) */}
-                        {selectedDoc.aiSummary && (
+                        {/* AI Summary */}
+                        {selectedDoc.aiSummary ? (
                             <div className={styles.summaryContainer}>
                                 <div className={styles.summaryHeader}>
                                     <Brain className={styles.summaryIcon} />
@@ -187,15 +251,17 @@ const DocumentViewer: React.FC = () => {
                                 </div>
                                 <p className={styles.summaryText}>{selectedDoc.aiSummary}</p>
                             </div>
-                        )}
-
+                        ) : (
                             <div className={styles.summaryContainer}>
                                 <div className={styles.summaryHeader}>
                                     <Brain className={styles.summaryIcon} />
                                     <h2 className={styles.summaryTitle}>AI Summary</h2>
                                 </div>
-                                <p className={styles.summaryText}>AI Summary currently unavailable.</p>
+                                <p className={styles.summaryText}>
+                                    AI Summary currently unavailable.
+                                </p>
                             </div>
+                        )}
 
                         {/* PDF Viewer */}
                         <div className={styles.pdfContainer}>
