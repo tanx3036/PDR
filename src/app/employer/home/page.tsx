@@ -24,7 +24,7 @@ const HomeScreen = () => {
             icon: <BarChart className={styles.menuIcon} />,
             title: "Document Statistics",
             description: "View analytics and insights about document usage",
-            path: "/employer/statistics"
+            path: "/unavailable"
         }
     ];
 
@@ -79,20 +79,20 @@ const HomeScreen = () => {
                 </div>
 
                 {/* Quick Stats */}
-                <div className={styles.statsContainer}>
-                    <div className={styles.stat}>
-                        <span className={styles.statNumber}>124</span>
-                        <span className={styles.statLabel}>Documents Processed</span>
-                    </div>
-                    <div className={styles.stat}>
-                        <span className={styles.statNumber}>3,487</span>
-                        <span className={styles.statLabel}>Total Views</span>
-                    </div>
-                    <div className={styles.stat}>
-                        <span className={styles.statNumber}>98%</span>
-                        <span className={styles.statLabel}>Accuracy Rate</span>
-                    </div>
-                </div>
+                {/*<div className={styles.statsContainer}>*/}
+                {/*    <div className={styles.stat}>*/}
+                {/*        <span className={styles.statNumber}>124</span>*/}
+                {/*        <span className={styles.statLabel}>Documents Processed</span>*/}
+                {/*    </div>*/}
+                {/*    <div className={styles.stat}>*/}
+                {/*        <span className={styles.statNumber}>3,487</span>*/}
+                {/*        <span className={styles.statLabel}>Total Views</span>*/}
+                {/*    </div>*/}
+                {/*    <div className={styles.stat}>*/}
+                {/*        <span className={styles.statNumber}>98%</span>*/}
+                {/*        <span className={styles.statLabel}>Accuracy Rate</span>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </main>
         </div>
     );

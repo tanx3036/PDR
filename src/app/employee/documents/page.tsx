@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     FileText,
     Search,
@@ -7,58 +7,86 @@ import {
     ChevronRight,
     ChevronDown,
     User,
-    LogOut,
+    LogOut, Home,
 } from 'lucide-react';
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // If you are using next/navigation router
+import { useRouter } from "next/navigation";
 import styles from '../../../styles/employeeDocumentViewer.module.css';
+import {SignIn, SignOutButton, useAuth, UserButton} from "@clerk/nextjs";
+import LoadingDoc from "~/app/employee/documents/loading-doc";
 
 // Mock data for documents
-const documents = [
-    {
-        id: 1,
-        name: 'Apple Financial Report Q1 2025',
-        category: 'Financial',
-        aiSummary:
-            'Apple Inc. reported strong financial results for Q4 2023 ... robust performance and financial stability during the quarter.',
-        url: 'https://utfs.io/f/zllPuoqtDQmMunOGjZkCWhtoxfrJp6Db5dHg8iIVBLawUOs2',
-    },
-    {
-        id: 2,
-        name: 'Employee Handbook 2025.pdf',
-        category: 'HR',
-        aiSummary:
-            'Updated employee handbook for 2025 includes new remote work policies ... and mental health support.',
-        url: '/documents/handbook.pdf',
-    },
-    {
-        id: 3,
-        name: 'Project Roadmap 2025.pdf',
-        category: 'Planning',
-        aiSummary:
-            'Strategic roadmap outlining key initiatives for 2025 ... resource allocation.',
-        url: '/documents/roadmap.pdf',
-    },
-];
+interface DocumentType {
+    id: number;
+    title: string;
+    category: string;
+    aiSummary?: string;  // optional if some documents don't have an AI summary
+    url: string;
+}
 
-interface Category {
+
+interface CategoryGroup {
     name: string;
     isOpen: boolean;
-    documents: typeof documents;
+    documents: DocumentType[];
 }
+
 
 const DocumentViewer: React.FC = () => {
     const router = useRouter();
-    const [selectedDoc, setSelectedDoc] = useState(documents[0]);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [documents, setDocuments] = useState<DocumentType[]>([]);
+    const [selectedDoc, setSelectedDoc] = useState<DocumentType | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const { userId } = useAuth();
+    const [loading, setLoading] = useState(true);
 
-    // Group documents by category
-    const categories: Category[] = Object.values(
-        documents.reduce((acc: { [key: string]: Category }, doc) => {
+    useEffect(() => {
+        // If userId is not yet available, skip the fetch
+        if (!userId) return;
+
+        const fetchDocuments = async () => {
+            try {
+                const response = await fetch("/api/fetchDocument", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch documents");
+                }
+                const data: DocumentType[] = await response.json();
+
+
+                setDocuments(data);
+            } catch (error) {
+                console.error("Error fetching documents:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDocuments();
+    }, [userId]); // re-run when userId becomes available
+
+
+
+// Group documents by category
+    const categories: CategoryGroup[] = Object.values(
+        documents.reduce((acc: { [key: string]: CategoryGroup }, doc) => {
+            // OPTIONAL: Filter by searchTerm if you want to hide docs that don't match
+            // For example, match on doc.name or doc.aiSummary
+            if (
+                !doc.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                !(doc.aiSummary || "").toLowerCase().includes(searchTerm.toLowerCase())
+            ) {
+                return acc; // skip this doc if it doesn't match search
+            }
+
             if (!acc[doc.category]) {
                 acc[doc.category] = {
                     name: doc.category,
-                    isOpen: true,
+                    isOpen: true, // or false if you prefer them collapsed initially
                     documents: [],
                 };
             }
@@ -67,29 +95,20 @@ const DocumentViewer: React.FC = () => {
         }, {})
     );
 
-    // Example user data - replace with actual user information in a real app
-    const user = {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-    };
+    if (!userId) {
+        return <LoadingDoc />;
+    }
 
-    // Handle logout action
-    const handleLogout = () => {
-        // Example logout logic:
-        // 1. Clear auth tokens from local storage
-        // 2. Call logout endpoint if needed
-        // 3. Redirect to login or home page
+    if (loading) {
+        return <LoadingDoc />;
+    }
 
-        // For now, let's just redirect to the main home page:
-        router.push('/');
-    };
 
     return (
         <div className={styles.container}>
             {/* Side Navigation */}
             <aside className={styles.sidebar}>
                 <div className={styles.sidebarHeader}>
-
                         <button className={styles.logoContainer}>
                             <Brain className={styles.logoIcon} />
                             <span className={styles.logoText}>PDR AI</span>
@@ -122,41 +141,58 @@ const DocumentViewer: React.FC = () => {
                             </div>
                             {category.isOpen && (
                                 <div className={styles.categoryDocs}>
-                                    {category.documents
-                                        .filter((doc) =>
-                                            doc.name.toLowerCase().includes(searchTerm.toLowerCase())
-                                        )
-                                        .map((doc) => (
-                                            <button
-                                                key={doc.id}
-                                                onClick={() => setSelectedDoc(doc)}
-                                                className={`${styles.docItem} ${
-                                                    selectedDoc.id === doc.id ? styles.selected : ''
-                                                }`}
-                                            >
-                                                <FileText className={styles.docIcon} />
-                                                <span className={styles.docName}>{doc.name}</span>
-                                            </button>
-                                        ))}
+                                    {category.documents.map((doc) => (
+                                        <button
+                                            key={doc.id}
+                                            onClick={() => setSelectedDoc(doc)}
+                                            className={`${styles.docItem} ${
+                                                selectedDoc && selectedDoc.id === doc.id ? styles.selected : ""
+                                            }`}
+                                        >
+                                            <FileText className={styles.docIcon} />
+                                            <span className={styles.docName}>{doc.title}</span>
+                                        </button>
+                                    ))}
                                 </div>
                             )}
                         </div>
                     ))}
                 </nav>
 
-                {/* User Profile & Logout */}
+
+
+
+                {/* Log out */}
                 <div className={styles.profileSection}>
-                    <div className={styles.userDetails}>
-                        <User className={styles.userIcon} />
-                        <div>
-                            <p className={styles.username}>{user.name}</p>
-                            <p className={styles.userEmail}>{user.email}</p>
-                        </div>
-                    </div>
-                    <button className={styles.logoutButton} onClick={handleLogout}>
-                        <LogOut className={styles.logoutIcon} />
-                        <span>Logout</span>
-                    </button>
+                    {/* Themed User Button */}
+                    <UserButton
+                        afterSignOutUrl="/sign-in"  // optional
+                        appearance={{
+                            variables: {
+                                // Adjust these colors to fit your color palette
+                                colorPrimary: "#8B5CF6",    // e.g. purple-500
+                                colorText: "#4F46E5",       // e.g. purple-600
+                                borderRadius: "0.5rem",     // e.g. rounded-md
+                                fontFamily: "Inter, sans-serif",
+                            },
+                            elements: {
+                                // Adjust specific elements within the UserButton
+                                userButtonAvatarBox: "border-2 border-purple-300",
+                                userButtonTrigger: "hover:bg-purple-50 transition-colors p-1 flex items-center rounded-lg",
+                                userButtonPopoverCard: "shadow-md border border-gray-100",
+                                userButtonPopoverFooter: "bg-gray-50 border-t border-gray-100 p-2",
+                                // ...
+                            },
+                        }}
+                    />
+
+                    {/* Themed Sign Out Button */}
+                    <SignOutButton>
+                        <button className={styles.logoutButton}>
+                            <LogOut className={styles.logoutIcon} />
+                            <span>Logout</span>
+                        </button>
+                    </SignOutButton>
                 </div>
             </aside>
 
@@ -166,16 +202,26 @@ const DocumentViewer: React.FC = () => {
                     <>
                         {/* Document Title */}
                         <div className={styles.docHeader}>
-                            <h1 className={styles.docTitle}>{selectedDoc.name}</h1>
+                            <h1 className={styles.docTitle}>{selectedDoc.title}</h1>
                         </div>
 
-                        {/* AI Summary */}
+                        {/* AI Summary (if present) */}
+                        {selectedDoc.aiSummary && (
+                            <div className={styles.summaryContainer}>
+                                <div className={styles.summaryHeader}>
+                                    <Brain className={styles.summaryIcon} />
+                                    <h2 className={styles.summaryTitle}>AI Summary</h2>
+                                </div>
+                                <p className={styles.summaryText}>{selectedDoc.aiSummary}</p>
+                            </div>
+                        )}
+
                         <div className={styles.summaryContainer}>
                             <div className={styles.summaryHeader}>
                                 <Brain className={styles.summaryIcon} />
                                 <h2 className={styles.summaryTitle}>AI Summary</h2>
                             </div>
-                            <p className={styles.summaryText}>{selectedDoc.aiSummary}</p>
+                            <p className={styles.summaryText}>AI Summary currently unavailable.</p>
                         </div>
 
                         {/* PDF Viewer */}
@@ -183,7 +229,7 @@ const DocumentViewer: React.FC = () => {
                             <iframe
                                 src={selectedDoc.url}
                                 className={styles.pdfViewer}
-                                title={selectedDoc.name}
+                                title={selectedDoc.title}
                             />
                         </div>
                     </>
@@ -194,3 +240,5 @@ const DocumentViewer: React.FC = () => {
 };
 
 export default DocumentViewer;
+
+
