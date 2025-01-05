@@ -158,8 +158,7 @@ const DocumentViewer: React.FC = () => {
         return <LoadingPage />;
     }
     else if (docsLoading){
-            return <LoadingDoc />;
-
+        return <LoadingDoc />;
     }
     return (
         <div className={styles.container}>

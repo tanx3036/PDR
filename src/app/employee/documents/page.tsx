@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import styles from '../../../styles/employeeDocumentViewer.module.css';
 import {SignIn, SignOutButton, useAuth, UserButton} from "@clerk/nextjs";
 import LoadingDoc from "~/app/employee/documents/loading-doc";
+import LoadingPage from "~/app/_components/loading";
 
 
 // Mock data for documents
@@ -38,8 +39,50 @@ const DocumentViewer: React.FC = () => {
     const [documents, setDocuments] = useState<DocumentType[]>([]);
     const [selectedDoc, setSelectedDoc] = useState<DocumentType | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const { userId } = useAuth();
     const [loading, setLoading] = useState(true);
+
+    const { isLoaded, userId } = useAuth();
+
+    // 1) Role-check loading
+    const [roleLoading, setRoleLoading] = useState(true);
+
+    useEffect(() => {
+        if (!isLoaded) return; // Wait until Clerk is fully ready
+
+        // No user => redirect home
+        if (!userId) {
+            window.alert("Authentication failed! No user found.");
+            router.push("/");
+            return;
+        }
+
+        const checkEmployerRole = async () => {
+            try {
+                const response = await fetch("/api/employeeAuth", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId }),
+                });
+                if (!response.ok) {
+                    // Not an employer or user not found => redirect
+                    window.alert("Authentication failed! You are not an employee.");
+                    router.push("/");
+                    return;
+                }
+            } catch (error) {
+                console.error("Error checking employee role:", error);
+                window.alert("Authentication failed! You are not an employee.");
+                router.push("/");
+            } finally {
+                setRoleLoading(false);
+            }
+        };
+
+        checkEmployerRole();
+    }, [isLoaded, userId, router]);
+
+
+
 
     useEffect(() => {
         // If userId is not yet available, skip the fetch
@@ -96,13 +139,13 @@ const DocumentViewer: React.FC = () => {
         }, {})
     );
 
-    if (!userId) {
-        return <LoadingDoc />;
+    if (roleLoading) {
+        return <LoadingPage />;
     }
-
     if (loading) {
         return <LoadingDoc />;
     }
+
 
 
     return (
