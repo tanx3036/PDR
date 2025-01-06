@@ -37,7 +37,7 @@ const ProfileDropdown: React.FC = () => {
     };
 
     const handleSettings = () => {
-        router.push("/fetchDocument/settings");
+        router.push("/employer/settings");
         setIsOpen(false);
     };
 
