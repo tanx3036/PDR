@@ -142,7 +142,7 @@ const DocumentUpload: React.FC = () => {
         });
         console.log(response)
 
-        router.push("/fetchDocument/documents")
+        router.push("/employer/documents")
 
 
         // Reset the form or redirect

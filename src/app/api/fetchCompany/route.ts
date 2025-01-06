@@ -9,7 +9,6 @@ export async function POST(request: Request) {
     try {
         const { userId } = await request.json();
 
-        // 1) Look up the user in the 'users' table
         const [userInfo] = await db
             .select()
             .from(users)
@@ -22,17 +21,15 @@ export async function POST(request: Request) {
             );
         }
 
-        // 2) Retrieve the user's companyId from userInfo
         const companyId = userInfo.companyId;
 
-        // 3) Select all documents that have the same companyId
-        const docs = await db
+        const companies = await db
             .select()
-            .from(document)
-            .where(eq(document.companyId, companyId));
+            .from(company)
+            .where(eq(company.id, companyId));
 
         // Return as JSON
-        return NextResponse.json(docs, { status: 200 });
+        return NextResponse.json(companies, { status: 200 });
     } catch (error: any) {
         console.error("Error fetching documents:", error);
         return NextResponse.json(

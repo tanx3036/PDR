@@ -1,87 +1,101 @@
 "use client";
-import React, {useEffect, useState} from "react";
-import {useAuth, useUser} from "@clerk/nextjs";
+import React, { useEffect, useState } from "react";
+import { useAuth, useUser } from "@clerk/nextjs";
 import styles from "../../../styles/employersettings.module.css";
-import {Brain, Home} from "lucide-react";
-import {useRouter} from "next/navigation";
+import { Brain, Home } from "lucide-react";
+import { useRouter } from "next/navigation";
 import LoadingPage from "~/app/_components/loading";
 
 const SettingsPage = () => {
     const router = useRouter();
 
-    //check if authorized. If not authorized as employer, return home
+    // Clerk Auth
     const { isLoaded, userId } = useAuth();
+    const { user } = useUser();
+
+    // Loading state
     const [loading, setLoading] = useState(true);
+
+    // Existing fields (from Clerk user)
+    const [displayName, setDisplayName] = useState(user?.fullName || "");
+    const [email, setEmail] = useState(user?.emailAddresses[0]?.emailAddress || "");
+
+    const [companyName, setCompanyName] = useState("");
+    const [employerPasskey, setEmployerPasskey] = useState("");
+    const [employeePasskey, setEmployeePasskey] = useState("");
+    const [staffCount, setStaffCount] = useState("");
 
     useEffect(() => {
         if (!isLoaded) return;
-        // If there is no user at all, send them home
+
         if (!userId) {
             window.alert("Authentication failed! No user found.");
             router.push("/");
             return;
         }
 
-        // Check if the user’s role is employer
-        const checkEmployerRole = async () => {
+        // Check the employer role, then fetch the company's data
+        const checkEmployerAndFetchCompany = async () => {
             try {
+
+                // 1) Verify the user is an employer
                 const response = await fetch("/api/employerAuth", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ userId }),
                 });
                 if (!response.ok) {
-                    // If the endpoint returns an error, also redirect
                     window.alert("Authentication failed! You are not an employer.");
                     router.push("/");
                     return;
                 }
 
+                // 2) Now that role check is successful, fetch company info
+                const companyResponse = await fetch("/api/fetchCompany", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ userId }),
+                });
+
+                if (!companyResponse.ok) {
+                    throw new Error("Failed to fetch company info");
+                }
+
+                const data = await companyResponse.json();
+
+                setCompanyName(data.name || "");
+                setEmployerPasskey(data.employerPasskey || "");
+                setEmployeePasskey(data.employeePasskey || "");
+                setStaffCount(data.numberOfEmployees || "");
+
             } catch (error) {
-                console.error("Error checking employer role:", error);
-                // If there is any error, also redirect or handle appropriately
-                window.alert("Authentication failed! You are not an employer.");
+                console.error("Error checking employer role or fetching company info:", error);
+                window.alert("Something went wrong. Redirecting you home.");
                 router.push("/");
             } finally {
                 setLoading(false);
             }
         };
 
-        checkEmployerRole();
-    }, [userId, router]);
-
-
-
-
-    const { user } = useUser();
-
-    // Existing fields (from Clerk user)
-    const [displayName, setDisplayName] = useState(user?.fullName || "");
-    const [email, setEmail] = useState(
-        user?.emailAddresses[0]?.emailAddress || ""
-    );
-
-    // New fields you want to manage
-    const [companyName, setCompanyName] = useState("");
-    const [employerPasskey, setEmployerPasskey] = useState("");
-    const [employeePasskey, setEmployeePasskey] = useState("");
-    const [staffCount, setStaffCount] = useState("");
+        checkEmployerAndFetchCompany();
+    }, [isLoaded, userId, router]);
 
     const handleSave = async () => {
+        // For example:
         try {
-            // Example: call your API route to save in the database
-            const response = await fetch("/api/settings/update", {
+            const response = await fetch("/api/updateCompany", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    displayName,
-                    email,
-                    companyName,
+                    userId,
+                    name: companyName,
                     employerPasskey,
                     employeePasskey,
-                    staffCount,
+                    numberOfEmployees: staffCount,
                 }),
             });
 
@@ -89,20 +103,19 @@ const SettingsPage = () => {
                 throw new Error("Error updating settings");
             }
 
-            // Optionally, handle success (e.g., show a success message, etc.)
             console.log("Settings updated successfully");
+            window.alert("Company settings saved!");
         } catch (error) {
-            // Handle error (e.g., display a toast or message)
             console.error(error);
+            window.alert("Failed to update settings. Please try again.");
         }
     };
 
-    if(loading){
+    if (loading) {
         return <LoadingPage />;
     }
 
     return (
-
         <div className={styles.container}>
             <nav className={styles.navbar}>
                 <div className={styles.navContent}>
@@ -120,15 +133,12 @@ const SettingsPage = () => {
                 </div>
             </nav>
 
-
             <div className={styles.settingsContainer}>
                 <h1 className={styles.settingsTitle}>Settings</h1>
 
-                {/*
-          --------------------------------------------------
-          Existing Fields
-          --------------------------------------------------
-      */}
+                {/* --------------------------------------------------
+            Existing Fields
+           -------------------------------------------------- */}
                 <div className={styles.formGroup}>
                     <label htmlFor="displayName" className={styles.label}>
                         Display Name
@@ -151,16 +161,13 @@ const SettingsPage = () => {
                         type="email"
                         className={styles.input}
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        disabled // Typically you might not let the user change the main email here
+                        disabled // Typically, the main email wouldn't be changed here
                     />
                 </div>
 
-                {/*
-          --------------------------------------------------
-          New Fields
-          --------------------------------------------------
-      */}
+                {/* --------------------------------------------------
+            New Fields
+           -------------------------------------------------- */}
                 <div className={styles.formGroup}>
                     <label htmlFor="companyName" className={styles.label}>
                         Company Name
@@ -217,13 +224,7 @@ const SettingsPage = () => {
                     Save
                 </button>
             </div>
-
-
         </div>
-
-
-
-
     );
 };
 
