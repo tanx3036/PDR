@@ -33,14 +33,17 @@ const RoleCard: React.FC<RoleCardProps> = ({
 );
 
 const RoleSelection: React.FC = () => {
-    const [selectedRole, setSelectedRole] = useState<'fetchDocument' | 'employee' | null>(null);
+    const [selectedRole, setSelectedRole] = useState<'employer' | 'employee' | null>(null);
     const router = useRouter(); // Now from 'next/navigation'
 
     const handleContinue = async () => {
         if (selectedRole === 'employee') {
             router.push('/signup/employee');
-        } else {
+        } else if (selectedRole === 'employer') {
             router.push('/signup/employer');
+        }
+        else{
+            router.push('/');
         }
     };
 
@@ -66,8 +69,8 @@ const RoleSelection: React.FC = () => {
                             title="I'm an Employer"
                             description="Upload and manage documents, track analytics, and oversee document processing"
                             icon={<Briefcase className={styles.cardIcon} />}
-                            isSelected={selectedRole === 'fetchDocument'}
-                            onClick={() => setSelectedRole('fetchDocument')}
+                            isSelected={selectedRole === 'employer'}
+                            onClick={() => setSelectedRole('employer')}
                         />
                         <RoleCard
                             title="I'm an Employee"
