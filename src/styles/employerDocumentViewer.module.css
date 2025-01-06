@@ -209,3 +209,22 @@
 .homeIcon {
     @apply w-5 h-5;
 }
+
+.deleteButton {
+    @apply ml-auto inline-flex items-center justify-center
+    p-2 text-gray-400
+    hover:text-red-600 hover:bg-gray-100
+    rounded transition-colors duration-150;
+}
+
+.trashIcon {
+    @apply w-4 h-4;
+}
+
+.docButton {
+    @apply flex items-center w-full text-left
+    px-2 py-1.5 text-sm text-gray-700
+    hover:bg-purple-50 rounded
+    transition-colors duration-150
+    focus:outline-none focus:bg-purple-50;
+}

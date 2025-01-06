@@ -10,7 +10,7 @@ export async function DELETE(request: Request) {
         const body = await request.json();
         const { docId } = body;
 
-        await db.delete(document).where(eq(id, docId));
+        await db.delete(document).where(eq(document.id, docId));
 
         // Return a success response
         return NextResponse.json({ success: true }, { status: 200 });

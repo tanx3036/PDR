@@ -6,7 +6,7 @@ import {
     Brain,
     ChevronRight,
     ChevronDown,
-    Home,
+    Home, Trash2,
 } from "lucide-react";
 import styles from "../../../styles/employerDocumentViewer.module.css";
 import Link from "next/link";
@@ -126,6 +126,34 @@ const DocumentViewer: React.FC = () => {
     // If documents are still loading, show doc-specific loader
 
 
+    const handleDeleteDocument = async (docId: number) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this document?");
+        if (!confirmDelete) return;
+
+        try {
+            const response = await fetch("/api/deleteDocument", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ docId }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete document");
+            }
+
+            // Remove the deleted document from our local state
+            setDocuments(prevDocs => prevDocs.filter(doc => doc.id !== docId));
+
+            // If the deleted doc was the one currently selected, clear it
+            if (selectedDoc?.id === docId) {
+                setSelectedDoc(null);
+            }
+        } catch (error) {
+            console.error("Error deleting document:", error);
+        }
+    };
+
+
     /**
      * GROUPING DOCS BY CATEGORY
      * + Basic search filtering
@@ -200,16 +228,37 @@ const DocumentViewer: React.FC = () => {
                             {category.isOpen && (
                                 <div className={styles.categoryDocs}>
                                     {category.documents.map((doc) => (
-                                        <button
+                                        <div
                                             key={doc.id}
-                                            onClick={() => setSelectedDoc(doc)}
                                             className={`${styles.docItem} ${
-                                                selectedDoc?.id === doc.id ? styles.selected : ""
+                                                selectedDoc && selectedDoc.id === doc.id
+                                                    ? styles.selected
+                                                    : ""
                                             }`}
                                         >
-                                            <FileText className={styles.docIcon} />
-                                            <span className={styles.docName}>{doc.title}</span>
-                                        </button>
+                                            <button
+                                                onClick={() => setSelectedDoc(doc)}
+                                                className={styles.docButton}
+                                            >
+                                                <FileText className={styles.docIcon} />
+                                                <span className={styles.docName}>{doc.title}</span>
+                                            </button>
+                                            {/* Delete Button */}
+                                            <button
+                                                className={styles.deleteButton}
+                                                onClick={async (e) => {
+                                                    e.stopPropagation();
+                                                    try {
+                                                        await handleDeleteDocument(doc.id); // Wait for Promise to resolve
+                                                    } catch (error) {
+                                                        // Optionally handle the error
+                                                        console.error(error);
+                                                    }
+                                                }}
+                                            >
+                                                <Trash2 className={styles.trashIcon} />
+                                            </button>
+                                        </div>
                                     ))}
                                 </div>
                             )}
