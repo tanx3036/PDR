@@ -40,7 +40,7 @@ const RoleSelection: React.FC = () => {
         if (selectedRole === 'employee') {
             router.push('/signup/employee');
         } else {
-            router.push('/signup/fetchDocument');
+            router.push('/signup/employer');
         }
     };
 
