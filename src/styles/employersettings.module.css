@@ -1,3 +1,7 @@
+.container {
+    @apply min-h-screen bg-gray-50;
+}
+
 .settingsContainer {
     @apply max-w-xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-sm border border-gray-200;
 }
@@ -22,4 +26,34 @@
 .saveButton {
     @apply mt-4 px-4 py-2 rounded-md bg-purple-600 text-white
     hover:bg-purple-700 transition-colors;
+}
+
+.navbar {
+    @apply bg-white border-b border-gray-200;
+}
+
+.navContent {
+    @apply max-w-7xl mx-auto px-6 py-4 flex justify-between items-center;
+}
+
+.logoWrapper {
+    @apply flex items-center space-x-2;
+}
+
+.logoIcon {
+    @apply w-8 h-8 text-purple-600;
+}
+
+.logoText {
+    @apply text-xl font-bold text-black;
+}
+
+.homeButton {
+    @apply flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg
+    hover:bg-purple-700 transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2;
+}
+
+.homeIcon {
+    @apply w-5 h-5 mr-2;
 }
