@@ -13,14 +13,18 @@ const SettingsPage = () => {
     const { isLoaded, userId } = useAuth();
     const { user } = useUser();
 
-    // Loading state
+    // Loading state for page data
     const [loading, setLoading] = useState(true);
+
+    // Saving state for the form submission
+    const [isSaving, setIsSaving] = useState(false);
 
     // Existing fields (from Clerk user)
     const [displayName, setDisplayName] = useState(user?.fullName || "");
     const [email, setEmail] = useState(user?.emailAddresses[0]?.emailAddress || "");
-    console.log(user)
+    console.log(user);
 
+    // New fields
     const [companyName, setCompanyName] = useState("");
     const [employerPasskey, setEmployerPasskey] = useState("");
     const [employeePasskey, setEmployeePasskey] = useState("");
@@ -38,7 +42,6 @@ const SettingsPage = () => {
         // Check the employer role, then fetch the company's data
         const checkEmployerAndFetchCompany = async () => {
             try {
-
                 // 1) Verify the user is an employer
                 const response = await fetch("/api/employerAuth", {
                     method: "POST",
@@ -51,7 +54,7 @@ const SettingsPage = () => {
                     return;
                 }
 
-                // 2) Now that role check is successful, fetch company info
+                // 2) Fetch company info
                 const companyResponse = await fetch("/api/fetchCompany", {
                     method: "POST",
                     headers: {
@@ -66,11 +69,12 @@ const SettingsPage = () => {
 
                 const data = await companyResponse.json();
 
-
                 setCompanyName(data[0].name || "");
                 setEmployerPasskey(data[0].employerpasskey || "");
                 setEmployeePasskey(data[0].employeepasskey || "");
                 setStaffCount(data[0].numberOfEmployees || "");
+                setDisplayName(user?.fullName || "");
+                setEmail(user?.emailAddresses[0]?.emailAddress || "");
 
             } catch (error) {
                 console.error("Error checking employer role or fetching company info:", error);
@@ -84,8 +88,10 @@ const SettingsPage = () => {
         checkEmployerAndFetchCompany();
     }, [isLoaded, userId, router]);
 
+    // Save handler
     const handleSave = async () => {
-        // For example:
+        setIsSaving(true); // Start saving
+
         try {
             const response = await fetch("/api/updateCompany", {
                 method: "POST",
@@ -110,6 +116,8 @@ const SettingsPage = () => {
         } catch (error) {
             console.error(error);
             window.alert("Failed to update settings. Please try again.");
+        } finally {
+            setIsSaving(false); // End saving
         }
     };
 
@@ -139,8 +147,8 @@ const SettingsPage = () => {
                 <h1 className={styles.settingsTitle}>Settings</h1>
 
                 {/* --------------------------------------------------
-            Existing Fields
-           -------------------------------------------------- */}
+                    Existing Fields
+                -------------------------------------------------- */}
                 <div className={styles.formGroup}>
                     <label htmlFor="displayName" className={styles.label}>
                         Display Name
@@ -168,8 +176,8 @@ const SettingsPage = () => {
                 </div>
 
                 {/* --------------------------------------------------
-            New Fields
-           -------------------------------------------------- */}
+                    New Fields
+                -------------------------------------------------- */}
                 <div className={styles.formGroup}>
                     <label htmlFor="companyName" className={styles.label}>
                         Company Name
@@ -222,8 +230,12 @@ const SettingsPage = () => {
                     />
                 </div>
 
-                <button onClick={handleSave} className={styles.saveButton}>
-                    Save
+                <button
+                    onClick={handleSave}
+                    className={styles.saveButton}
+                    disabled={isSaving}
+                >
+                    {isSaving ? "Saving..." : "Save"}
                 </button>
             </div>
         </div>

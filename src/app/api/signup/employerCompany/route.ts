@@ -8,7 +8,6 @@ export async function POST(request: Request) {
     try {
         const {userId, companyName, employerPasskey, employeePasskey, numberOfEmployees} = await request.json();
 
-        console.log()
 
         const [newCompany] = await db
             .insert(company)
