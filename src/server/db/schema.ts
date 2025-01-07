@@ -1,9 +1,9 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
+import {relations, sql} from "drizzle-orm";
 import {
-    index,
+    index,text,
     integer, pgTable,
     pgTableCreator, serial,
     timestamp,
@@ -60,4 +60,36 @@ export const document = createTable('document', {
         () => new Date()
     ),
 });
+
+
+
+export const pdfChunks = pgTable("pdf_chunks", {
+    id: serial("id").primaryKey(),
+
+    // Which document this chunk belongs to
+    documentId: integer("document_id")
+        .notNull()
+        .references(() => document.id, { onDelete: "cascade" }),
+
+    page: integer("page").notNull(),
+    content: text("content").notNull(),
+
+    // 1536 dimension for text-embedding-ada-002
+    embedding: sql`vector(1536)`,
+});
+
+
+
+export const documentsRelations = relations(document, ({ many }) => ({
+    pdfChunks: many(pdfChunks),
+}));
+
+export const pdfChunksRelations = relations(pdfChunks, ({ one }) => ({
+    document: one(document, {
+        fields: [pdfChunks.documentId],
+        references: [document.id],
+    }),
+}));
+
+
 
