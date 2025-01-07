@@ -22,7 +22,6 @@ const SettingsPage = () => {
     // Existing fields (from Clerk user)
     const [displayName, setDisplayName] = useState(user?.fullName || "");
     const [email, setEmail] = useState(user?.emailAddresses[0]?.emailAddress || "");
-    console.log(user);
 
     // New fields
     const [companyName, setCompanyName] = useState("");
@@ -30,12 +29,44 @@ const SettingsPage = () => {
     const [employeePasskey, setEmployeePasskey] = useState("");
     const [staffCount, setStaffCount] = useState("");
 
+    // --------------------------------------------------------------------------
+    // Popup (Modal) Management
+    // --------------------------------------------------------------------------
+    const [popupVisible, setPopupVisible] = useState(false);
+    const [popupMessage, setPopupMessage] = useState("");
+    const [redirectPath, setRedirectPath] = useState("");
+
+    // A helper to show a popup without redirect
+    const showPopup = (message) => {
+        setPopupMessage(message);
+        setRedirectPath("");
+        setPopupVisible(true);
+    };
+
+    // A helper to show a popup *and* redirect after closing
+    const showPopupAndRedirect = (message, path) => {
+        setPopupMessage(message);
+        setRedirectPath(path);
+        setPopupVisible(true);
+    };
+
+    // Called when user clicks "OK" on the popup
+    const handlePopupClose = () => {
+        setPopupVisible(false);
+
+        // If a redirect path was set, redirect after closing the popup
+        if (redirectPath) {
+            router.push(redirectPath);
+        }
+    };
+    // --------------------------------------------------------------------------
+
     useEffect(() => {
         if (!isLoaded) return;
 
         if (!userId) {
-            window.alert("Authentication failed! No user found.");
-            router.push("/");
+            // Show popup and redirect home
+            showPopupAndRedirect("Authentication failed! No user found.", "/");
             return;
         }
 
@@ -49,8 +80,10 @@ const SettingsPage = () => {
                     body: JSON.stringify({ userId }),
                 });
                 if (!response.ok) {
-                    window.alert("Authentication failed! You are not an employer.");
-                    router.push("/");
+                    showPopupAndRedirect(
+                        "Authentication failed! You are not an employer.",
+                        "/"
+                    );
                     return;
                 }
 
@@ -77,16 +110,18 @@ const SettingsPage = () => {
                 setEmail(user?.emailAddresses[0]?.emailAddress || "");
 
             } catch (error) {
-                console.error("Error checking employer role or fetching company info:", error);
-                window.alert("Something went wrong. Redirecting you home.");
-                router.push("/");
+                console.error(
+                    "Error checking employer role or fetching company info:",
+                    error
+                );
+                showPopupAndRedirect("Something went wrong. Redirecting you home.", "/");
             } finally {
                 setLoading(false);
             }
         };
 
         checkEmployerAndFetchCompany();
-    }, [isLoaded, userId, router]);
+    }, [isLoaded, userId, router, user?.fullName, user?.emailAddresses]);
 
     // Save handler
     const handleSave = async () => {
@@ -112,12 +147,12 @@ const SettingsPage = () => {
             }
 
             console.log("Settings updated successfully");
-            window.alert("Company settings saved!");
+            showPopup("Company settings saved!");
         } catch (error) {
             console.error(error);
-            window.alert("Failed to update settings. Please try again.");
+            showPopup("Failed to update settings. Please try again.");
         } finally {
-            setIsSaving(false); // End saving
+            setIsSaving(false);
         }
     };
 
@@ -147,8 +182,8 @@ const SettingsPage = () => {
                 <h1 className={styles.settingsTitle}>Settings</h1>
 
                 {/* --------------------------------------------------
-                    Existing Fields
-                -------------------------------------------------- */}
+            Existing Fields
+        -------------------------------------------------- */}
                 <div className={styles.formGroup}>
                     <label htmlFor="displayName" className={styles.label}>
                         Display Name
@@ -176,8 +211,8 @@ const SettingsPage = () => {
                 </div>
 
                 {/* --------------------------------------------------
-                    New Fields
-                -------------------------------------------------- */}
+            New Fields
+        -------------------------------------------------- */}
                 <div className={styles.formGroup}>
                     <label htmlFor="companyName" className={styles.label}>
                         Company Name
@@ -238,6 +273,20 @@ const SettingsPage = () => {
                     {isSaving ? "Saving..." : "Save"}
                 </button>
             </div>
+
+            {/* ------------------------------------------------------------------
+          Custom Popup (Modal)
+      ------------------------------------------------------------------ */}
+            {popupVisible && (
+                <div className={styles.popupOverlay}>
+                    <div className={styles.popup}>
+                        <p>{popupMessage}</p>
+                        <button className={styles.popupButton} onClick={handlePopupClose}>
+                            OK
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
