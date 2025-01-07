@@ -19,6 +19,7 @@ const SettingsPage = () => {
     // Existing fields (from Clerk user)
     const [displayName, setDisplayName] = useState(user?.fullName || "");
     const [email, setEmail] = useState(user?.emailAddresses[0]?.emailAddress || "");
+    console.log(user)
 
     const [companyName, setCompanyName] = useState("");
     const [employerPasskey, setEmployerPasskey] = useState("");
@@ -65,10 +66,11 @@ const SettingsPage = () => {
 
                 const data = await companyResponse.json();
 
-                setCompanyName(data.name || "");
-                setEmployerPasskey(data.employerPasskey || "");
-                setEmployeePasskey(data.employeePasskey || "");
-                setStaffCount(data.numberOfEmployees || "");
+
+                setCompanyName(data[0].name || "");
+                setEmployerPasskey(data[0].employerpasskey || "");
+                setEmployeePasskey(data[0].employeepasskey || "");
+                setStaffCount(data[0].numberOfEmployees || "");
 
             } catch (error) {
                 console.error("Error checking employer role or fetching company info:", error);
@@ -148,7 +150,7 @@ const SettingsPage = () => {
                         type="text"
                         className={styles.input}
                         value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
+                        disabled
                     />
                 </div>
 
