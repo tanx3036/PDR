@@ -3,11 +3,12 @@
 
 import {relations, sql} from "drizzle-orm";
 import {
-    index,text,
+    index, text,
     integer, pgTable,
     pgTableCreator, serial,
     timestamp,
     varchar,
+    pgTable, integer, text, serial, vector
 } from "drizzle-orm/pg-core";
 
 /**
@@ -16,10 +17,10 @@ import {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `pdr_ai_v2_${name}`);
+export const pgTable = pgTableCreator((name) => `pdr_ai_v2_${name}`);
 
 
-export const users = createTable("users", {
+export const users = pgTable("users", {
     id: serial("id").primaryKey(),
     userId: varchar("userId", {  length: 256 }).notNull(),
     companyId: varchar("companyId", {  length: 256 }).notNull(),
@@ -33,7 +34,7 @@ export const users = createTable("users", {
 
 });
 
-export const company = createTable('company', {
+export const company = pgTable('company', {
     id: serial("id").primaryKey(),
     name: varchar("name", {  length: 256 }).notNull(),
     employerpasskey: varchar("employerPasskey", {  length: 256 }).notNull(),
@@ -47,7 +48,7 @@ export const company = createTable('company', {
     ),
 });
 
-export const document = createTable('document', {
+export const document = pgTable('document', {
     id: serial("id").primaryKey(),
     url: varchar("url", {  length: 256 }).notNull(),
     category: varchar("category", {  length: 256 }).notNull(),

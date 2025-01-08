@@ -16,7 +16,8 @@ export default function HomePage() {
         setReferences([]);
 
         try {
-            const response = await fetch("/api/ask", {
+            console.log("sent")
+            const response = await fetch("/api/question", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ question }),

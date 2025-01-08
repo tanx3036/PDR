@@ -1,6 +1,7 @@
 // app/api/ask/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { Configuration, OpenAIApi } from "openai";
+import  Configuration from "openai";
+import OpenAIApi from "openai";
 import { db } from "../../../server/db/index";
 
 export async function POST(req: NextRequest) {
@@ -52,13 +53,13 @@ export async function POST(req: NextRequest) {
 
         // 4. Build final prompt for ChatGPT
         const systemPrompt = `
-You are a helpful assistant with access to the following PDF excerpts.
-Use ONLY these excerpts to answer the user's question. 
-If the answer is not in the provided excerpts, say "I don't have enough information."
-    
-Excerpts:
-${contextText}
-`;
+            You are a helpful assistant with access to the following PDF excerpts.
+            Use ONLY these excerpts to answer the user's question. 
+            If the answer is not in the provided excerpts, say "I don't have enough information."
+                
+            Excerpts:
+            ${contextText}
+            `;
 
         const userPrompt = `User question: ${question}`;
 
@@ -70,7 +71,7 @@ ${contextText}
                 { role: "user", content: userPrompt },
             ],
             max_tokens: 1000,
-            temperature: 0.2,
+            temperature: 0.5,
         });
 
         const answer = chatCompletion.data.choices[0].message?.content || "";

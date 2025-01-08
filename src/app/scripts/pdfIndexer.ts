@@ -2,12 +2,12 @@
 import fs from "fs";
 import path from "path";
 import pdfParse from "pdf-parse";
-import { Configuration, OpenAIApi } from "openai";
-import { db } from "../db/connection"; // your Drizzle connection
-import { pdfChunks } from "../db/schema";
+import OpenAIApi from "openai";
+import Configuration from "openai"
+import { db } from "../../server/db"; // your Drizzle connection
+import { pdfChunks } from "../../server/db/schema";
 
-const PDF_PATH = path.join(__dirname, "..", "example.pdf");
-// Adjust to your actual PDF file
+const PDF_PATH = "https://utfs.io/f/zllPuoqtDQmMPzmHHUhDqHSOGy4zRcrUfXQuNKl5ohkb2a38";
 
 const CHUNK_SIZE = 500; // characters, adjust as needed
 
@@ -27,6 +27,8 @@ async function main() {
     const pdfData = await pdfParse(pdfBuffer);
 
     const pages = pdfData.text.split("\f"); // assume form-feed per page
+
+    console.log("fs read pdf. # of pages in PDF: ", pages.length)
 
     // 2. OpenAI config
     const config = new Configuration({
