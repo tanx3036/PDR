@@ -20,8 +20,8 @@ const teamMembers = [
         id: 2,
         name: 'Timothy Lin',
         role: 'Tech Lead',
-        description: 'Developed and built the PDR AI platform. Specializes in full-stack development and AI integration. Leads the technical development of PDR AI.',
-        image: '/api/placeholder/400/400',
+        description: 'Developed and built the PDR AI platform. Specializes in full-stack development, AI integration, and Machine Learning. Leads the technical development of PDR AI.',
+        image: 'https://h0xotvuawi.ufs.sh/f/KSLubuOGoQY2NnwtVGR6HJrBbtv7fyQpxVMN4nEGLsh1mcT9',
         email: 'tlin56@jh.edu',
         github: 'https://github.com/Deodat-Lawson',
         linkedin: 'https://www.linkedin.com/in/tlin2004/'

@@ -244,14 +244,14 @@ const DocumentViewer: React.FC = () => {
                     >
                         Document Only
                     </button>
-                    <button
-                        className={`${styles.viewModeButton} ${
-                            viewMode === "with-summary" ? styles.activeViewMode : ""
-                        }`}
-                        onClick={() => setViewMode("with-summary")}
-                    >
-                        AI Summary + Doc
-                    </button>
+                    {/*<button*/}
+                    {/*    className={`${styles.viewModeButton} ${*/}
+                    {/*        viewMode === "with-summary" ? styles.activeViewMode : ""*/}
+                    {/*    }`}*/}
+                    {/*    onClick={() => setViewMode("with-summary")}*/}
+                    {/*>*/}
+                    {/*    AI Summary + Doc*/}
+                    {/*</button>*/}
                     <button
                         className={`${styles.viewModeButton} ${
                             viewMode === "with-ai-qa" ? styles.activeViewMode : ""
