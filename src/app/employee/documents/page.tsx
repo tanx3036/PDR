@@ -31,6 +31,15 @@ interface CategoryGroup {
     documents: DocumentType[];
 }
 
+interface LangChainResponse {
+    success: boolean;
+    summarizedAnswer: string;
+    recommendedPages: number[];
+    // ... other properties if needed
+}
+
+
+
 type ViewMode = "document-only" | "with-summary" | "with-ai-qa";
 
 const DocumentViewer: React.FC = () => {
@@ -52,6 +61,21 @@ const DocumentViewer: React.FC = () => {
     const [aiAnswer, setAiAnswer] = useState("");
     const [aiError, setAiError] = useState("");
     const [aiLoading, setAiLoading] = useState(false);
+
+    // Reference pages
+    const [referencePages, setReferencePages] = useState<number[]>([]);
+
+    // PDF page to display (defaults to 1)
+    const [pdfPageNumber, setPdfPageNumber] = useState<number>(1);
+
+    // Load PDF with page number
+    const pdfSrcWithPage = (baseUrl: string, pageNumber: number) => {
+        // Some PDF readers support #page=N
+        console.log("PDF URL:", `${baseUrl}#page=${pageNumber}`);
+        return `${baseUrl}#page=${pageNumber}`;
+
+    };
+
 
     // Handle Authentication
     useEffect(() => {
@@ -142,6 +166,8 @@ const DocumentViewer: React.FC = () => {
         e.preventDefault();
         setAiError("");
         setAiAnswer("");
+        setReferencePages([]); // Reset before new request
+
         if (!aiQuestion.trim()) return;
 
         try {
@@ -158,8 +184,18 @@ const DocumentViewer: React.FC = () => {
             }
             console.log(res);
 
-            const data = await res.json();
+            const data = (await res.json()) as LangChainResponse;
+
             setAiAnswer(data.summarizedAnswer);
+
+            // data.recommendedPages => array of pages
+            if (Array.isArray(data.recommendedPages)) {
+                // remove duplicates, just in case
+                const uniquePages = Array.from(new Set(data.recommendedPages));
+                setReferencePages(uniquePages);
+            }
+
+
         } catch (err: any) {
             setAiError(err.message);
         } finally {
@@ -243,7 +279,12 @@ const DocumentViewer: React.FC = () => {
                                     {category.documents.map((doc) => (
                                         <button
                                             key={doc.id}
-                                            onClick={() => setSelectedDoc(doc)}
+                                            onClick={() => {
+                                                setSelectedDoc(doc);
+                                                setPdfPageNumber(1); // reset to page 1 when doc changes
+                                                setAiAnswer("");
+                                                setReferencePages([]);
+                                            }}
                                             className={`${styles.docItem} ${
                                                 selectedDoc && selectedDoc.id === doc.id
                                                     ? styles.selected
@@ -357,6 +398,27 @@ const DocumentViewer: React.FC = () => {
                                 {aiAnswer && (
                                     <div className="bg-gray-100 rounded p-3 mt-2">
                                         <p className="text-gray-700">{aiAnswer}</p>
+                                        {/* REFERENCE PAGES */}
+                                        {referencePages.length > 0 && (
+                                            <div className="mt-4">
+                                                <p className="font-semibold text-gray-700 mb-2">
+                                                    Reference Pages:
+                                                </p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {referencePages.map((page) => (
+                                                        <button
+                                                            key={page}
+                                                            onClick={() => setPdfPageNumber(page)}
+                                                            className="inline-block bg-purple-100 text-purple-700 px-3 py-1 rounded-md
+                                                                        hover:bg-purple-200 transition-colors"
+                                                        >
+                                                            Page {page}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
                                     </div>
                                 )}
                             </div>
@@ -365,7 +427,8 @@ const DocumentViewer: React.FC = () => {
                         {/* PDF Viewer (always visible as long as a doc is selected) */}
                         <div className={styles.pdfContainer}>
                             <iframe
-                                src={selectedDoc.url}
+                                key={pdfPageNumber}
+                                src={pdfSrcWithPage(selectedDoc.url, pdfPageNumber)}
                                 className={styles.pdfViewer}
                                 title={selectedDoc.title}
                             />
