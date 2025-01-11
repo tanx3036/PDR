@@ -40,11 +40,11 @@ export default function HomePage() {
                                 </Link>
 
                                 {/* Link to /about page */}
-                                <Link href="/about">
-                                    <button className={`${styles.btn} ${styles["btn-ghost"]}`}>
-                                        About
-                                    </button>
-                                </Link>
+                                {/*<Link href="/about">*/}
+                                {/*    <button className={`${styles.btn} ${styles["btn-ghost"]}`}>*/}
+                                {/*        About*/}
+                                {/*    </button>*/}
+                                {/*</Link>*/}
 
                                 {/* Link to /get-started page */}
                                 <SignUpButton>
