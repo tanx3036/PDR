@@ -50,6 +50,10 @@ export async function POST(request: Request) {
             openAIApiKey: process.env.OPENAI_API_KEY,
         });
 
+        if(!embeddings){
+            throw new Error("Document is too difficult to be analyzed.");
+        }
+
         const vectorStore = new MemoryVectorStore(embeddings);
         await vectorStore.addDocuments(allSplits);
 
@@ -58,6 +62,10 @@ export async function POST(request: Request) {
         const results = await vectorStore.similaritySearch(question);
 
         console.log("Results:", results);
+
+        if(!results.length){
+            throw new Error("No relevant results found.");
+        }
 
         // 6) OPTIONAL: Summarize using ChatOpenAI
         //    We'll merge all relevant chunks into one prompt for simplicity:
@@ -80,7 +88,6 @@ export async function POST(request: Request) {
                 `User's question: "${question}"\n\nRelevant PDF content:\n${combinedContent}\n\nPlease provide a short, helpful answer.`
             ),
         ]);
-
 
 
 

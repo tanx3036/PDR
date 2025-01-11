@@ -71,7 +71,7 @@ const DocumentViewer: React.FC = () => {
     // Load PDF with page number
     const pdfSrcWithPage = (baseUrl: string, pageNumber: number) => {
         // Some PDF readers support #page=N
-        console.log("PDF URL:", `${baseUrl}#page=${pageNumber}`);
+        // console.log("PDF URL:", `${baseUrl}#page=${pageNumber}`);
         return `${baseUrl}#page=${pageNumber}`;
 
     };
@@ -197,6 +197,7 @@ const DocumentViewer: React.FC = () => {
 
 
         } catch (err: any) {
+
             setAiError(err.message);
         } finally {
             setAiLoading(false);
