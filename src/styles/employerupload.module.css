@@ -155,3 +155,38 @@
         @apply p-4;
     }
 }
+
+
+.navbar {
+    @apply bg-white border-b border-gray-200;
+}
+
+.navContent {
+    @apply max-w-7xl mx-auto px-6 py-4 flex justify-between items-center;
+}
+
+.logoWrapper {
+    @apply flex items-center space-x-2;
+}
+
+.logoIcon {
+    @apply w-8 h-8 text-purple-600;
+}
+
+.logoText {
+    @apply text-xl font-bold text-black;
+}
+
+.homeButton {
+    @apply flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg
+    hover:bg-purple-700 transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2;
+}
+
+.homeIcon {
+    @apply w-5 h-5 mr-2;
+}
+
+.mainContainer {
+    @apply min-h-screen bg-gray-50;
+}
