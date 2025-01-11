@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import { UploadDropzone } from "~/app/utils/uploadthing"; // Adjust import path to your project structure
 import {
   FileText,
@@ -87,83 +87,93 @@ const DocumentUpload: React.FC = () => {
   const [errors, setErrors] = useState<Partial<UploadFormData>>({});
 
   // Categories -----------------------------
-
-
   // Categories state
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategory, setNewCategory] = useState("");
 
   // Fetch categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch("/api/Categories/GetCategories", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: userId,
-          }),
-        });
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-        const data = await res.json();
-        setCategories(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  // Add a new category
-  const handleAddCategory = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newCategory.trim()) return;
-
+  const fetchCategories = async () => {
     try {
-      const res = await fetch("/api/Categories/AddCategories", {
+      const res = await fetch("/api/Categories/GetCategories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: userId ,CategoryName: newCategory }),
+        body: JSON.stringify({
+          userId: userId,
+        }),
       });
 
       if (!res.ok) {
-        throw new Error("Failed to create category");
+        throw new Error("Failed to fetch categories");
       }
-
-      const createdCategory: Category = await res.json();
-      console.log("Created category:", createdCategory);
-      setCategories((prev) => [...prev, createdCategory]);
-      setNewCategory("");
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const data = await res.json();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      setCategories(data);
     } catch (error) {
       console.error(error);
-      alert("Error creating category. Check console for details.");
     }
   };
+
+
+  // Add a new category
+  const handleAddCategory = useCallback(
+      async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newCategory.trim()) return;
+        try {
+          const res = await fetch("/api/Categories/AddCategories", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: userId, CategoryName: newCategory }),
+          });
+          if (!res.ok) {
+            throw new Error("Failed to create category");
+          }
+          const createdCategory: Category = await res.json();
+          setCategories((prev) => [...prev, createdCategory]);
+          setNewCategory("");
+        } catch (error) {
+          console.error(error);
+          alert("Error creating category. Check console for details.");
+        }
+      },
+      [userId, newCategory, setCategories],
+  );
 
   //remove a category
-  const handleRemoveCategory = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this category?")) return;
+  const handleRemoveCategory = useCallback(
+      async (id: string) => {
+        if (!confirm("Are you sure you want to delete this category?")) return;
 
-    try {
-      const res = await fetch("/api/Categories/DeleteCategories", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
-      });
-      if (!res.ok) {
-        throw new Error("Failed to remove category");
-      }
-      // Update local state
-      setCategories((prev) => prev.filter((cat) => cat.id !== id));
-    } catch (error) {
+        try {
+          const res = await fetch("/api/Categories/DeleteCategories", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+          });
+          if (!res.ok) {
+            throw new Error("Failed to remove category");
+          }
+          setCategories((prev) => prev.filter((cat) => cat.id !== id));
+        } catch (error) {
+          console.error(error);
+          alert("Error removing category. Check console for details.");
+        }
+      },
+      [setCategories],
+  );
+
+
+//  Fetch categories only when userId is known and we are not loading
+  useEffect(() => {
+    if (!isLoaded || !userId || loading) return;
+
+    void fetchCategories().catch((error) => {
       console.error(error);
-      alert("Error removing category. Check console for details.");
-    }
-  };
+    });
+  }, [isLoaded, userId, loading, handleAddCategory, handleRemoveCategory]);
+
 
 
   // -----------------------------
