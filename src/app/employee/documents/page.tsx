@@ -7,7 +7,8 @@ import {
     ChevronRight,
     ChevronDown,
     User,
-    LogOut, Home,
+    LogOut,
+    Home,
 } from 'lucide-react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,16 +17,13 @@ import {SignIn, SignOutButton, useAuth, UserButton} from "@clerk/nextjs";
 import LoadingDoc from "~/app/employee/documents/loading-doc";
 import LoadingPage from "~/app/_components/loading";
 
-
-// Mock data for documents
 interface DocumentType {
     id: number;
     title: string;
     category: string;
-    aiSummary?: string;  // optional if some documents don't have an AI summary
+    aiSummary?: string;
     url: string;
 }
-
 
 interface CategoryGroup {
     name: string;
@@ -33,6 +31,7 @@ interface CategoryGroup {
     documents: DocumentType[];
 }
 
+type ViewMode = "document-only" | "with-summary" | "with-ai-qa";
 
 const DocumentViewer: React.FC = () => {
     const router = useRouter();
@@ -40,12 +39,21 @@ const DocumentViewer: React.FC = () => {
     const [selectedDoc, setSelectedDoc] = useState<DocumentType | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
-
     const { isLoaded, userId } = useAuth();
 
     // 1) Role-check loading
     const [roleLoading, setRoleLoading] = useState(true);
 
+    // View mode state
+    const [viewMode, setViewMode] = useState<ViewMode>("document-only");
+
+    // AI Search Variables
+    const [aiQuestion, setAiQuestion] = useState("");
+    const [aiAnswer, setAiAnswer] = useState("");
+    const [aiError, setAiError] = useState("");
+    const [aiLoading, setAiLoading] = useState(false);
+
+    // Handle Authentication
     useEffect(() => {
         if (!isLoaded) return; // Wait until Clerk is fully ready
 
@@ -64,7 +72,6 @@ const DocumentViewer: React.FC = () => {
                     body: JSON.stringify({ userId }),
                 });
                 if (!response.ok) {
-                    // Not an employer or user not found => redirect
                     window.alert("Authentication failed! You are not an employee.");
                     router.push("/");
                     return;
@@ -81,11 +88,8 @@ const DocumentViewer: React.FC = () => {
         checkEmployerRole();
     }, [isLoaded, userId, router]);
 
-
-
-
+    // Fetch documents
     useEffect(() => {
-        // If userId is not yet available, skip the fetch
         if (!userId) return;
 
         const fetchDocuments = async () => {
@@ -100,8 +104,6 @@ const DocumentViewer: React.FC = () => {
                     throw new Error("Failed to fetch documents");
                 }
                 const data: DocumentType[] = await response.json();
-
-
                 setDocuments(data);
             } catch (error) {
                 console.error("Error fetching documents:", error);
@@ -111,26 +113,22 @@ const DocumentViewer: React.FC = () => {
         };
 
         fetchDocuments();
-    }, [userId]); // re-run when userId becomes available
+    }, [userId]);
 
-
-
-// Group documents by category
+    // Group documents by category (filter by search term)
     const categories: CategoryGroup[] = Object.values(
         documents.reduce((acc: { [key: string]: CategoryGroup }, doc) => {
-            // OPTIONAL: Filter by searchTerm if you want to hide docs that don't match
-            // For example, match on doc.name or doc.aiSummary
             if (
                 !doc.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
                 !(doc.aiSummary || "").toLowerCase().includes(searchTerm.toLowerCase())
             ) {
-                return acc; // skip this doc if it doesn't match search
+                return acc;
             }
 
             if (!acc[doc.category]) {
                 acc[doc.category] = {
                     name: doc.category,
-                    isOpen: true, // or false if you prefer them collapsed initially
+                    isOpen: true,
                     documents: [],
                 };
             }
@@ -139,6 +137,36 @@ const DocumentViewer: React.FC = () => {
         }, {})
     );
 
+    // Handle AI Search
+    const handleAiSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setAiError("");
+        setAiAnswer("");
+        if (!aiQuestion.trim()) return;
+
+        try {
+            setAiLoading(true);
+            const res = await fetch("/api/LangChain", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: selectedDoc?.url , question: aiQuestion }),
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Request failed");
+            }
+            console.log(res);
+
+            const data = await res.json();
+            setAiAnswer(data.summarizedAnswer);
+        } catch (err: any) {
+            setAiError(err.message);
+        } finally {
+            setAiLoading(false);
+        }
+    };
+
     if (roleLoading) {
         return <LoadingPage />;
     }
@@ -146,17 +174,15 @@ const DocumentViewer: React.FC = () => {
         return <LoadingDoc />;
     }
 
-
-
     return (
         <div className={styles.container}>
             {/* Side Navigation */}
             <aside className={styles.sidebar}>
                 <div className={styles.sidebarHeader}>
-                        <button className={styles.logoContainer}>
-                            <Brain className={styles.logoIcon} />
-                            <span className={styles.logoText}>PDR AI</span>
-                        </button>
+                    <button className={styles.logoContainer}>
+                        <Brain className={styles.logoIcon} />
+                        <span className={styles.logoText}>PDR AI</span>
+                    </button>
 
                     {/* Search Bar */}
                     <div className={styles.searchContainer}>
@@ -170,6 +196,35 @@ const DocumentViewer: React.FC = () => {
                         />
                     </div>
                 </div>
+
+                {/* VIEW-MODE BUTTONS */}
+                <div className={styles.viewModeButtons}>
+                    <button
+                        className={`${styles.viewModeButton} ${
+                            viewMode === "document-only" ? styles.activeViewMode : ""
+                        }`}
+                        onClick={() => setViewMode("document-only")}
+                    >
+                        Document Only
+                    </button>
+                    <button
+                        className={`${styles.viewModeButton} ${
+                            viewMode === "with-summary" ? styles.activeViewMode : ""
+                        }`}
+                        onClick={() => setViewMode("with-summary")}
+                    >
+                        AI Summary + Doc
+                    </button>
+                    <button
+                        className={`${styles.viewModeButton} ${
+                            viewMode === "with-ai-qa" ? styles.activeViewMode : ""
+                        }`}
+                        onClick={() => setViewMode("with-ai-qa")}
+                    >
+                        AI Q&A + Doc
+                    </button>
+                </div>
+                {/* END VIEW-MODE BUTTONS */}
 
                 {/* Document List */}
                 <nav className={styles.docList}>
@@ -190,7 +245,9 @@ const DocumentViewer: React.FC = () => {
                                             key={doc.id}
                                             onClick={() => setSelectedDoc(doc)}
                                             className={`${styles.docItem} ${
-                                                selectedDoc && selectedDoc.id === doc.id ? styles.selected : ""
+                                                selectedDoc && selectedDoc.id === doc.id
+                                                    ? styles.selected
+                                                    : ""
                                             }`}
                                         >
                                             <FileText className={styles.docIcon} />
@@ -203,34 +260,26 @@ const DocumentViewer: React.FC = () => {
                     ))}
                 </nav>
 
-
-
-
-                {/* Log out */}
+                {/* Profile Section */}
                 <div className={styles.profileSection}>
-                    {/* Themed User Button */}
                     <UserButton
-                        afterSignOutUrl="/sign-in"  // optional
+                        afterSignOutUrl="/sign-in"
                         appearance={{
                             variables: {
-                                // Adjust these colors to fit your color palette
-                                colorPrimary: "#8B5CF6",    // e.g. purple-500
-                                colorText: "#4F46E5",       // e.g. purple-600
-                                borderRadius: "0.5rem",     // e.g. rounded-md
+                                colorPrimary: "#8B5CF6",
+                                colorText: "#4F46E5",
+                                borderRadius: "0.5rem",
                                 fontFamily: "Inter, sans-serif",
                             },
                             elements: {
-                                // Adjust specific elements within the UserButton
                                 userButtonAvatarBox: "border-2 border-purple-300",
-                                userButtonTrigger: "hover:bg-purple-50 transition-colors p-1 flex items-center rounded-lg",
+                                userButtonTrigger:
+                                    "hover:bg-purple-50 transition-colors p-1 flex items-center rounded-lg",
                                 userButtonPopoverCard: "shadow-md border border-gray-100",
                                 userButtonPopoverFooter: "bg-gray-50 border-t border-gray-100 p-2",
-                                // ...
                             },
                         }}
                     />
-
-                    {/* Themed Sign Out Button */}
                     <SignOutButton>
                         <button className={styles.logoutButton}>
                             <LogOut className={styles.logoutIcon} />
@@ -242,15 +291,22 @@ const DocumentViewer: React.FC = () => {
 
             {/* Main Content */}
             <main className={styles.mainContent}>
+                {/* No document selected */}
+                {!selectedDoc && (
+                    <div className={styles.noDocSelected}>
+                        <h1 className={styles.noDocTitle}>Select a document to view</h1>
+                    </div>
+                )}
+
+                {/* Document Viewer */}
                 {selectedDoc && (
                     <>
-                        {/* Document Title */}
                         <div className={styles.docHeader}>
                             <h1 className={styles.docTitle}>{selectedDoc.title}</h1>
                         </div>
 
-                        {/* AI Summary (if present) */}
-                        {selectedDoc.aiSummary && (
+                        {/* Conditionally render AI Summary */}
+                        {viewMode === "with-summary" && selectedDoc.aiSummary && (
                             <div className={styles.summaryContainer}>
                                 <div className={styles.summaryHeader}>
                                     <Brain className={styles.summaryIcon} />
@@ -260,15 +316,53 @@ const DocumentViewer: React.FC = () => {
                             </div>
                         )}
 
-                        <div className={styles.summaryContainer}>
-                            <div className={styles.summaryHeader}>
-                                <Brain className={styles.summaryIcon} />
-                                <h2 className={styles.summaryTitle}>AI Summary</h2>
+                        {/* If there's no AI summary but we're in "with-summary" mode */}
+                        {viewMode === "with-summary" && !selectedDoc.aiSummary && (
+                            <div className={styles.summaryContainer}>
+                                <div className={styles.summaryHeader}>
+                                    <Brain className={styles.summaryIcon} />
+                                    <h2 className={styles.summaryTitle}>AI Summary</h2>
+                                </div>
+                                <p className={styles.summaryText}>
+                                    AI Summary currently unavailable.
+                                </p>
                             </div>
-                            <p className={styles.summaryText}>AI Summary currently unavailable.</p>
-                        </div>
+                        )}
 
-                        {/* PDF Viewer */}
+                        {/* Conditionally render AI Q&A */}
+                        {viewMode === "with-ai-qa" && (
+                            <div className={styles.summaryContainer}>
+                                <div className={styles.summaryHeader}>
+                                    <Brain className={styles.summaryIcon} />
+                                    <h2 className={styles.summaryTitle}>AI Q&A</h2>
+                                </div>
+
+                                <form onSubmit={handleAiSearch} className="flex flex-col space-y-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Ask a question about your documents..."
+                                        value={aiQuestion}
+                                        onChange={(e) => setAiQuestion(e.target.value)}
+                                        className="border border-gray-300 rounded p-2 w-full"
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 focus:outline-none"
+                                    >
+                                        {aiLoading ? "Asking AI..." : "Ask AI"}
+                                    </button>
+                                </form>
+
+                                {aiError && <p className="text-red-500 mt-2">{aiError}</p>}
+                                {aiAnswer && (
+                                    <div className="bg-gray-100 rounded p-3 mt-2">
+                                        <p className="text-gray-700">{aiAnswer}</p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* PDF Viewer (always visible as long as a doc is selected) */}
                         <div className={styles.pdfContainer}>
                             <iframe
                                 src={selectedDoc.url}
@@ -284,5 +378,3 @@ const DocumentViewer: React.FC = () => {
 };
 
 export default DocumentViewer;
-
-

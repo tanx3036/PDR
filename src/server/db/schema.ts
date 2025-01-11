@@ -4,11 +4,9 @@
 import {relations, sql} from "drizzle-orm";
 import {
     index, text,
-    integer, pgTable,
-    pgTableCreator, serial,
+    integer, pgTableCreator, serial,
     timestamp,
     varchar,
-    pgTable, integer, text, serial, vector
 } from "drizzle-orm/pg-core";
 
 /**
@@ -75,8 +73,6 @@ export const pdfChunks = pgTable("pdf_chunks", {
     page: integer("page").notNull(),
     content: text("content").notNull(),
 
-    // 1536 dimension for text-embedding-ada-002
-    embedding: sql`vector(1536)`,
 });
 
 

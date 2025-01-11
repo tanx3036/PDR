@@ -224,3 +224,29 @@
 .loadingText {
     @apply text-lg text-gray-700 font-medium;
 }
+
+/* VIEW-MODE BUTTONS */
+.viewModeButtons {
+    @apply p-2 flex flex-col space-y-2;
+}
+
+.viewModeButton {
+    @apply w-full bg-purple-100 text-purple-700 py-1.5 px-2 rounded-lg
+    text-sm font-semibold text-left hover:bg-purple-200 transition-colors duration-150;
+}
+
+/* Toggle an "active" style if you want a distinct appearance when selected */
+.activeViewMode {
+    @apply bg-purple-300 text-white;
+}
+
+/* No document selected */
+.noDocSelected {
+    @apply flex items-center justify-center h-full;
+}
+
+.noDocTitle {
+    @apply text-xl font-medium text-gray-500;
+}
+
+

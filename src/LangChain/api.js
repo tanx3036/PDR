@@ -36,7 +36,9 @@ const embeddings = new OpenAIEmbeddings({
 });
 
 
+// @ts-expect-error
 const vector1 = await embeddings.embedQuery(allSplits[0].pageContent);
+// @ts-expect-error
 const vector2 = await embeddings.embedQuery(allSplits[1].pageContent);
 
 console.assert(vector1.length === vector2.length);
