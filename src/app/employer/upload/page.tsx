@@ -145,20 +145,20 @@ const DocumentUpload: React.FC = () => {
   };
 
   //remove a category
-  const handleRemoveCategory = async (RemovedCategory: string) => {
+  const handleRemoveCategory = async (id: string) => {
     if (!confirm("Are you sure you want to delete this category?")) return;
 
     try {
       const res = await fetch("/api/Categories/DeleteCategories", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: userId, CategoryName: RemovedCategory }),
+        body: JSON.stringify({ id }),
       });
       if (!res.ok) {
         throw new Error("Failed to remove category");
       }
       // Update local state
-      setCategories((prev) => prev.filter((cat) => cat.id !== RemovedCategory));
+      setCategories((prev) => prev.filter((cat) => cat.id !== id));
     } catch (error) {
       console.error(error);
       alert("Error removing category. Check console for details.");

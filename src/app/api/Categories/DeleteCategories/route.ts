@@ -8,6 +8,7 @@ export async function DELETE(request: Request) {
         const { id } = await request.json();
 
         await db.delete(category).where(eq(category.id, id));
+
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error: any) {
         console.error(error);
