@@ -9,6 +9,7 @@ import {
   Plus,
   Brain,
   Home,
+    Trash2,
 } from "lucide-react";
 import styles from "../../../styles/employerupload.module.css";
 import { useAuth } from "@clerk/nextjs";
@@ -22,6 +23,14 @@ interface UploadFormData {
   fileUrl: string | null; // Store the uploaded file URL
   fileName: string;
 }
+
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+
 
 const DocumentUpload: React.FC = () => {
   const auth = useAuth();
@@ -77,16 +86,85 @@ const DocumentUpload: React.FC = () => {
 
   const [errors, setErrors] = useState<Partial<UploadFormData>>({});
 
-  // Predefined categories (can be moved to a separate config or fetched from an API)
-  const categories = [
-    "Financial",
-    "HR",
-    "Legal",
-    "Marketing",
-    "Operations",
-    "Planning",
-    "Other",
-  ];
+  // Categories -----------------------------
+
+
+  // Categories state
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [newCategory, setNewCategory] = useState("");
+
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/Categories/GetCategories", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: userId,
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        const data = await res.json();
+        setCategories(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Add a new category
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCategory.trim()) return;
+
+    try {
+      const res = await fetch("/api/Categories/AddCategories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: userId ,CategoryName: newCategory }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create category");
+      }
+
+      const createdCategory: Category = await res.json();
+      console.log("Created category:", createdCategory);
+      setCategories((prev) => [...prev, createdCategory]);
+      setNewCategory("");
+    } catch (error) {
+      console.error(error);
+      alert("Error creating category. Check console for details.");
+    }
+  };
+
+  //remove a category
+  const handleRemoveCategory = async (RemovedCategory: string) => {
+    if (!confirm("Are you sure you want to delete this category?")) return;
+
+    try {
+      const res = await fetch("/api/Categories/DeleteCategories", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: userId, CategoryName: RemovedCategory }),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to remove category");
+      }
+      // Update local state
+      setCategories((prev) => prev.filter((cat) => cat.id !== RemovedCategory));
+    } catch (error) {
+      console.error(error);
+      alert("Error removing category. Check console for details.");
+    }
+  };
+
 
   // -----------------------------
   // Handle Input Changes
@@ -263,8 +341,8 @@ const DocumentUpload: React.FC = () => {
                   >
                     <option value="">Select a category</option>
                     {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
+                        <option key={cat.id} value={cat.name}>
+                          {cat.name}
                         </option>
                     ))}
                   </select>
@@ -296,6 +374,38 @@ const DocumentUpload: React.FC = () => {
               Upload Document
             </button>
           </form>
+
+
+          {/* Category Management Section */}
+          <div className={styles.categoryManagement}>
+            <h2>Manage Categories</h2>
+            <form onSubmit={handleAddCategory} className={styles.addCategoryForm}>
+              <input
+                  type="text"
+                  placeholder="New category name"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+              />
+              <button type="submit">Add Category</button>
+            </form>
+
+            <ul className={styles.categoryList}>
+              {categories.map((cat) => (
+                  <li key={cat.id} className={styles.categoryListItem}>
+                    <span>{cat.name}</span>
+                    <button
+                        type="button"
+                        onClick={() => handleRemoveCategory(cat.id)}
+                        className={styles.removeCategoryBtn}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </li>
+              ))}
+            </ul>
+          </div>
+
+
         </div>
       </div>
   );

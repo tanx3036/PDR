@@ -60,6 +60,18 @@ export const document = pgTable('document', {
     ),
 });
 
+export const category = pgTable('category', {
+    id: serial("id").primaryKey(),
+    name: varchar("name", {  length: 256 }).notNull(),
+    companyId: varchar("company id", {  length: 256 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+        () => new Date()
+    ),
+});
+
 
 
 export const pdfChunks = pgTable("pdf_chunks", {

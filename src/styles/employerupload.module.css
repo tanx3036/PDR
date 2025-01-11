@@ -190,3 +190,48 @@
 .mainContainer {
     @apply min-h-screen bg-gray-50;
 }
+
+
+/* ======================================= */
+/* NEW: Category Management Styles         */
+/* ======================================= */
+.categoryManagement {
+    @apply mt-10 p-6 bg-white rounded-lg border border-gray-200 shadow-sm;
+}
+
+.categoryManagement h2 {
+    @apply text-lg font-semibold text-gray-900 mb-4;
+}
+
+.addCategoryForm {
+    @apply flex items-center space-x-3 mb-4;
+}
+
+.addCategoryForm input[type="text"] {
+    @apply flex-1 border border-gray-300 rounded-md p-2
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+    placeholder-gray-400;
+}
+
+.addCategoryForm button[type="submit"] {
+    @apply inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md
+    hover:bg-purple-700 transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2;
+}
+
+.categoryList {
+    @apply space-y-2;
+}
+
+.categoryListItem {
+    @apply flex items-center justify-between bg-gray-50 px-4 py-2 rounded-md border border-gray-200;
+}
+
+.categoryListItem span {
+    @apply text-gray-700;
+}
+
+.removeCategoryBtn {
+    @apply text-red-500 hover:text-red-700 transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2;
+}

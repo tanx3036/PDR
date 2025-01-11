@@ -26,11 +26,11 @@ export default function HomePage() {
                             </div>
                             <div className={styles["nav-links"]}>
                                 {/* Link to /features page */}
-                                <Link href="/unavailable">
-                                    <button className={`${styles.btn} ${styles["btn-ghost"]}`}>
-                                        Features
-                                    </button>
-                                </Link>
+                                {/*<Link href="/unavailable">*/}
+                                {/*    <button className={`${styles.btn} ${styles["btn-ghost"]}`}>*/}
+                                {/*        Features*/}
+                                {/*    </button>*/}
+                                {/*</Link>*/}
 
                                 {/* Link to /pricing page */}
                                 <Link href="/unavailable">
