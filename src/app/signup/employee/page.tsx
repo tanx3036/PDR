@@ -76,6 +76,7 @@ const EmployeeSignIn: React.FC = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 userId,
+                companyName: employeeSignInFormData.companyName,
                 employeePasskey: employeeSignInFormData.employeePasscode,
             }),
         });

@@ -1,17 +1,22 @@
 import { NextResponse } from "next/server";
 import { db } from "../../../../server/db/index";
 import { users, company } from "../../../../server/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export async function POST(request: Request) {
     try {
-        const { userId, employeePasskey } = await request.json();
+        const { userId, employeePasskey, companyName } = await request.json();
 
-        // Find company by employee passkey
+        // Find company by company name
         const [existingCompany] = await db
             .select()
             .from(company)
-            .where(eq(company.employeepasskey, employeePasskey));
+            .where(
+                and(
+                    eq(company.name, companyName),
+                    eq(company.employeepasskey, employeePasskey)
+                )
+            );
 
         if (!existingCompany) {
             return NextResponse.json(

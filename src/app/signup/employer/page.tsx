@@ -91,7 +91,7 @@ const EmployerSignup: React.FC = () => {
             errors.companyName = "Company name is required";
         }
         if (!signInFormData.managerPasscode) {
-            errors.managerPasscode = "Manager passcode is required";
+            errors.managerPasscode = "Manager passkey is required";
         }
 
         setSignInErrors(errors);
@@ -105,6 +105,7 @@ const EmployerSignup: React.FC = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 userId: userId,
+                companyName: signInFormData.companyName,
                 employerPasskey: signInFormData.managerPasscode,
             }),
         });
@@ -137,18 +138,18 @@ const EmployerSignup: React.FC = () => {
             errors.companyName = "Company name is required";
         }
         if (signUpFormData.managerPasscode.length < 8) {
-            errors.managerPasscode = "Manager passcode must be at least 8 characters";
+            errors.managerPasscode = "Manager passkey must be at least 8 characters";
         }
         if (signUpFormData.managerPasscode !== signUpFormData.managerPasscodeConfirm) {
-            errors.managerPasscodeConfirm = "Manager passcodes do not match";
+            errors.managerPasscodeConfirm = "Manager passkeys do not match";
         }
         if (signUpFormData.employeePasscode.length < 8) {
-            errors.employeePasscode = "Employee passcode must be at least 8 characters";
+            errors.employeePasscode = "Employee passkey must be at least 8 characters";
         }
         if (
             signUpFormData.employeePasscode !== signUpFormData.employeePasscodeConfirm
         ) {
-            errors.employeePasscodeConfirm = "Employee passcodes do not match";
+            errors.employeePasscodeConfirm = "Employee passkeys do not match";
         }
         if (!signUpFormData.staffCount) {
             errors.staffCount = "Please enter approximate staff count";

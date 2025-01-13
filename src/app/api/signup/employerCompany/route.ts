@@ -2,11 +2,25 @@ import {db} from "~/server/db";
 import {company, users} from "~/server/db/schema";
 import {NextResponse} from "next/server";
 import console from "console";
+import {eq} from "drizzle-orm";
 
 
 export async function POST(request: Request) {
     try {
         const {userId, companyName, employerPasskey, employeePasskey, numberOfEmployees} = await request.json();
+
+        // Check if company already exists
+        const [existingCompany] = await db
+            .select()
+            .from(company)
+            .where(eq(company.name, companyName));
+
+        if (existingCompany) {
+            return NextResponse.json(
+                { error: "Company already exists." },
+                { status: 400 }
+            );
+        }
 
 
         const [newCompany] = await db
@@ -20,6 +34,7 @@ export async function POST(request: Request) {
             .returning({ id: company.id });
 
 
+        // @ts-ignore
         const companyId = newCompany.id.toString();
 
 
