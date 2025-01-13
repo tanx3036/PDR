@@ -287,25 +287,25 @@ const DocumentViewer: React.FC = () => {
                         </div>
 
                         {/* AI Summary */}
-                        {selectedDoc.aiSummary ? (
-                            <div className={styles.summaryContainer}>
-                                <div className={styles.summaryHeader}>
-                                    <Brain className={styles.summaryIcon} />
-                                    <h2 className={styles.summaryTitle}>AI Summary</h2>
-                                </div>
-                                <p className={styles.summaryText}>{selectedDoc.aiSummary}</p>
-                            </div>
-                        ) : (
-                            <div className={styles.summaryContainer}>
-                                <div className={styles.summaryHeader}>
-                                    <Brain className={styles.summaryIcon} />
-                                    <h2 className={styles.summaryTitle}>AI Summary</h2>
-                                </div>
-                                <p className={styles.summaryText}>
-                                    AI Summary currently unavailable.
-                                </p>
-                            </div>
-                        )}
+                        {/*{selectedDoc.aiSummary ? (*/}
+                        {/*    <div className={styles.summaryContainer}>*/}
+                        {/*        <div className={styles.summaryHeader}>*/}
+                        {/*            <Brain className={styles.summaryIcon} />*/}
+                        {/*            <h2 className={styles.summaryTitle}>AI Summary</h2>*/}
+                        {/*        </div>*/}
+                        {/*        <p className={styles.summaryText}>{selectedDoc.aiSummary}</p>*/}
+                        {/*    </div>*/}
+                        {/*) : (*/}
+                        {/*    <div className={styles.summaryContainer}>*/}
+                        {/*        <div className={styles.summaryHeader}>*/}
+                        {/*            <Brain className={styles.summaryIcon} />*/}
+                        {/*            <h2 className={styles.summaryTitle}>AI Summary</h2>*/}
+                        {/*        </div>*/}
+                        {/*        <p className={styles.summaryText}>*/}
+                        {/*            AI Summary currently unavailable.*/}
+                        {/*        </p>*/}
+                        {/*    </div>*/}
+                        {/*)}*/}
 
                         {/* PDF Viewer */}
                         <div className={styles.pdfContainer}>

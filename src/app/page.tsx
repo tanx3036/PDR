@@ -38,7 +38,7 @@ export default function HomePage() {
                                         Pricing
                                     </button>
                                 </Link>
-
+                                
                                 {/* Link to /about page */}
                                 {/*<Link href="/about">*/}
                                 {/*    <button className={`${styles.btn} ${styles["btn-ghost"]}`}>*/}
