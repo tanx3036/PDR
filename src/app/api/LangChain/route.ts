@@ -1,48 +1,39 @@
 import { NextResponse } from "next/server";
 import fetch from "node-fetch";
 import fs from "fs/promises";
+import os from "os";
 import path from "path";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import {  ChatOpenAI, OpenAIEmbeddings} from "@langchain/openai";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import {HumanMessage, SystemMessage} from "@langchain/core/messages";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 export async function POST(request: Request) {
     try {
-        // 1) Fetch the remote PDF file
         const { url, question } = await request.json();
-        console.log("Received URL:", url);
-        console.log("Received question:", question);
 
-        const pdfUrl = url;
-        const response = await fetch(pdfUrl);
-
+        // 1) Fetch the remote PDF file
+        const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(
-                `Unable to fetch PDF from ${pdfUrl}: ${response.status} ${response.statusText}`
-            );
-        } else{
-            console.log("PDF fetched successfully");
+            throw new Error(`Unable to fetch PDF from ${url}`);
         }
 
         // 2) Convert response to a Buffer
         const pdfArrayBuffer = await response.arrayBuffer();
         const pdfBuffer = Buffer.from(pdfArrayBuffer);
 
-        // 3) Write to a temp file in your server environment
-        const tempFilePath = path.join(process.cwd(), "temp.pdf");
+        // 3) Write to an ephemeral temp directory
+        const tempFilePath = path.join(os.tmpdir(), "temp.pdf");
         await fs.writeFile(tempFilePath, pdfBuffer);
 
-        // 4) Use PDFLoader on that temp file
+        // 4) Load the PDF
         const loader = new PDFLoader(tempFilePath);
         const docs = await loader.load();
 
-        // --- LangChain Logic ---
-        const textSplitter = new RecursiveCharacterTextSplitter({
-            chunkSize: 1000,
-            chunkOverlap: 200,
-        });
+        // 5) Text splitter, embeddings, vector store, similarity search...
+        //    (same as in your original code)
+        const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 200 });
         const allSplits = await textSplitter.splitDocuments(docs);
 
         const embeddings = new OpenAIEmbeddings({
@@ -50,67 +41,37 @@ export async function POST(request: Request) {
             openAIApiKey: process.env.OPENAI_API_KEY,
         });
 
-        if(!embeddings){
-            throw new Error("Document is too difficult to be analyzed.");
-        }
-
         const vectorStore = new MemoryVectorStore(embeddings);
         await vectorStore.addDocuments(allSplits);
 
-
-        // 5) Similarity search
         const results = await vectorStore.similaritySearch(question);
 
-        console.log("Results:", results);
-
-        if(!results.length){
-            throw new Error("No relevant results found.");
-        }
-
-        // 6) OPTIONAL: Summarize using ChatOpenAI
-        //    We'll merge all relevant chunks into one prompt for simplicity:
+        // 6) Summarize with ChatOpenAI...
         const chat = new ChatOpenAI({
             openAIApiKey: process.env.OPENAI_API_KEY,
             temperature: 0.5,
             modelName: "gpt-4-turbo",
         });
 
-        // Combine the relevant content into a single string
-        const combinedContent = results.map((doc, idx) => {
-            const pageNum = doc.metadata?.loc?.pageNumber ?? "unknown";
-            return `=== Result #${idx + 1}, Page: ${pageNum} ===\n${doc.pageContent}`;
-        }).join("\n\n");
+        const combinedContent = results
+            .map((doc, idx) => `=== Result #${idx + 1}, Page: ${doc.metadata?.loc?.pageNumber} ===\n${doc.pageContent}`)
+            .join("\n\n");
 
-        // Ask for a short summary or answer to the user's question
         const summarizedAnswer = await chat.call([
-            new SystemMessage("You are a helpful assistant. Read the provided PDF excerpts and answer the user's question concisely."),
-            new HumanMessage(
-                `User's question: "${question}"\n\nRelevant PDF content:\n${combinedContent}\n\nPlease provide a short, helpful answer.`
-            ),
+            new SystemMessage("You are a helpful assistant..."),
+            new HumanMessage(`User's question: "${question}"\n\n${combinedContent}\n\nAnswer concisely.`),
         ]);
 
-
-
-        // 5) Clean up - remove the temp PDF file if you like
+        // 7) Clean up
         await fs.unlink(tempFilePath);
 
-        const relevantPages = results.map((doc) => doc.metadata?.loc?.pageNumber ?? "unknown");
-
-        console.log("Summarized answer:", summarizedAnswer.text);
-        console.log("Relevant pages:", relevantPages);
-
-        // Return JSON with the AI answer + relevant pages
         return NextResponse.json({
             success: true,
             summarizedAnswer: summarizedAnswer.text,
-            recommendedPages: relevantPages,
+            recommendedPages: results.map((doc) => doc.metadata?.loc?.pageNumber),
         });
-
     } catch (error: any) {
         console.error(error);
-        return NextResponse.json(
-            { success: false, error: error.message },
-            { status: 500 }
-        );
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }
