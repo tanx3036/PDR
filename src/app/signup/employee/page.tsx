@@ -20,6 +20,7 @@ const EmployeeSignIn: React.FC = () => {
     const router = useRouter();
     const { userId } = useAuth();
 
+
     // Form data state
     const [employeeSignInFormData, setEmployeeSignInFormData] =
         useState<EmployeeSignInFormData>({
@@ -71,7 +72,7 @@ const EmployeeSignIn: React.FC = () => {
     const submitSignIn = async () => {
         if (!userId) return;
 
-        await fetch("/api/signup/employee", {
+        const response = await fetch("/api/signup/employee", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -80,6 +81,12 @@ const EmployeeSignIn: React.FC = () => {
                 employeePasskey: employeeSignInFormData.employeePasscode,
             }),
         });
+
+        if (response.status === 400) {
+            const { error } = await response.json();
+            setEmployeeSignInFormErrors((prev) => ({ ...prev, employeePasscode: error }));
+            return;
+        }
         // Redirect to an appropriate route after successful sign-in
         router.push("/employee/documents");
     };

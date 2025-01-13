@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
         if (!existingCompany) {
             return NextResponse.json(
-                { error: "Invalid employee passkey." },
+                { error: "Invalid company name or passkey." },
                 { status: 400 }
             );
         }

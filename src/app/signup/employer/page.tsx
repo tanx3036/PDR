@@ -100,7 +100,7 @@ const EmployerSignup: React.FC = () => {
 
     const submitSignIn = async () => {
         if (!userId) return;
-        await fetch("/api/signup/employer", {
+        const response = await fetch("/api/signup/employer", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -109,6 +109,14 @@ const EmployerSignup: React.FC = () => {
                 employerPasskey: signInFormData.managerPasscode,
             }),
         });
+
+        if (response.status === 400) {
+            const { error } = await response.json();
+            setSignInErrors((prev) => ({ ...prev, managerPasscode: error }));
+            return;
+        }
+
+
         router.push("/employer/home");
     };
 
@@ -161,7 +169,7 @@ const EmployerSignup: React.FC = () => {
 
     const submitSignUp = async () => {
         if (!userId) return;
-        await fetch("/api/signup/employerCompany", {
+        const response = await fetch("/api/signup/employerCompany", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -172,6 +180,13 @@ const EmployerSignup: React.FC = () => {
                 numberOfEmployees: signUpFormData.staffCount,
             }),
         });
+
+        if (response.status === 400) {
+            const { error } = await response.json();
+            setSignUpErrors((prev) => ({ ...prev, companyName: error }));
+            return;
+        }
+
         router.push("/employer/home");
     };
 
