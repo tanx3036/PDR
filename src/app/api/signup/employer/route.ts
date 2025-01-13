@@ -16,7 +16,7 @@ export async function POST(request: Request) {
             .where(
                 and(
                     eq(company.name, companyName),
-                    eq(company.employeepasskey, employerPasskey)
+                    eq(company.employerpasskey, employerPasskey)
                 )
             );
 
