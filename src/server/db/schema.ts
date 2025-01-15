@@ -8,6 +8,8 @@ import {
     timestamp,
     varchar,
 } from "drizzle-orm/pg-core";
+import { pgVector } from "~/server/db/pgVector";
+
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -84,6 +86,7 @@ export const pdfChunks = pgTable("pdf_chunks", {
 
     page: integer("page").notNull(),
     content: text("content").notNull(),
+    embedding: pgVector({ dimension: 1536 })("embedding"),
 
 });
 

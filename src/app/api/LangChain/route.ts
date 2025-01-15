@@ -9,6 +9,8 @@ import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import type { Document } from "langchain/document";
+import { Client } from "pg";
+
 
 type PostBody = {
     url: string;
@@ -53,6 +55,19 @@ export async function POST(request: Request) {
             model: "text-embedding-3-large",
             openAIApiKey: process.env.OPENAI_API_KEY,
         });
+
+        // 7) Set up a Postgres client
+        const client = new Client({
+            // or simply connectionString: process.env.DATABASE_URL
+            user: process.env.POSTGRES_USER,
+            host: process.env.POSTGRES_HOST,
+            database: process.env.POSTGRES_DB,
+            password: process.env.POSTGRES_PASSWORD,
+            port: 5432,
+        });
+        await client.connect();
+
+
 
         const vectorStore = new MemoryVectorStore(embeddings);
         await vectorStore.addDocuments(allSplits);

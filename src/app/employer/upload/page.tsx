@@ -282,9 +282,7 @@ const DocumentUpload: React.FC = () => {
                     endpoint="pdfUploader"
                     onClientUploadComplete={(res) => {
                       if (!res || !res.length) return;
-                      // @ts-ignore
                       const fileUrl = res[0].url;
-                      // @ts-ignore
                       const fileName = res[0].name;
                       setFormData((prev) => ({
                         ...prev,

@@ -39,6 +39,16 @@ export async function POST(request: Request) {
             })
             .returning(); // Return the inserted record for confirmation
 
+        //process lang chain
+
+
+
+
+
+
+
+
+
         // 3) Respond with the newly inserted document
         return NextResponse.json(
             { message: "Document created successfully", document: insertedDocument },
