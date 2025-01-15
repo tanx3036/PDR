@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server';
 import { db } from "../../../server/db/index";
-import { company, document, users } from "../../../server/db/schema";
+import { document } from "../../../server/db/schema";
 import { eq } from "drizzle-orm";
 import * as console from "console";
 
+type PostBody = {
+    docId: string;
+};
 
 export async function DELETE(request: Request) {
     try {
-        const body = await request.json();
-        const { docId } = body;
+        const { docId } = (await request.json()) as PostBody;
 
-        await db.delete(document).where(eq(document.id, docId));
+        await db.delete(document).where(eq(document.id, Number(docId)));
 
         // Return a success response
         return NextResponse.json({ success: true }, { status: 200 });

@@ -4,9 +4,16 @@ import { company, document,users } from "../../../server/db/schema";
 import { eq } from "drizzle-orm";
 import * as console from "console";
 
+type PostBody = {
+    userId: string;
+    documentName: string;
+    documentUrl: string;
+    documentCategory: string;
+};
+
 export async function POST(request: Request) {
     try {
-        const { userId, documentName, documentUrl, documentCategory } = await request.json();
+        const { userId, documentName, documentUrl, documentCategory } = (await request.json()) as PostBody;
 
         // 1) Find the user in the database
         const [userInfo] = await db
@@ -38,8 +45,8 @@ export async function POST(request: Request) {
             { status: 201 }
         );
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(error);
-        return NextResponse.json({ error: error.message || error }, { status: 500 });
+        return NextResponse.json({ error: error || error }, { status: 500 });
     }
 }

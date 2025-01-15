@@ -31,7 +31,6 @@ interface Category {
 }
 
 
-
 const DocumentUpload: React.FC = () => {
   const auth = useAuth();
   const router = useRouter();

@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import { db } from "../../../../server/db/index";
-import {users, company, category} from "../../../../server/db/schema";
+import {users, category} from "../../../../server/db/schema";
 import { eq } from "drizzle-orm";
+
+type PostBody = {
+    userId: string;
+    CategoryName: string;
+};
 
 export async function POST(request: Request) {
     try {
-        const { userId, CategoryName } = await request.json();
+        const { userId, CategoryName } = (await request.json()) as PostBody;
 
         // 1) Look up the user in the 'users' table
         const [userInfo] = await db
@@ -32,8 +37,8 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json({ success: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error }, { status: 500 });
     }
 }

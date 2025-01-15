@@ -4,10 +4,18 @@ import { company, document,users } from "../../../server/db/schema";
 import { eq } from "drizzle-orm";
 import * as console from "console";
 
+type PostBody = {
+    userId: string;
+    name: string;
+    employerPasskey: string;
+    employeePasskey: string;
+    numberOfEmployees: string;
+}
+
 
 export async function POST(request: Request) {
     try {
-        const { userId, name, employerPasskey, employeePasskey, numberOfEmployees  } = await request.json();
+        const { userId, name, employerPasskey, employeePasskey, numberOfEmployees  } = (await request.json()) as PostBody;
 
         /*
                     userId,
@@ -31,20 +39,20 @@ export async function POST(request: Request) {
 
         const companyId = userInfo.companyId;
 
-        const [updatedCompany] = await db
-            .update(company)                        // 1) switch from .insert() to .update()
-            .set({                                  // 2) .values(...) becomes .set(...)
+        await db //update company
+            .update(company)
+            .set({
                 name: name,
                 employerpasskey: employerPasskey,
                 employeepasskey: employeePasskey,
                 numberOfEmployees: numberOfEmployees ?? '0',
             })
-            .where(eq(company.id, companyId))  // 3) specify which row to update
-            .returning({ id: company.id });         // optionally return specific columns
+            .where(eq(company.id, Number(companyId)))
+            .returning({ id: company.id });
 
         // Return as JSON
         return NextResponse.json( { status: 200 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error fetching documents:", error);
         return NextResponse.json(
             { error: "Unable to fetch documents" },

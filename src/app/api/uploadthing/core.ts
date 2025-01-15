@@ -15,7 +15,7 @@ export const ourFileRouter = {
         .middleware(async () => {
             // This code runs on your server before upload
             const { userId } = await auth();
-            if (!userId) throw new UploadThingError("Unauthorized");
+            if (!userId) throw new Error("Unauthorized");
 
             // Whatever is returned here is accessible in onUploadComplete as `metadata`
             return { userId };

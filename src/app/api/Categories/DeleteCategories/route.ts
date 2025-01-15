@@ -3,15 +3,19 @@ import { db } from "../../../../server/db/index";
 import {users, company, category, document} from "../../../../server/db/schema";
 import { eq } from "drizzle-orm";
 
+type PostBody = {
+    id: string;
+};
+
 export async function DELETE(request: Request) {
     try {
-        const { id } = await request.json();
+        const { id } = (await request.json()) as PostBody;
 
-        await db.delete(category).where(eq(category.id, id));
+        await db.delete(category).where(eq(category.id, Number(id)));
 
         return NextResponse.json({ success: true }, { status: 200 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error }, { status: 500 });
     }
 }

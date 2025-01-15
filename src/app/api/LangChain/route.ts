@@ -8,10 +8,23 @@ import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import type { Document } from "langchain/document";
+
+type PostBody = {
+    url: string;
+    question: string;
+};
+
+interface MyDocMetadata {
+    loc?: {
+        pageNumber?: number;
+    };
+}
+
 
 export async function POST(request: Request) {
     try {
-        const { url, question } = await request.json();
+        const { url, question } = (await request.json()) as PostBody;
 
         // 1) Fetch the remote PDF file
         const response = await fetch(url);
@@ -44,7 +57,7 @@ export async function POST(request: Request) {
         const vectorStore = new MemoryVectorStore(embeddings);
         await vectorStore.addDocuments(allSplits);
 
-        const results = await vectorStore.similaritySearch(question);
+        const results: Document<MyDocMetadata>[] = await vectorStore.similaritySearch(question);
 
         // 6) Summarize with ChatOpenAI...
         const chat = new ChatOpenAI({
@@ -70,8 +83,8 @@ export async function POST(request: Request) {
             summarizedAnswer: summarizedAnswer.text,
             recommendedPages: results.map((doc) => doc.metadata?.loc?.pageNumber),
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(error);
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        return NextResponse.json({ success: false, error: error }, { status: 500 });
     }
 }

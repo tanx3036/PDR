@@ -3,9 +3,15 @@ import { db } from "../../../../server/db/index";
 import { users, company } from "../../../../server/db/schema";
 import { and, eq } from "drizzle-orm";
 
+type PostBody = {
+    userId: string;
+    employeePasskey: string;
+    companyName: string;
+};
+
 export async function POST(request: Request) {
     try {
-        const { userId, employeePasskey, companyName } = await request.json();
+        const { userId, employeePasskey, companyName } = (await request.json()) as PostBody;
 
         // Find company by company name
         const [existingCompany] = await db
@@ -33,8 +39,8 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json({ success: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: error }, { status: 500 });
     }
 }

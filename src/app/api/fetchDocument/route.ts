@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { db } from "../../../server/db/index";
-import { company, document,users } from "../../../server/db/schema";
+import { document,users } from "../../../server/db/schema";
 import { eq } from "drizzle-orm";
 import * as console from "console";
 
+type PostBody = {
+    userId: string;
+};
 
 export async function POST(request: Request) {
     try {
-        const { userId } = await request.json();
+        const { userId } = (await request.json()) as PostBody;
 
         // 1) Look up the user in the 'users' table
         const [userInfo] = await db
@@ -33,7 +36,7 @@ export async function POST(request: Request) {
 
         // Return as JSON
         return NextResponse.json(docs, { status: 200 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error fetching documents:", error);
         return NextResponse.json(
             { error: "Unable to fetch documents" },

@@ -4,10 +4,16 @@ import { users, company } from "../../../../server/db/schema";
 import {and, eq} from "drizzle-orm";
 import * as console from "console";
 
+type PostBody = {
+    userId: string;
+    employerPasskey: string;
+    companyName: string;
+}
+
 
 export async function POST(request: Request) {
     try {
-        const {userId, employerPasskey, companyName} = await request.json();
+        const {userId, employerPasskey, companyName} = (await request.json()) as PostBody;
 
         let companyId: string;
         const [existingCompany] = await db
@@ -37,7 +43,7 @@ export async function POST(request: Request) {
         });
 
     }
-    catch (error: any) {
+    catch (error: unknown) {
         console.error(error);
         return NextResponse.json({ error: error}, { status: 500 });
     }

@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import { db } from "../../../server/db/index";
 import { company, document,users } from "../../../server/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import * as console from "console";
+
+type PostBody = {
+    userId: string;
+};
 
 
 export async function POST(request: Request) {
     try {
-        const { userId } = await request.json();
+        const { userId } = (await request.json()) as PostBody;
 
         const [userInfo] = await db
             .select()
@@ -26,11 +30,11 @@ export async function POST(request: Request) {
         const companies = await db
             .select()
             .from(company)
-            .where(eq(company.id, companyId));
+            .where(and(eq(company.id, Number(companyId))));
 
         // Return as JSON
         return NextResponse.json(companies, { status: 200 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error fetching documents:", error);
         return NextResponse.json(
             { error: "Unable to fetch documents" },

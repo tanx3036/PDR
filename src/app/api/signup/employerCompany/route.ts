@@ -4,10 +4,19 @@ import {NextResponse} from "next/server";
 import console from "console";
 import {eq} from "drizzle-orm";
 
+type PostBody = {
+    userId: string;
+    companyName: string;
+    employerPasskey: string;
+    employeePasskey: string;
+    numberOfEmployees: string;
+}
+
+
 
 export async function POST(request: Request) {
     try {
-        const {userId, companyName, employerPasskey, employeePasskey, numberOfEmployees} = await request.json();
+        const {userId, companyName, employerPasskey, employeePasskey, numberOfEmployees} = (await request.json()) as PostBody;
 
         // Check if company already exists
         const [existingCompany] = await db
@@ -33,8 +42,13 @@ export async function POST(request: Request) {
             })
             .returning({ id: company.id });
 
+        if(!newCompany) {
+            return NextResponse.json(
+                { error: "Could not create company." },
+                { status: 400 }
+            );
+        }
 
-        // @ts-ignore
         const companyId = newCompany.id.toString();
 
 
@@ -47,7 +61,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true });
 
     }
-    catch (error: any) {
+    catch (error: unknown) {
         console.error(error);
         return NextResponse.json({ error: error}, { status: 500 });
     }
