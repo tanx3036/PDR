@@ -1,105 +1,103 @@
 import { NextResponse } from "next/server";
-import fetch from "node-fetch";
-import fs from "fs/promises";
-import os from "os";
-import path from "path";
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { db } from "../../../server/db/index";
+import { sql } from "drizzle-orm";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import type { Document } from "langchain/document";
-import { Client } from "pg";
 
+// e.g. if your "pdfChunks" table is called "pdr_ai_v2_pdf_chunks" in the DB schema
+// and has columns: id, document_id, page, content, embedding (vector).
 
 type PostBody = {
-    url: string;
+    documentId: number; // or string, depending on your schema
     question: string;
 };
 
-interface MyDocMetadata {
-    loc?: {
-        pageNumber?: number;
-    };
-}
+// A helper interface for the row shape returned by the query.
+type PdfChunkRow = Record<string, unknown> & {
+    id: number;
+    content: string;
+    page: number;
+    distance: number;
+};
 
 
 export async function POST(request: Request) {
     try {
-        const { url, question } = (await request.json()) as PostBody;
+        // 1) Parse the request body
+        const { documentId, question } = (await request.json()) as PostBody;
 
-        // 1) Fetch the remote PDF file
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Unable to fetch PDF from ${url}`);
+        // 2) Embed the user's question
+        const embeddings = new OpenAIEmbeddings({
+            model: "text-embedding-ada-002",
+            openAIApiKey: process.env.OPENAI_API_KEY,
+        });
+        const questionEmbedding = await embeddings.embedQuery(question);
+
+        // 3) pgvector expects bracketed notation "[x,y,z]" not curly braces.
+        const bracketedEmbedding = `[${questionEmbedding.join(",")}]`;
+
+        console.log(documentId);
+
+        // 4) Use Drizzle's `db.execute(sql<...>)` to run raw SQL with vector similarity
+        //    We ORDER BY embedding <-> $QUESTION_EMBEDDING::vector(1536) (lowest = most similar).
+        //    Adjust the dimension if needed; 1536 is standard for "text-embedding-ada-002".
+        const query = sql`
+          SELECT
+            id,
+            content,
+            page,
+            embedding <-> ${bracketedEmbedding}::vector(1536) AS distance
+          FROM pdr_ai_v2_pdf_chunks
+          WHERE document_id = ${documentId}
+          ORDER BY embedding <-> ${bracketedEmbedding}::vector(1536)
+          LIMIT 3
+        `;
+
+
+        // Then execute
+        const result = await db.execute<PdfChunkRow>(query);
+        // Drizzle returns rows in `result.rows`
+        const rows = result.rows;
+
+        if (rows.length === 0) {
+            return NextResponse.json({
+                success: false,
+                message: "No chunks found for the given documentId.",
+            });
         }
 
-        // 2) Convert response to a Buffer
-        const pdfArrayBuffer = await response.arrayBuffer();
-        const pdfBuffer = Buffer.from(pdfArrayBuffer);
-
-        // 3) Write to an ephemeral temp directory
-        const tempFilePath = path.join(os.tmpdir(), "temp.pdf");
-        await fs.writeFile(tempFilePath, pdfBuffer);
-
-        // 4) Load the PDF
-        const loader = new PDFLoader(tempFilePath);
-        const docs = await loader.load();
-
-        // 5) Text splitter, embeddings, vector store, similarity search...
-        //    (same as in your original code)
-        const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 200 });
-        const allSplits = await textSplitter.splitDocuments(docs);
-
-        const embeddings = new OpenAIEmbeddings({
-            model: "text-embedding-3-large",
-            openAIApiKey: process.env.OPENAI_API_KEY,
-        });
-
-        // 7) Set up a Postgres client
-        const client = new Client({
-            // or simply connectionString: process.env.DATABASE_URL
-            user: process.env.POSTGRES_USER,
-            host: process.env.POSTGRES_HOST,
-            database: process.env.POSTGRES_DB,
-            password: process.env.POSTGRES_PASSWORD,
-            port: 5432,
-        });
-        await client.connect();
-
-
-
-        const vectorStore = new MemoryVectorStore(embeddings);
-        await vectorStore.addDocuments(allSplits);
-
-        const results: Document<MyDocMetadata>[] = await vectorStore.similaritySearch(question);
-
-        // 6) Summarize with ChatOpenAI...
-        const chat = new ChatOpenAI({
-            openAIApiKey: process.env.OPENAI_API_KEY,
-            temperature: 0.5,
-            modelName: "gpt-4-turbo",
-        });
-
-        const combinedContent = results
-            .map((doc, idx) => `=== Result #${idx + 1}, Page: ${doc.metadata?.loc?.pageNumber} ===\n${doc.pageContent}`)
+        // 5) Combine all top-chunks into a single prompt
+        const combinedContent = rows
+            .map(
+                (row, idx) =>
+                    `=== Chunk #${idx + 1}, Page ${row.page}, Distance: ${row.distance} === ${row.content}`
+            )
             .join("\n\n");
 
+        // 6) Summarize / answer with ChatOpenAI
+        const chat = new ChatOpenAI({
+            openAIApiKey: process.env.OPENAI_API_KEY,
+            modelName: "gpt-4", // or gpt-3.5-turbo
+            temperature: 0.5,
+        });
+
         const summarizedAnswer = await chat.call([
-            new SystemMessage("You are a helpful assistant..."),
-            new HumanMessage(`User's question: "${question}"\n\n${combinedContent}\n\nAnswer concisely.`),
+            new SystemMessage(
+                "You are a helpful assistant that answers questions about a document."
+            ),
+            new HumanMessage(
+                `User's question: "${question}"\n\n${combinedContent}\n\nAnswer concisely.`
+            ),
         ]);
 
-        // 7) Clean up
-        await fs.unlink(tempFilePath);
-
+        // 7) Return JSON response
         return NextResponse.json({
             success: true,
             summarizedAnswer: summarizedAnswer.text,
-            recommendedPages: results.map((doc) => doc.metadata?.loc?.pageNumber),
+            recommendedPages: rows.map((row) => row.page),
         });
     } catch (error: unknown) {
         console.error(error);
-        return NextResponse.json({ success: false, error: error }, { status: 500 });
+        return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
     }
 }

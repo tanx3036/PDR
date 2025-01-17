@@ -136,7 +136,7 @@ const DocumentViewer: React.FC = () => {
             }
         };
 
-        fetchDocuments();
+        fetchDocuments().catch(console.error);
     }, [userId]);
 
     // Group documents by category (filter by search term)
@@ -175,7 +175,7 @@ const DocumentViewer: React.FC = () => {
             const res = await fetch("/api/LangChain", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ url: selectedDoc?.url , question: aiQuestion }),
+                body: JSON.stringify({ documentId: selectedDoc?.id, question: aiQuestion }),
             });
 
             if (!res.ok) {
