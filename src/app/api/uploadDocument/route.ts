@@ -86,25 +86,25 @@ export async function POST(request: Request) {
 
 
         // 7) Insert chunks -> pdfChunks table
-        //    Manually convert the float[] to bracketed format, e.g. [x,y,z]
         const rowsToInsert = allSplits.map((split, i) => {
-            if(!chunkEmbeddings[i]){
+            if (!chunkEmbeddings[i]) {
                 throw new Error("Missing embedding for chunk");
             }
+
+            // Sanitize the text: remove all null-byte characters
+            const sanitizedContent = split.pageContent.replace(/\0/g, "");
+
             const bracketedVector = `[${chunkEmbeddings[i].join(",")}]`;
 
             return {
                 documentId: insertedDocument.id,
                 page: split.metadata?.loc?.pageNumber ?? 1,
-                content: split.pageContent,
+                content: sanitizedContent,
                 embedding: sql`${bracketedVector}::vector(1536)`,
             };
         });
 
         await db.insert(pdfChunks).values(rowsToInsert);
-
-        // 8) Cleanup temp file
-        await fs.unlink(tempFilePath);
 
         // 9) Return success
         return NextResponse.json(

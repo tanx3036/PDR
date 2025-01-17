@@ -16,6 +16,7 @@ import styles from '../../../styles/employeeDocumentViewer.module.css';
 import {SignIn, SignOutButton, useAuth, UserButton} from "@clerk/nextjs";
 import LoadingDoc from "~/app/employee/documents/loading-doc";
 import LoadingPage from "~/app/_components/loading";
+import { fetchWithRetries } from "./fetchWithRetries";
 
 interface DocumentType {
     id: number;
@@ -109,7 +110,7 @@ const DocumentViewer: React.FC = () => {
             }
         };
 
-        checkEmployerRole();
+        checkEmployerRole().catch(console.error);
     }, [isLoaded, userId, router]);
 
     // Fetch documents
@@ -156,6 +157,8 @@ const DocumentViewer: React.FC = () => {
                     documents: [],
                 };
             }
+
+            // @ts-ignore
             acc[doc.category].documents.push(doc);
             return acc;
         }, {})
@@ -172,33 +175,28 @@ const DocumentViewer: React.FC = () => {
 
         try {
             setAiLoading(true);
-            const res = await fetch("/api/LangChain", {
+
+            // 2) Use our helper with up to 5 retries
+            const data = (await fetchWithRetries("/api/LangChain", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ documentId: selectedDoc?.id, question: aiQuestion }),
-            });
+                body: JSON.stringify({
+                    documentId: selectedDoc?.id,
+                    question: aiQuestion,
+                }),
+            }, 5)) as LangChainResponse; // cast to your response type if needed
 
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || "Request failed");
-            }
-            console.log(res);
-
-            const data = (await res.json()) as LangChainResponse;
-
+            // 3) Handle success
             setAiAnswer(data.summarizedAnswer);
 
-            // data.recommendedPages => array of pages
+            // remove duplicates from recommended pages
             if (Array.isArray(data.recommendedPages)) {
-                // remove duplicates, just in case
                 const uniquePages = Array.from(new Set(data.recommendedPages));
                 setReferencePages(uniquePages);
             }
-
-
-        } catch (err: any) {
-
-            setAiError(err.message);
+        } catch (err: unknown) {
+            // 4) If all retries fail or error is non-timeout
+            setAiError("Timeout error: Please try again later.");
         } finally {
             setAiLoading(false);
         }
