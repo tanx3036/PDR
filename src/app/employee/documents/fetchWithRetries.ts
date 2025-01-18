@@ -12,30 +12,46 @@ export async function fetchWithRetries(
 
             if (!res.ok) {
                 // For a non-200 response, you can parse the error body or just throw.
-                const errorData = await res.json().catch(() => ({}));
-                throw new Error(errorData.error || `Request failed with status ${res.status}`);
+                const rawErrorData : unknown = await res.json().catch(() => ({}));
+
+                if(typeof rawErrorData !== "object") {
+                    throw new Error(`Request failed with status ${res.status}`);
+                }
+
+                const errorData = rawErrorData as { error?: string };
+
+                throw new Error(errorData.error ?? `Request failed with status ${res.status}`);
             }
 
             // If fetch + response parsing is successful, return the JSON
-            return res.json();
-        } catch (err: any) {
+            const data: unknown = await res.json(); // Store in a variable
+            return data; // Then return the resolved value
+        } catch (err: unknown) {
             lastError = err;
 
             // Check if it's specifically a "timeout" or "network" error
-            // (Depending on your environment, you might rely on `err.name === 'AbortError'`
-            //  or a specific message like "NetworkError when attempting to fetch resource".)
-            const isTimeoutError = /timed out/i.test(err.message) || err.name === "AbortError";
+            if (err instanceof Error) {
+                const isTimeoutError =
+                    /timed out/i.test(err.message) || err.name === "AbortError";
 
-            if (isTimeoutError && attempt < maxRetries) {
-                console.warn(`Attempt ${attempt} failed due to timeout, retrying...`);
-                continue; // Go to the next attempt
+                if (isTimeoutError && attempt < maxRetries) {
+                    console.warn(`Attempt ${attempt} failed due to timeout, retrying...`);
+                    continue; // Go to the next attempt
+                }
+
+                // If it's a non-timeout error or we've used all retries, re-throw
+                throw err; // This is safe now because `err` is an Error
             } else {
-                // If it's not a timeout or we've used up all retries, throw immediately
-                throw err;
+                // Wrap non-Error in a real Error
+                throw new Error(`Non-Error thrown: ${String(err)}`);
             }
         }
     }
 
     // If we somehow exit the loop, throw the last error
+    // If `lastError` is not an Error, wrap it
+    if (!(lastError instanceof Error)) {
+        throw new Error(`Non-Error thrown: ${String(lastError)}`);
+    }
     throw lastError;
 }

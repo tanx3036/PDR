@@ -10,6 +10,7 @@ import path from "path";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { OpenAIEmbeddings } from "@langchain/openai";
+import type { Document } from "langchain/document";
 
 // Drizzle expects a type for the table columns, skip for brevity
 // import type { InsertPdfChunks } from '../../../server/db/schema/pdfChunks';
@@ -20,6 +21,13 @@ type PostBody = {
     documentUrl: string;
     documentCategory: string;
 };
+
+interface PDFMetadata {
+    loc?: {
+        pageNumber?: number;
+    };
+}
+
 
 export async function POST(request: Request) {
     try {
@@ -69,7 +77,7 @@ export async function POST(request: Request) {
             chunkSize: 1000,
             chunkOverlap: 200,
         });
-        const allSplits = await textSplitter.splitDocuments(docs);
+        const allSplits = (await textSplitter.splitDocuments(docs)) as Document<PDFMetadata>[];
 
         // 6) Embed
         const embeddings = new OpenAIEmbeddings({

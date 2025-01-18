@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from 'react';
+import React, {FC, ReactNode} from 'react';
 import { FileText, Brain, Zap, ArrowRight, Check } from 'lucide-react';
 import styles from '../styles/home.module.css';
 
@@ -11,6 +11,18 @@ import {
     SignedOut,
     UserButton
 } from '@clerk/nextjs'
+
+
+interface FeatureCardProps {
+    icon: ReactNode;
+    title: string;
+    description: string;
+}
+
+interface BenefitItemProps {
+    text: string;
+}
+
 
 export default function HomePage() {
     return (
@@ -132,7 +144,7 @@ export default function HomePage() {
     );
 }
 
-const FeatureCard = ({ icon, title, description }) => (
+const FeatureCard: FC<FeatureCardProps> = ({ icon, title, description }) => (
     <div className={styles['feature-card']}>
         <div className={styles['feature-icon']}>
             {icon}
@@ -142,7 +154,7 @@ const FeatureCard = ({ icon, title, description }) => (
     </div>
 );
 
-const BenefitItem = ({ text }) => (
+const BenefitItem: FC<BenefitItemProps> = ({ text }) => (
     <div className={styles['benefit-item']}>
         <Check className={styles['icon-check']} />
         <span className={styles['benefit-text']}>{text}</span>

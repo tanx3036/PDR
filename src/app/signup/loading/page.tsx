@@ -10,6 +10,10 @@ export default async function LoadingPage() {
     const { userId } = await auth();
     console.log('Server side Id:' + userId);
 
+    if(!userId) {
+        redirect("/");
+    }
+
     // 2) Check if user exists in the DB
     const [existingUser] = await db
         .select()

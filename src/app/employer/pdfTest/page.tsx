@@ -24,15 +24,27 @@ export default function HomePage() {
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Request failed");
+                const rawErrorData:unknown = await response.json();
+                if (typeof rawErrorData !== "object") {
+                    throw new Error(`Request failed with status ${response.status}`);
+                }
+                const errorData = rawErrorData as { error?: string };
+                throw new Error(errorData.error ?? "Request failed");
             }
 
-            const data = await response.json();
+            const rawData:unknown = await response.json();
+            if (typeof rawData !== "object") {
+                throw new Error("Invalid response from server");
+            }
+            const data = rawData as { answer: string; references: number[] };
             setAnswer(data.answer);
             setReferences(data.references);
-        } catch (err: any) {
-            setErrorMsg(err.message);
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setErrorMsg(err.message);
+            } else {
+                setErrorMsg(`Non-Error thrown: ${String(err)}`);
+            }
         } finally {
             setLoading(false);
         }

@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from '../../../styles/employeeDocumentViewer.module.css';
-import {SignIn, SignOutButton, useAuth, UserButton} from "@clerk/nextjs";
+import { SignOutButton, useAuth, UserButton } from "@clerk/nextjs";
 import LoadingDoc from "~/app/employee/documents/loading-doc";
 import LoadingPage from "~/app/_components/loading";
 import { fetchWithRetries } from "./fetchWithRetries";
@@ -36,7 +36,6 @@ interface LangChainResponse {
     success: boolean;
     summarizedAnswer: string;
     recommendedPages: number[];
-    // ... other properties if needed
 }
 
 
@@ -128,7 +127,12 @@ const DocumentViewer: React.FC = () => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch documents");
                 }
-                const data: DocumentType[] = await response.json();
+
+                const rawData : unknown = await response.json();
+                if (!Array.isArray(rawData)) {
+                    throw new Error("Invalid data format, expected an array.");
+                }
+                const data = rawData as DocumentType[];
                 setDocuments(data);
             } catch (error) {
                 console.error("Error fetching documents:", error);
@@ -142,10 +146,10 @@ const DocumentViewer: React.FC = () => {
 
     // Group documents by category (filter by search term)
     const categories: CategoryGroup[] = Object.values(
-        documents.reduce((acc: { [key: string]: CategoryGroup }, doc) => {
+        documents.reduce((acc: Record<string, CategoryGroup>, doc) => {
             if (
                 !doc.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                !(doc.aiSummary || "").toLowerCase().includes(searchTerm.toLowerCase())
+                !(doc.aiSummary ?? "").toLowerCase().includes(searchTerm.toLowerCase())
             ) {
                 return acc;
             }
@@ -158,8 +162,7 @@ const DocumentViewer: React.FC = () => {
                 };
             }
 
-            // @ts-ignore
-            acc[doc.category].documents.push(doc);
+            acc[doc.category]!.documents.push(doc);
             return acc;
         }, {})
     );

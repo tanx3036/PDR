@@ -85,7 +85,7 @@ const DocumentViewer: React.FC = () => {
             }
         };
 
-        checkEmployerRole();
+        checkEmployerRole().catch((error) => {console.error("Error checking employer role:", error);});
     }, [isLoaded, userId, router]);
 
     // If still checking role, show general loading
@@ -111,7 +111,8 @@ const DocumentViewer: React.FC = () => {
                     throw new Error("Failed to fetch documents");
                 }
 
-                const data: DocumentType[] = await response.json();
+                const rawData: unknown = await response.json();
+                const data = Array.isArray(rawData) ? rawData : [];
                 setDocuments(data);
             } catch (error) {
                 console.error("Error fetching documents:", error);
@@ -120,7 +121,7 @@ const DocumentViewer: React.FC = () => {
             }
         };
 
-        fetchDocuments();
+        fetchDocuments().catch((error) => {console.error("Error fetching documents:", error);});
     }, [userId]);
 
     // If documents are still loading, show doc-specific loader
@@ -159,11 +160,11 @@ const DocumentViewer: React.FC = () => {
      * + Basic search filtering
      */
     const categories: CategoryGroup[] = Object.values(
-        documents.reduce((acc: { [key: string]: CategoryGroup }, doc) => {
+        documents.reduce((acc: Record<string, CategoryGroup>, doc) => {
             // Filter by search term on title or AI summary
             if (
                 !doc.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                !(doc.aiSummary || "")
+                !(doc.aiSummary ?? "")
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase())
             ) {
@@ -177,7 +178,7 @@ const DocumentViewer: React.FC = () => {
                     documents: [],
                 };
             }
-            acc[doc.category].documents.push(doc);
+            acc[doc.category]!.documents.push(doc);
             return acc;
         }, {})
     );

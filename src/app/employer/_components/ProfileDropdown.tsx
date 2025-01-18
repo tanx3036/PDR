@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { SignedIn, SignedOut, useUser, useClerk } from "@clerk/nextjs";
-import { User } from "lucide-react";
+import {  useUser, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import styles from "../../../styles/employerprofiledropdown.module.css";
 import {
@@ -12,7 +11,6 @@ import {
 const ProfileDropdown: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const { user } = useUser();          // Clerk user object
     const { signOut } = useClerk();      // Clerk sign-out method
     const router = useRouter();
 

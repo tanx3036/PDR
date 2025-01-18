@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { FileText, TrendingUp, Eye, Calendar, Search } from 'lucide-react';
 import styles from '../../../styles/employerstats.module.css';
 

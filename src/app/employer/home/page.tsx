@@ -48,7 +48,7 @@ const HomeScreen = () => {
             }
         };
 
-        checkEmployerRole();
+        checkEmployerRole().catch(console.error);
     }, [userId, router]);
 
 

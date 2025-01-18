@@ -12,10 +12,11 @@ import {
   UserButton
 } from '@clerk/nextjs'
 
+
 export const metadata: Metadata = {
   title: "PDR AI",
   description: "PDR AI",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "favicon.ico" }],
 };
 
 export default function RootLayout({
