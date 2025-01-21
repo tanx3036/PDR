@@ -1,6 +1,5 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
-
 import {relations, sql} from "drizzle-orm";
 import {
     index, text,
@@ -22,16 +21,18 @@ export const pgTable = pgTableCreator((name) => `pdr_ai_v2_${name}`);
 
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
+    name: varchar("name", {  length: 256 }).notNull(),
+    email: varchar("email", {  length: 256 }).notNull(),
     userId: varchar("userId", {  length: 256 }).notNull(),
     companyId: varchar("companyId", {  length: 256 }).notNull(),
     role: varchar("role", {  length: 256 }).notNull(),
+    status: varchar("status", {  length: 256 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
         .default(sql`CURRENT_TIMESTAMP`)
         .notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
         () => new Date()
     ),
-
 });
 
 export const company = pgTable('company', {

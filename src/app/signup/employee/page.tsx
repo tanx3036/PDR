@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { Eye, EyeOff, Lock, Building, Brain } from "lucide-react";
-import styles from "../../../styles/employeesignin.module.css";
+import styles from "~/styles/employeesignin.module.css";
 
 interface EmployeeSignInFormData {
     companyName: string;
@@ -19,7 +20,7 @@ interface EmployeeSignInFormErrors {
 const EmployeeSignIn: React.FC = () => {
     const router = useRouter();
     const { userId } = useAuth();
-
+    const { user } = useUser();
 
     // Form data state
     const [employeeSignInFormData, setEmployeeSignInFormData] =
@@ -71,12 +72,16 @@ const EmployeeSignIn: React.FC = () => {
     // -------------------------------
     const submitSignIn = async () => {
         if (!userId) return;
+        if( !user ) return;
+
 
         const response = await fetch("/api/signup/employee", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 userId,
+                name: user?.fullName,
+                email: user?.emailAddresses[0]?.emailAddress,
                 companyName: employeeSignInFormData.companyName,
                 employeePasskey: employeeSignInFormData.employeePasscode,
             }),

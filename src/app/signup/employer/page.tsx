@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
+import {useAuth, useUser} from "@clerk/nextjs";
 import { Eye, EyeOff, Building, Brain, Lock, Users } from "lucide-react";
 // Import your CSS Module (with Tailwind's @apply rules)
 import styles from "../../../styles/EmployerSignup.module.css";
@@ -38,6 +38,7 @@ interface SignInFormErrors {
 const EmployerSignup: React.FC = () => {
     const router = useRouter();
     const { userId } = useAuth();
+    const { user } = useUser();
 
     // Sign Up State
     const [signUpFormData, setSignUpFormData] = useState<SignUpFormData>({
@@ -100,11 +101,15 @@ const EmployerSignup: React.FC = () => {
 
     const submitSignIn = async () => {
         if (!userId) return;
+        if (!user) return;
+
         const response = await fetch("/api/signup/employer", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 userId: userId,
+                name: user?.fullName,
+                email: user?.emailAddresses[0]?.emailAddress,
                 companyName: signInFormData.companyName,
                 employerPasskey: signInFormData.managerPasscode,
             }),
@@ -169,11 +174,17 @@ const EmployerSignup: React.FC = () => {
 
     const submitSignUp = async () => {
         if (!userId) return;
+        if (!user) return;
+
+
+
         const response = await fetch("/api/signup/employerCompany", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 userId: userId,
+                name: user?.fullName,
+                email: user?.emailAddresses[0]?.emailAddress,
                 companyName: signUpFormData.companyName,
                 employerPasskey: signUpFormData.managerPasscode,
                 employeePasskey: signUpFormData.employeePasscode,

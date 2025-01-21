@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { db } from "../../../../server/db/index";
-import { users, company } from "../../../../server/db/schema";
+import { db } from "~/server/db/index";
+import { users, company } from "~/server/db/schema";
 import {and, eq} from "drizzle-orm";
 import * as console from "console";
 
 type PostBody = {
     userId: string;
+    name: string;
+    email: string;
     employerPasskey: string;
     companyName: string;
 }
@@ -13,7 +15,7 @@ type PostBody = {
 
 export async function POST(request: Request) {
     try {
-        const {userId, employerPasskey, companyName} = (await request.json()) as PostBody;
+        const {userId, name, email, employerPasskey, companyName} = (await request.json()) as PostBody;
 
         let companyId: string;
         const [existingCompany] = await db
@@ -38,7 +40,10 @@ export async function POST(request: Request) {
 
         await db.insert(users).values({
             userId,
+            name,
+            email,
             companyId,
+            status: "verified",
             role: "employer",
         });
 

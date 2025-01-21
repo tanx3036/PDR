@@ -7,6 +7,8 @@ import {eq} from "drizzle-orm";
 type PostBody = {
     userId: string;
     companyName: string;
+    name: string;
+    email: string;
     employerPasskey: string;
     employeePasskey: string;
     numberOfEmployees: string;
@@ -16,7 +18,15 @@ type PostBody = {
 
 export async function POST(request: Request) {
     try {
-        const {userId, companyName, employerPasskey, employeePasskey, numberOfEmployees} = (await request.json()) as PostBody;
+        const {userId, name, email, companyName, employerPasskey, employeePasskey, numberOfEmployees} = (await request.json()) as PostBody;
+
+        console.log('userId: ' + userId);
+        console.log('name: ' + name);
+        console.log('email: ' + email);
+        console.log('companyName: ' + companyName);
+        console.log('employerPasskey: ' + employerPasskey);
+        console.log('employeePasskey: ' + employeePasskey);
+        console.log('numberOfEmployees: ' + numberOfEmployees);
 
         // Check if company already exists
         const [existingCompany] = await db
@@ -55,6 +65,9 @@ export async function POST(request: Request) {
         await db.insert(users).values({
             userId,
             companyId,
+            name,
+            email,
+            status: "verified",
             role: "employer",
         });
 

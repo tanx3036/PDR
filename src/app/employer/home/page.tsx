@@ -1,16 +1,16 @@
-"use client"
-import React, {useState, useEffect} from 'react';
-import {Upload, FileText, BarChart, Brain, Settings} from 'lucide-react';
-import styles from '../../../styles/employerhome.module.css';
-import {useRouter} from "next/navigation";
+"use client";
+import React, { useState, useEffect } from "react";
+import { Upload, FileText, BarChart, Brain, Settings, Users } from "lucide-react";
+import styles from "../../../styles/employerhome.module.css";
+import { useRouter } from "next/navigation";
 import ProfileDropdown from "~/app/employer/_components/ProfileDropdown";
-import { useAuth} from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import LoadingPage from "~/app/_components/loading";
 
 const HomeScreen = () => {
     const router = useRouter();
 
-    //check if authorized. If not authorized as employer, return home
+    // check if authorized. If not authorized as employer, return home
     const { isLoaded, userId } = useAuth();
     const [loading, setLoading] = useState(true);
 
@@ -37,7 +37,6 @@ const HomeScreen = () => {
                     router.push("/");
                     return;
                 }
-
             } catch (error) {
                 console.error("Error checking employer role:", error);
                 // If there is any error, also redirect or handle appropriately
@@ -49,46 +48,49 @@ const HomeScreen = () => {
         };
 
         checkEmployerRole().catch(console.error);
-    }, [userId, router]);
+    }, [userId, router, isLoaded]);
 
-
+    // Updated menu options with Manage Employees
     const menuOptions = [
         {
             icon: <Upload className={styles.menuIcon} />,
             title: "Upload Documents",
             description: "Add new documents to the database for AI analysis",
-            path: "/employer/upload"
+            path: "/employer/upload",
         },
         {
             icon: <FileText className={styles.menuIcon} />,
             title: "View Documents",
             description: "Browse and manage your uploaded documents",
-            path: "/employer/documents"
+            path: "/employer/documents",
         },
         {
             icon: <BarChart className={styles.menuIcon} />,
             title: "Document Statistics",
             description: "View analytics and insights about document usage",
-            path: "/unavailable"
+            path: "/unavailable",
+        },
+        {
+            icon: <Users className={styles.menuIcon} />,
+            title: "Manage Employees",
+            description: "View and manage employees in your organization",
+            path: "/employer/employees", // <-- your new route
         },
         {
             icon: <Settings className={styles.menuIcon} />,
             title: "User Settings",
             description: "Manage your profile, preferences, and account details",
-            path: "/employer/settings"
-        }
+            path: "/employer/settings",
+        },
     ];
 
-    const handleNavigation = (path : string) => {
-        // Navigation logic will go here
-        console.log(`Navigating to: ${path}`);
-        router.push(path)
+    const handleNavigation = (path: string) => {
+        router.push(path);
     };
 
-    if(loading){
+    if (loading) {
         return <LoadingPage />;
     }
-
 
     return (
         <div className={styles.container}>
@@ -108,7 +110,8 @@ const HomeScreen = () => {
                 <div className={styles.welcomeSection}>
                     <h1 className={styles.welcomeTitle}>Welcome to PDR AI</h1>
                     <p className={styles.welcomeText}>
-                        Your AI integrated document management assistant and interpreter. Choose an option below to get started.
+                        Your AI integrated document management assistant and interpreter. Choose an option below
+                        to get started.
                     </p>
                 </div>
 
@@ -122,9 +125,7 @@ const HomeScreen = () => {
                             role="button"
                             tabIndex={0}
                         >
-                            <div className={styles.iconContainer}>
-                                {option.icon}
-                            </div>
+                            <div className={styles.iconContainer}>{option.icon}</div>
                             <h2 className={styles.menuTitle}>{option.title}</h2>
                             <p className={styles.menuDescription}>{option.description}</p>
                             <div className={styles.cardFooter}>
@@ -133,7 +134,6 @@ const HomeScreen = () => {
                         </div>
                     ))}
                 </div>
-
             </main>
         </div>
     );
