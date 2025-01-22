@@ -40,7 +40,12 @@ const ManageEmployeesPage = () => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ userId }),
                 });
-                if (!response.ok) {
+                if(response.status === 300){
+                    router.push("/employee/pending-approval");
+                    return;
+                }
+                else if (!response.ok) {
+                    // If the endpoint returns an error, also redirect
                     window.alert("Authentication failed! You are not an employer.");
                     router.push("/");
                     return;

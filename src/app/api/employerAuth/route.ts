@@ -31,6 +31,9 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: "Not authorized" }, { status: 403 });
         }
 
+        if(userInfo.status !== "verified"){
+            return NextResponse.json({ error: "User not verified" }, { status: 300 });
+        }
 
         // Return role only if found
         return NextResponse.json(userInfo.role, { status: 200 });
