@@ -6,16 +6,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import ProfileDropdown from "~/app/employer/_components/ProfileDropdown";
 import LoadingPage from "~/app/_components/loading";
-import {varchar} from "drizzle-orm/pg-core";
 
 interface Employee {
-
-    userId: varchar("userId", {  length: 256 }).notNull(),
-    companyId: varchar("companyId", {  length: 256 }).notNull(),
-    role: varchar("role", {  length: 256 }).notNull(),
-    status: varchar("status", {  length: 256 }).notNull(),
-
-
     id: string;
     name: string;
     email: string;
