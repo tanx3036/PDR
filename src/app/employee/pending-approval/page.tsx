@@ -1,26 +1,59 @@
 "use client"
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Brain, Clock, Building, Mail, AlertCircle } from 'lucide-react';
+import { useRouter } from "next/navigation"
+import { useAuth } from "@clerk/nextjs";
 import styles from '~/styles/employeePendingApproval.module.css';
 
 interface PendingApprovalProps {
-    employeeData?: {
-        name: string;
-        email: string;
-        company: string;
-        submissionDate: string;
-    };
+        name?: string;
+        email?: string;
+        company?: string;
+        submissionDate?: string;
 }
 
-const PendingApproval: React.FC<PendingApprovalProps> = ({
-                                                             employeeData = {
-                                                                 name: "John Doe",
-                                                                 email: "john.doe@company.com",
-                                                                 company: "Tech Corp",
-                                                                 submissionDate: "2025-01-20"
-                                                             }
-                                                         }) => {
+const PendingApproval: React.FC<PendingApprovalProps> = () => {
+    const router = useRouter();
+    const userId = useAuth();
+
+
+    const [currentEmployeeData, setCurrentEmployeeData] =
+        useState<PendingApprovalProps>();
+
+    // Fetch user data and populate state
+    const checkEmployerRole = async () => {
+        try {
+            const response = await fetch("/api/fetchUserInfo", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId }),
+            });
+
+            if (!response.ok) {
+                window.alert("Authentication failed! You are not an employee.");
+                router.push("/");
+                return;
+            }
+
+            // Parse the returned data and set it to state
+            const rawData:unknown = await response.json();
+
+
+            setCurrentEmployeeData({
+                name: data?.name,
+                email: data?.email,
+                company: data?.company,
+                submissionDate: data?.submissionDate,
+            });
+        } catch (error) {
+            console.error("Error checking employee role:", error);
+            window.alert("Authentication failed! You are not an employee.");
+            router.push("/");
+        }
+    };
+
+
     return (
         <div className={styles.container}>
             {/* Navigation */}

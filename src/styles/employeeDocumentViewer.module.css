@@ -225,6 +225,23 @@
     @apply text-lg text-gray-700 font-medium;
 }
 
+.aiSearchForm {
+    @apply flex flex-col space-y-2;
+}
+
+.aiSearchInput {
+    @apply border border-gray-300 rounded p-2 w-full;
+}
+
+.aiSearchButton {
+    @apply bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700
+    transition-colors duration-200;
+}
+
+.aiAnswerContainer {
+    @apply bg-gray-100 rounded p-3 mt-2;
+}
+
 /* VIEW-MODE BUTTONS */
 .viewModeButtons {
     @apply p-2 flex flex-col space-y-2;

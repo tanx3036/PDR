@@ -19,21 +19,15 @@ export async function POST(request: Request) {
             .from(users)
             .where(eq(users.userId, userId));
 
-        console.log("user Id", userId)
-        console.log("user info", userInfo)
         // If user not found or no role, handle appropriately
         if (!userInfo) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
-        }
-
-        // You could also do a server-side check here; for example:
-        if (userInfo.role !== "employer") {
-          return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+            return NextResponse.json({error: "User not found"}, {status: 404});
         }
 
 
         // Return role only if found
-        return NextResponse.json(userInfo.role, { status: 200 });
+        return NextResponse.json(userInfo, { status: 200 });
+
     } catch (error: unknown) {
         console.error("Error fetching documents:", error);
         return NextResponse.json(
