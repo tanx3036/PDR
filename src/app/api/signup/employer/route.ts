@@ -43,7 +43,7 @@ export async function POST(request: Request) {
             name,
             email,
             companyId,
-            status: "verified",
+            status: "pending",
             role: "employer",
         });
 

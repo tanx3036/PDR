@@ -11,7 +11,8 @@ interface Employee {
     id: string;
     name: string;
     email: string;
-    status: "approved" | "pending";
+    role: string;
+    status: "verified" | "pending";
 }
 
 const ManageEmployeesPage = () => {
@@ -71,7 +72,7 @@ const ManageEmployeesPage = () => {
             const data: Employee[] = await res.json();
 
             // Separate approved from pending
-            const approved = data.filter((emp) => emp.status === "approved");
+            const approved = data.filter((emp) => emp.status === "verified");
             const pending = data.filter((emp) => emp.status === "pending");
 
             setEmployees(approved);
@@ -84,8 +85,10 @@ const ManageEmployeesPage = () => {
     const handleRemoveEmployee = async (employeeId: string) => {
         try {
             // Call your remove endpoint
-            await fetch(`/api/getAllEmployees`, {
-                method: "DELETE",
+            await fetch(`/api/removeEmployees`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ employeeId }),
             });
             // Refresh the lists
             await loadEmployees();
@@ -97,8 +100,10 @@ const ManageEmployeesPage = () => {
     const handleApproveEmployee = async (employeeId: string) => {
         try {
             // Call your approve endpoint
-            await fetch(`/api/employees/${employeeId}/approve`, {
+            await fetch(`/api/approveEmployees`, {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ employeeId }),
             });
             // Refresh the lists
             await loadEmployees();
@@ -115,99 +120,103 @@ const ManageEmployeesPage = () => {
     }
 
     return (
-        <div className={styles.container}>
-            {/* Navigation Bar */}
-            <nav className={styles.navbar}>
-                <div className={styles.navContent}>
-                    <div className={styles.logoContainer}>
-                        <Brain className={styles.logoIcon} />
-                        <span className={styles.logoText}>PDR AI</span>
-                    </div>
-                    <ProfileDropdown />
-                </div>
-            </nav>
+      <div className={styles.container}>
+        {/* Navigation Bar */}
+        <nav className={styles.navbar}>
+          <div className={styles.navContent}>
+            <div className={styles.logoContainer}>
+              <Brain className={styles.logoIcon} />
+              <span className={styles.logoText}>PDR AI</span>
+            </div>
+            <ProfileDropdown />
+          </div>
+        </nav>
 
-            <main className={styles.main}>
-                <h1 className={styles.welcomeTitle}>Manage Employees</h1>
+        <main className={styles.main}>
+          <h1 className={styles.welcomeTitle}>Manage Employees</h1>
 
-                {/* Approved Employees List */}
-                <section className={styles.employeeSection}>
-                    <h2 className={styles.sectionTitle}>All Employees</h2>
-                    {employees.length === 0 ? (
-                        <p>No approved employees yet.</p>
-                    ) : (
-                        <table className={styles.employeeTable}>
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {employees.map((emp) => (
-                                <tr key={emp.id}>
-                                    <td>{emp.name}</td>
-                                    <td>{emp.email}</td>
-                                    <td>
-                                        <button
-                                            className={styles.removeButton}
-                                            onClick={() => handleRemoveEmployee(emp.id)}
-                                        >
-                                            <Trash2 size={16} />
-                                            Remove
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    )}
-                </section>
+          {/* Approved Employees List */}
+          <section className={styles.employeeSection}>
+            <h2 className={styles.sectionTitle}>All Employees</h2>
+            {employees.length === 0 ? (
+              <p>No approved employees yet.</p>
+            ) : (
+              <table className={styles.employeeTable}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {employees.map((emp) => (
+                    <tr key={emp.id}>
+                      <td>{emp.name}</td>
+                      <td>{emp.email}</td>
+                      <td>{emp.role}</td>
+                      <td>
+                        <button
+                          className={styles.removeButton}
+                          onClick={() => handleRemoveEmployee(emp.id)}
+                        >
+                          <Trash2 size={16} />
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </section>
 
-                {/* Pending Employees List */}
-                <section className={styles.employeeSection}>
-                    <h2 className={styles.sectionTitle}>Pending Approvals</h2>
-                    {pendingEmployees.length === 0 ? (
-                        <p>No pending employees.</p>
-                    ) : (
-                        <table className={styles.employeeTable}>
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {pendingEmployees.map((emp) => (
-                                <tr key={emp.id}>
-                                    <td>{emp.name}</td>
-                                    <td>{emp.email}</td>
-                                    <td>
-                                        <button
-                                            className={styles.approveButton}
-                                            onClick={() => handleApproveEmployee(emp.id)}
-                                        >
-                                            <CheckCircle size={16} />
-                                            Approve
-                                        </button>
-                                        <button
-                                            className={styles.removeButton}
-                                            onClick={() => handleRemoveEmployee(emp.id)}
-                                        >
-                                            <Trash2 size={16} />
-                                            Remove
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    )}
-                </section>
-            </main>
-        </div>
+          {/* Pending Employees List */}
+          <section className={styles.employeeSection}>
+            <h2 className={styles.sectionTitle}>Pending Approvals</h2>
+            {pendingEmployees.length === 0 ? (
+              <p>No pending employees.</p>
+            ) : (
+              <table className={styles.employeeTable}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pendingEmployees.map((emp) => (
+                    <tr key={emp.id}>
+                      <td>{emp.name}</td>
+                      <td>{emp.email}</td>
+                      <td>{emp.role}</td>
+                      <td>
+                        <button
+                          className={styles.approveButton}
+                          onClick={() => handleApproveEmployee(emp.id)}
+                        >
+                          <CheckCircle size={16} />
+                          Approve
+                        </button>
+                        <button
+                          className={styles.removeButton}
+                          onClick={() => handleRemoveEmployee(emp.id)}
+                        >
+                          <Trash2 size={16} />
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </section>
+        </main>
+      </div>
     );
 };
 

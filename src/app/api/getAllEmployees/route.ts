@@ -35,7 +35,6 @@ export async function POST(request: Request) {
             .where(
                 and(
                     eq(users.companyId, companyId),
-                    eq(users.role, "employee")
                 )
             );
 

@@ -95,6 +95,10 @@ const DocumentViewer: React.FC = () => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ userId }),
                 });
+                if(response.status === 300){
+                    router.push("/employee/pending-approval");
+                }
+
                 if (!response.ok) {
                     window.alert("Authentication failed! You are not an employee.");
                     router.push("/");
