@@ -97,9 +97,9 @@ const DocumentViewer: React.FC = () => {
                 });
                 if(response.status === 300){
                     router.push("/employee/pending-approval");
+                    return;
                 }
-
-                if (!response.ok) {
+                else if (!response.ok) {
                     window.alert("Authentication failed! You are not an employee.");
                     router.push("/");
                     return;

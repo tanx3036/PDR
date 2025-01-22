@@ -15,11 +15,9 @@ interface PendingApprovalProps {
 
 const PendingApproval: React.FC<PendingApprovalProps> = () => {
     const router = useRouter();
-    const userId = useAuth();
+    const {userId} = useAuth();
 
-
-    const [currentEmployeeData, setCurrentEmployeeData] =
-        useState<PendingApprovalProps>();
+    const [currentEmployeeData, setCurrentEmployeeData] = useState<PendingApprovalProps>();
 
     // Fetch user data and populate state
     const checkEmployerRole = async () => {
@@ -30,14 +28,11 @@ const PendingApproval: React.FC<PendingApprovalProps> = () => {
                 body: JSON.stringify({ userId }),
             });
 
-            if (!response.ok) {
-                window.alert("Authentication failed! You are not an employee.");
-                router.push("/");
-                return;
-            }
-
             // Parse the returned data and set it to state
             const rawData:unknown = await response.json();
+            console.log("Raw data:", rawData);
+            const data = rawData as PendingApprovalProps
+            console.log("Employee data:", data);
 
 
             setCurrentEmployeeData({
@@ -52,6 +47,13 @@ const PendingApproval: React.FC<PendingApprovalProps> = () => {
             router.push("/");
         }
     };
+
+    // Run the check on mount
+    useEffect(() => {
+        if (userId) {
+            checkEmployerRole().catch(console.error);
+        }
+    }, [userId]);
 
 
     return (
@@ -88,7 +90,7 @@ const PendingApproval: React.FC<PendingApprovalProps> = () => {
                                 <Building className={styles.detailIcon} />
                                 <div className={styles.detailContent}>
                                     <span className={styles.detailLabel}>Company</span>
-                                    <span className={styles.detailValue}>{employeeData.company}</span>
+                                    <span className={styles.detailValue}>{currentEmployeeData?.company ?? ""}</span>
                                 </div>
                             </div>
 
@@ -96,7 +98,7 @@ const PendingApproval: React.FC<PendingApprovalProps> = () => {
                                 <Mail className={styles.detailIcon} />
                                 <div className={styles.detailContent}>
                                     <span className={styles.detailLabel}>Email</span>
-                                    <span className={styles.detailValue}>{employeeData.email}</span>
+                                    <span className={styles.detailValue}>{currentEmployeeData?.email ?? ""}</span>
                                 </div>
                             </div>
 
@@ -104,20 +106,20 @@ const PendingApproval: React.FC<PendingApprovalProps> = () => {
                                 <Clock className={styles.detailIcon} />
                                 <div className={styles.detailContent}>
                                     <span className={styles.detailLabel}>Submission Date</span>
-                                    <span className={styles.detailValue}>{employeeData.submissionDate}</span>
+                                    <span className={styles.detailValue}>{currentEmployeeData?.submissionDate ?? ""}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Notice */}
-                    <div className={styles.notice}>
-                        <AlertCircle className={styles.noticeIcon} />
-                        <p className={styles.noticeText}>
-                            You will receive an email notification once your account has been approved.
-                            This process typically takes 1-2 business days.
-                        </p>
-                    </div>
+                    {/*<div className={styles.notice}>*/}
+                    {/*    <AlertCircle className={styles.noticeIcon} />*/}
+                    {/*    <p className={styles.noticeText}>*/}
+                    {/*        You will receive an email notification once your account has been approved.*/}
+                    {/*        This process typically takes 1-2 business days.*/}
+                    {/*    </p>*/}
+                    {/*</div>*/}
 
                     {/* Support Section */}
                     <div className={styles.supportSection}>
