@@ -8,12 +8,30 @@ import { Employee } from "./types";
 interface EmployeeTableProps {
     employees: Employee[];
     onRemove: (employeeId: string) => void;
+    currentUserRole: "owner" | "employer" | "employee";
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees, onRemove }) => {
+const EmployeeTable: React.FC<EmployeeTableProps> = ({
+                                                         employees,
+                                                         onRemove,
+                                                         currentUserRole,
+                                                     }) => {
     if (employees.length === 0) {
         return <p>No approved employees yet.</p>;
     }
+
+    // A small helper function to decide if the trash button should be shown
+    const shouldShowTrash = (employeeRole: string) => {
+        if (currentUserRole === "owner") {
+            // owner can remove both employer and employee roles
+            return employeeRole === "employer" || employeeRole === "employee";
+        }
+        if (currentUserRole === "employer") {
+            // employer can remove only employee role
+            return employeeRole === "employee";
+        }
+        return false;
+    };
 
     return (
         <table className={styles.employeeTable}>
@@ -33,7 +51,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees, onRemove }) =>
                     {/* If role is "employer", display "admin" instead */}
                     <td>{emp.role === "employer" ? "admin" : emp.role}</td>
                     <td>
-                        {emp.role === "employee" && (
+                        {shouldShowTrash(emp.role) && (
                             <button
                                 className={styles.removeButton}
                                 onClick={() => onRemove(emp.id)}

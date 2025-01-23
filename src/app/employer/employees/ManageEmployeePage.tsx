@@ -16,7 +16,7 @@ import styles from "~/styles/employerEmployeeManagement.module.css";
 const ManageEmployeesPage: React.FC = () => {
     const { isLoaded, userId } = useAuth();
     const router = useRouter();
-
+    const [userRole, setUserRole] = useState("");
     const [loading, setLoading] = useState(true);
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [pendingEmployees, setPendingEmployees] = useState<Employee[]>([]);
@@ -31,8 +31,8 @@ const ManageEmployeesPage: React.FC = () => {
             return;
         }
 
-        // Check if the user’s role is employer
-        const checkEmployerRole = async () => {
+        // Check if the user’s role is owner or employer
+        const checkRole = async () => {
             try {
                 const response = await fetch("/api/employerAuth", {
                     method: "POST",
@@ -40,28 +40,45 @@ const ManageEmployeesPage: React.FC = () => {
                     body: JSON.stringify({ userId }),
                 });
 
+                // If the user is pending, redirect them to /employee/pending-approval
                 if (response.status === 300) {
                     router.push("/employee/pending-approval");
                     return;
-                } else if (!response.ok) {
-                    // If the endpoint returns an error, also redirect
-                    window.alert("Authentication failed! You are not an employer.");
-                    router.push("/");
-                    return;
                 }
 
-                // If employer check passes, load employees
-                await loadEmployees();
+                // If not OK, the user is not owner/employer => redirect
+                if (!response.ok) {
+                    window.alert("Authentication failed! You are not an employer or owner.");
+                    router.push("/");
+                    return;s
+                }
+
+                // Parse the JSON, which should contain the user's role
+                const data = await response.json();
+                // e.g. data might look like { role: 'employer' } or { role: 'owner' }
+                const roleFromServer = data.role;
+                console.log(data)
+                console.log(data.role)
+
+                // Check if we actually get "owner" or "employer"
+                if (roleFromServer === "owner" || roleFromServer === "employer") {
+                    setUserRole(roleFromServer);
+                    // Load employees if authorized
+                    await loadEmployees();
+                } else {
+                    window.alert("Authentication failed! You are not an employer or owner.");
+                    router.push("/");
+                }
             } catch (error) {
-                console.error("Error checking employer role:", error);
-                window.alert("Authentication failed! You are not an employer.");
+                console.error("Error checking role:", error);
+                window.alert("Authentication failed! You are not an employer or owner.");
                 router.push("/");
             } finally {
                 setLoading(false);
             }
         };
 
-        checkEmployerRole().catch(console.error);
+        checkRole().catch(console.error);
     }, [isLoaded, userId, router]);
 
     const loadEmployees = async () => {
@@ -130,6 +147,7 @@ const ManageEmployeesPage: React.FC = () => {
                     <EmployeeTable
                         employees={employees}
                         onRemove={handleRemoveEmployee}
+                        currentUserRole={userRole} // pass down 'owner' or 'employer'
                     />
                 </section>
 

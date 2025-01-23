@@ -68,7 +68,7 @@ export async function POST(request: Request) {
             name,
             email,
             status: "verified",
-            role: "employer",
+            role: "owner",
         });
 
         return NextResponse.json({ success: true });

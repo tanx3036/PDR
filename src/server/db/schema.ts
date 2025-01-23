@@ -92,6 +92,21 @@ export const pdfChunks = pgTable("pdf_chunks", {
 });
 
 
+export const ChatHistory = pgTable('chatHistory', {
+    id: serial("id").primaryKey(),
+    UserId: varchar("company id", {  length: 256 }).notNull(),
+    question: varchar("question", {length: 256}).notNull(),
+    response: varchar("response", {length: 1024}).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+        () => new Date()
+    ),
+});
+
+
+
 
 export const documentsRelations = relations(document, ({ many }) => ({
     pdfChunks: many(pdfChunks),

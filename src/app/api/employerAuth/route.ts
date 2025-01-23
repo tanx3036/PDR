@@ -27,7 +27,7 @@ export async function POST(request: Request) {
         }
 
         // You could also do a server-side check here; for example:
-        if (userInfo.role !== "employer") {
+        if (userInfo.role === "employee") {
           return NextResponse.json({ error: "Not authorized" }, { status: 403 });
         }
 
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
         }
 
         // Return role only if found
-        return NextResponse.json(userInfo.role, { status: 200 });
+        return NextResponse.json({role: userInfo.role}, { status: 200 });
     } catch (error: unknown) {
         console.error("Error fetching documents:", error);
         return NextResponse.json(

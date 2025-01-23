@@ -5,6 +5,8 @@ import { Brain, Clock, Building, Mail } from 'lucide-react';
 import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs";
 import styles from '~/styles/employeePendingApproval.module.css';
+import ProfileDropdown from "~/app/employer/_components/ProfileDropdown";
+import NavBar from "~/app/employer/employees/NavBar";
 
 interface PendingApprovalProps {
         name?: string;
@@ -59,14 +61,7 @@ const PendingApproval: React.FC<PendingApprovalProps> = () => {
     return (
         <div className={styles.container}>
             {/* Navigation */}
-            <nav className={styles.navbar}>
-                <div className={styles.navContent}>
-                    <div className={styles.logoContainer}>
-                        <Brain className={styles.logoIcon} />
-                        <span className={styles.logoText}>PDR AI</span>
-                    </div>
-                </div>
-            </nav>
+            <NavBar />
 
             <main className={styles.main}>
                 <div className={styles.statusCard}>
