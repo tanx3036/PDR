@@ -1,0 +1,157 @@
+
+.container {
+    @apply min-h-screen bg-gray-50;
+}
+
+/* Navigation */
+.navbar {
+    @apply bg-white border-b border-gray-200;
+}
+
+.navContent {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between;
+}
+
+.logoContainer {
+    @apply flex items-center space-x-2;
+}
+
+.logoIcon {
+    @apply w-8 h-8 text-purple-600;
+}
+
+.logoText {
+    @apply text-xl font-bold text-purple-600;
+}
+
+.homeButton {
+    @apply flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg
+    hover:bg-purple-700 transition-colors duration-200;
+}
+
+.homeIcon {
+    @apply w-5 h-5 mr-2;
+}
+
+/* Main Content */
+.main {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12;
+}
+
+.header {
+    @apply text-center mb-12;
+}
+
+.title {
+    @apply text-3xl font-bold text-gray-900 mb-2;
+}
+
+.subtitle {
+    @apply text-gray-600 max-w-2xl mx-auto;
+}
+
+.contentGrid {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-8;
+}
+
+/* Contact Form */
+.contactSection {
+    @apply bg-white rounded-lg shadow-sm p-6 border border-gray-200;
+}
+
+.sectionTitle {
+    @apply text-xl font-bold text-gray-900 mb-6 flex items-center;
+}
+
+.sectionIcon {
+    @apply w-5 h-5 text-purple-600 mr-2;
+}
+
+.contactForm {
+    @apply space-y-4;
+}
+
+.formGroup {
+    @apply space-y-1;
+}
+
+.label {
+    @apply block text-sm font-medium text-gray-700;
+}
+
+.input {
+    @apply block w-full px-4 py-2 border border-gray-300 rounded-lg
+    focus:ring-2 focus:ring-purple-500 focus:border-transparent
+    placeholder-gray-400;
+}
+
+.textarea {
+    @apply block w-full px-4 py-2 border border-gray-300 rounded-lg
+    focus:ring-2 focus:ring-purple-500 focus:border-transparent
+    placeholder-gray-400 resize-none;
+}
+
+.submitButton {
+    @apply w-full flex items-center justify-center px-4 py-2 bg-purple-600 text-white
+    rounded-lg hover:bg-purple-700 transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2;
+}
+
+.buttonIcon {
+    @apply w-5 h-5 mr-2;
+}
+
+/* FAQ Section */
+.faqSection {
+    @apply bg-white rounded-lg shadow-sm p-6 border border-gray-200;
+}
+
+.faqList {
+    @apply space-y-2;
+}
+
+.faqItem {
+    @apply border border-gray-200 rounded-lg overflow-hidden;
+}
+
+.faqButton {
+    @apply w-full flex items-center justify-between px-4 py-3 text-left
+    hover:bg-gray-50 transition-colors duration-200;
+}
+
+.faqIcon {
+    @apply w-5 h-5 text-gray-400;
+}
+
+.faqAnswer {
+    @apply px-4 py-3 bg-gray-50 text-gray-600 border-t border-gray-200;
+}
+
+/* Hover States */
+.input:hover, .textarea:hover {
+    @apply border-purple-300;
+}
+
+.faqButton:hover .faqIcon {
+    @apply text-purple-600;
+}
+
+/* Focus States */
+.faqButton:focus {
+    @apply outline-none ring-2 ring-purple-500 ring-offset-2;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .main {
+        @apply py-8;
+    }
+
+    .title {
+        @apply text-2xl;
+    }
+
+    .contactSection, .faqSection {
+        @apply p-4;
+    }
+}
