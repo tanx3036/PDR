@@ -6,7 +6,7 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import { Brain } from "lucide-react";
 import SignInForm from "~/app/signup/employer/SignInForm";
 import SignUpForm from "~/app/signup/employer/SignUpForm";
-import styles from "../../../styles/EmployerSignup.module.css";
+import styles from "../../../styles/Employer/Signup.module.css";
 
 /** --------------- */
 /** TYPES          */

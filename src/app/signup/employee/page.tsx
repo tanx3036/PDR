@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import { Eye, EyeOff, Lock, Building, Brain } from "lucide-react";
-import styles from "~/styles/employeesignin.module.css";
+import styles from "~/styles/Employee/SignIn.module.css";
 
 interface EmployeeSignInFormData {
     companyName: string;

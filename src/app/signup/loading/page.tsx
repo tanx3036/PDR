@@ -1,7 +1,7 @@
 // app/loading/page.tsx (or wherever your loading page is)
 import { auth } from "@clerk/nextjs/server";
-import { db } from "../../../server/db/index";
-import { users } from "../../../server/db/schema";
+import { db } from "~/server/db/index";
+import { users } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 

@@ -2,7 +2,7 @@
 
 import React, { FC } from "react";
 import { Eye, EyeOff, Lock, Building, Users } from "lucide-react";
-import styles from "~/styles/EmployerSignup.module.css";
+import styles from "~/styles/Employer/Signup.module.css";
 
 // Types for form data & errors
 interface SignUpFormData {

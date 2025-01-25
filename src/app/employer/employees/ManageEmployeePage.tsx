@@ -16,7 +16,7 @@ import styles from "~/styles/Employer/EmployeeManagement.module.css";
 const ManageEmployeesPage: React.FC = () => {
     const { isLoaded, userId } = useAuth();
     const router = useRouter();
-    const [userRole, setUserRole] = useState("");
+    const [userRole, setUserRole] = useState("employer" as "owner" | "employer");
     const [loading, setLoading] = useState(true);
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [pendingEmployees, setPendingEmployees] = useState<Employee[]>([]);
@@ -54,7 +54,9 @@ const ManageEmployeesPage: React.FC = () => {
                 }
 
                 // Parse the JSON, which should contain the user's role
-                const data = await response.json();
+                const rawData:unknown = await response.json();
+
+                const data = rawData as { role: string };
                 // e.g. data might look like { role: 'employer' } or { role: 'owner' }
                 const roleFromServer = data.role;
                 console.log(data)

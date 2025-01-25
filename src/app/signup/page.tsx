@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Briefcase, Users, ArrowRight, Brain } from 'lucide-react';
 import { useRouter } from 'next/navigation'; // <-- Use 'next/navigation'
-import styles from '../../styles/signup.module.css';
+import styles from '~/styles/signup.module.css';
 
 interface RoleCardProps {
     title: string;
