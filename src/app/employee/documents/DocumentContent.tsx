@@ -3,7 +3,7 @@
 
 import React from "react";
 import { Brain } from "lucide-react";
-import styles from "~/styles/employeeDocumentViewer.module.css";
+import styles from "~/styles/Employee/DocumentViewer.module.css";
 
 interface DocumentType {
     id: number;

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Trash2 } from "lucide-react";
-import styles from "~/styles/employerEmployeeManagement.module.css";
+import styles from "~/styles/Employer/EmployeeManagement.module.css";
 import { Employee } from "./types";
 
 interface EmployeeTableProps {

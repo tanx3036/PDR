@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Upload, FileText, BarChart, Brain, Settings, Users } from "lucide-react";
-import styles from "../../../styles/employerhome.module.css";
+import styles from "~/styles/Employer/Home.module.css";
 import { useRouter } from "next/navigation";
 import ProfileDropdown from "~/app/employer/_components/ProfileDropdown";
 import { useAuth } from "@clerk/nextjs";

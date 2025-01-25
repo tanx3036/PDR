@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { FileText, TrendingUp, Eye, Calendar, Search } from 'lucide-react';
-import styles from '../../../styles/employerstats.module.css';
+import styles from '~/styles/Employer/Stats.module.css';
 
 // Mock data for documents
 const documents = [

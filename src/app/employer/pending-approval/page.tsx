@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import { Brain, Clock, Building, Mail } from 'lucide-react';
 import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs";
-import styles from '~/styles/employeePendingApproval.module.css';
+import styles from '~/styles/Employer/PendingApproval.module.css';
 import ProfileDropdown from "~/app/employer/_components/ProfileDropdown";
 import NavBar from "~/app/employer/pending-approval/Navbar";
 

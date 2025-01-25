@@ -5,7 +5,7 @@ import { Calendar, FileText, FolderPlus, Plus } from "lucide-react";
 import { UploadDropzone } from "~/app/utils/uploadthing";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import styles from "../../../styles/employerupload.module.css";
+import styles from "~/styles/Employer/Upload.module.css";
 
 interface UploadFormData {
     title: string;

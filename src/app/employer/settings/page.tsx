@@ -13,7 +13,7 @@ import PopupModal from "~/app/employer/settings/PopupModal";
 import LoadingPage from "~/app/_components/loading";
 
 // Styles
-import styles from "../../../styles/employersettings.module.css";
+import styles from "~/styles/Employer/Settings.module.css";
 
 interface Company {
     id: number;

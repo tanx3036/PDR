@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import EmployerAuthCheck from "./EmployerAuthCheck";
 import UploadForm from "./UploadForm";
 import CategoryManagement from "./CategoryManagement";
-import styles from "../../../styles/employerupload.module.css";
+import styles from "~/styles/Employer/Upload.module.css";
 
 interface Category {
     id: string;

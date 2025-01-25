@@ -13,7 +13,7 @@ import {
     Home,
 } from "lucide-react";
 import { SignOutButton, UserButton } from "@clerk/nextjs";
-import styles from "~/styles/employerDocumentViewer.module.css";
+import styles from "~/styles/Employer/DocumentViewer.module.css";
 import { useRouter } from "next/navigation";
 
 interface DocumentType {

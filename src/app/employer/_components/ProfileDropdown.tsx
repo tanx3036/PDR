@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import {  useUser, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import styles from "../../../styles/employerprofiledropdown.module.css";
+import styles from "~/styles/Employer/ProfileDropdown.module.css";
 import {
     UserButton
 } from '@clerk/nextjs'

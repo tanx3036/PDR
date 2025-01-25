@@ -2,7 +2,7 @@
 
 import React from "react";
 import {Brain, Home} from "lucide-react";
-import styles from "~/styles/employerEmployeeManagement.module.css";
+import styles from "~/styles/Employer/EmployeeManagement.module.css";
 import { useRouter } from "next/navigation";
 
 const NavBar = () => {

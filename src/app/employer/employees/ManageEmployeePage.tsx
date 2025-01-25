@@ -11,7 +11,7 @@ import PendingEmployeeTable from "./PendingEmployeeTable";
 import { Employee } from "./types";
 import LoadingPage from "~/app/_components/loading";
 
-import styles from "~/styles/employerEmployeeManagement.module.css";
+import styles from "~/styles/Employer/EmployeeManagement.module.css";
 
 const ManageEmployeesPage: React.FC = () => {
     const { isLoaded, userId } = useAuth();

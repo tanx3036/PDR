@@ -11,7 +11,7 @@ import {
     LogOut,
 } from "lucide-react";
 import { SignOutButton, UserButton } from "@clerk/nextjs";
-import styles from "~/styles/employeeDocumentViewer.module.css";
+import styles from "~/styles/Employee/DocumentViewer.module.css";
 
 interface DocumentType {
     id: number;

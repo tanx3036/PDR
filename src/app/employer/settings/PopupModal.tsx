@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
-import styles from "~/styles/employersettings.module.css";
+import styles from "~/styles/Employer/Settings.module.css";
 
 interface PopupModalProps {
     visible: boolean;

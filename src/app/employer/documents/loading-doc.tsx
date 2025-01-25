@@ -3,7 +3,7 @@
 import React from "react";
 import { FileText, Brain } from "lucide-react";
 import Link from "next/link";
-import styles from "../../../styles/employerDocumentViewer.module.css";
+import styles from "~/styles/Employer/DocumentViewer.module.css";
 
 export default function LoadingDoc() {
     return (

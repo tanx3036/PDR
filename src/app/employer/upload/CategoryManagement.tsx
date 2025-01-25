@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Trash2 } from "lucide-react";
-import styles from "../../../styles/employerupload.module.css";
+import styles from "~/styles/Employer/Upload.module.css";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 

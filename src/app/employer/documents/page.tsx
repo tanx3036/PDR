@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 
-import styles from "~/styles/employerDocumentViewer.module.css";
+import styles from "~/styles/Employer/DocumentViewer.module.css";
 
 import LoadingDoc from "~/app/employer/documents/loading-doc";
 import LoadingPage from "~/app/_components/loading";

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Brain } from "lucide-react";
-import styles from "~/styles/employerEmployeeManagement.module.css";
+import styles from "~/styles/Employee/PendingApproval.module.css";
 import ProfileDropdown from "~/app/employer/_components/ProfileDropdown";
 
 const NavBar = () => {
