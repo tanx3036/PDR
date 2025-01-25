@@ -50,6 +50,7 @@ const Page: React.FC = () => {
                     throw new Error("Failed to create category");
                 }
                 const createdCategory = await res.json();
+
                 setCategories((prev) => [...prev, createdCategory]);
             } catch (error) {
                 console.error(error);

@@ -1,21 +1,19 @@
+// DocumentViewer/index.tsx
 "use client";
+
 import React, { useEffect, useState } from "react";
-import {
-    FileText,
-    Search,
-    Brain,
-    ChevronRight,
-    ChevronDown,
-    Home, Trash2,
-} from "lucide-react";
-import styles from "../../../styles/employerDocumentViewer.module.css";
-import Link from "next/link";
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+
+import styles from "~/styles/employeeDocumentViewer.module.css";
+
 import LoadingDoc from "~/app/employer/documents/loading-doc";
 import LoadingPage from "~/app/_components/loading";
 
-/** Types **/
+import { fetchWithRetries } from "./fetchWithRetries";
+import { DocumentsSidebar } from "./DocumentsSidebar";
+import { DocumentContent } from "./DocumentContent";
+
 interface DocumentType {
     id: number;
     title: string;
@@ -30,155 +28,128 @@ interface CategoryGroup {
     documents: DocumentType[];
 }
 
+type ViewMode = "document-only" | "with-summary" | "with-ai-qa";
+
+interface LangChainResponse {
+    success: boolean;
+    summarizedAnswer: string;
+    recommendedPages: number[];
+}
+
 const DocumentViewer: React.FC = () => {
     const router = useRouter();
     const { isLoaded, userId } = useAuth();
 
-    // 1) Role-check loading
-    const [roleLoading, setRoleLoading] = useState(true);
-
-    // 2) Document-fetch loading
-    const [docsLoading, setDocsLoading] = useState(false);
-
-    // 3) Document data
+    // State for documents
     const [documents, setDocuments] = useState<DocumentType[]>([]);
     const [selectedDoc, setSelectedDoc] = useState<DocumentType | null>(null);
 
-    // 4) Search
+    // Searching/filtering
     const [searchTerm, setSearchTerm] = useState("");
 
-    /**
-     * ROLE CHECK
-     * - Wait for Clerk to load
-     * - If no userId, redirect
-     * - Otherwise, verify role
-     */
-    useEffect(() => {
-        if (!isLoaded) return; // Wait until Clerk is fully ready
+    // Loading states
+    const [loading, setLoading] = useState(true);
+    const [roleLoading, setRoleLoading] = useState(true); // for role-check
 
-        // No user => redirect home
+    // View mode state
+    const [viewMode, setViewMode] = useState<ViewMode>("document-only");
+
+    // AI Q&A states
+    const [aiQuestion, setAiQuestion] = useState("");
+    const [aiAnswer, setAiAnswer] = useState("");
+    const [aiError, setAiError] = useState("");
+    const [aiLoading, setAiLoading] = useState(false);
+    const [referencePages, setReferencePages] = useState<number[]>([]);
+
+    // PDF page states
+    const [pdfPageNumber, setPdfPageNumber] = useState<number>(1);
+
+    // 1. Check Clerk Auth & Role
+    useEffect(() => {
+        if (!isLoaded) return; // wait until Clerk is loaded
+
         if (!userId) {
             window.alert("Authentication failed! No user found.");
             router.push("/");
             return;
         }
 
-        const checkEmployerRole = async () => {
+        const checkEmployeeRole = async () => {
             try {
                 const response = await fetch("/api/employerAuth", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ userId }),
                 });
-                if(response.status === 300){
+
+                if (response.status === 300) {
+                    // Pending approval
                     router.push("/employee/pending-approval");
                     return;
-                }
-                else if (!response.ok) {
-                    // If the endpoint returns an error, also redirect
-                    window.alert("Authentication failed! You are not an employer.");
+                } else if (!response.ok) {
+                    window.alert("Authentication failed! You are not an employee.");
                     router.push("/");
                     return;
                 }
             } catch (error) {
-                console.error("Error checking employer role:", error);
-                window.alert("Authentication failed! You are not an employer.");
+                console.error("Error checking employee role:", error);
+                window.alert("Authentication failed! You are not an employee.");
                 router.push("/");
             } finally {
                 setRoleLoading(false);
             }
         };
 
-        checkEmployerRole().catch((error) => {console.error("Error checking employer role:", error);});
+        checkEmployeeRole().catch(console.error);
     }, [isLoaded, userId, router]);
 
-    // If still checking role, show general loading
-
-
-    /**
-     * DOCUMENT FETCH
-     * - Only call once we know user is an employer
-     */
+    // 2. Fetch documents for this employer
     useEffect(() => {
         if (!userId) return;
 
         const fetchDocuments = async () => {
             try {
-                setDocsLoading(true);
-
                 const response = await fetch("/api/fetchDocument", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ userId }),
                 });
+
                 if (!response.ok) {
                     throw new Error("Failed to fetch documents");
                 }
 
-                const rawData: unknown = await response.json();
-                const data = Array.isArray(rawData) ? rawData : [];
+                const data: unknown = await response.json();
+
+                if (!Array.isArray(data)) {
+                    throw new Error("Invalid data format, expected an array.");
+                }
+
                 setDocuments(data);
             } catch (error) {
                 console.error("Error fetching documents:", error);
             } finally {
-                setDocsLoading(false);
+                setLoading(false);
             }
         };
 
-        fetchDocuments().catch((error) => {console.error("Error fetching documents:", error);});
+        fetchDocuments().catch(console.error);
     }, [userId]);
 
-    // If documents are still loading, show doc-specific loader
-
-
-    const handleDeleteDocument = async (docId: number) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this document?");
-        if (!confirmDelete) return;
-
-        try {
-            const response = await fetch("/api/deleteDocument", {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ docId }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to delete document");
-            }
-
-            // Remove the deleted document from our local state
-            setDocuments(prevDocs => prevDocs.filter(doc => doc.id !== docId));
-
-            // If the deleted doc was the one currently selected, clear it
-            if (selectedDoc?.id === docId) {
-                setSelectedDoc(null);
-            }
-        } catch (error) {
-            console.error("Error deleting document:", error);
-        }
-    };
-
-
-    /**
-     * GROUPING DOCS BY CATEGORY
-     * + Basic search filtering
-     */
+    // 3. Build category groups
     const categories: CategoryGroup[] = Object.values(
         documents.reduce((acc: Record<string, CategoryGroup>, doc) => {
-            // Filter by search term on title or AI summary
-            if (
-                !doc.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                !(doc.aiSummary ?? "")
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-            ) {
-                return acc;
-            }
+            // Filter by searchTerm in either "title" or "aiSummary"
+            const inTitle = doc.title.toLowerCase().includes(searchTerm.toLowerCase());
+            const inSummary =
+                doc.aiSummary?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false;
+
+            if (!inTitle && !inSummary) return acc;
 
             if (!acc[doc.category]) {
                 acc[doc.category] = {
                     name: doc.category,
-                    isOpen: true, // or false if you want them collapsed initially
+                    isOpen: true,
                     documents: [],
                 };
             }
@@ -187,141 +158,90 @@ const DocumentViewer: React.FC = () => {
         }, {})
     );
 
+    // 4. Handle AI Q&A
+    const handleAiSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setAiError("");
+        setAiAnswer("");
+        setReferencePages([]);
+
+        if (!aiQuestion.trim()) return; // skip if empty question
+
+        try {
+            setAiLoading(true);
+
+            // Use our fetchWithRetries
+            const data = (await fetchWithRetries(
+                "/api/LangChain",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        documentId: selectedDoc?.id,
+                        question: aiQuestion,
+                    }),
+                },
+                5
+            )) as LangChainResponse;
+
+            setAiAnswer(data.summarizedAnswer);
+
+            // De-duplicate recommended pages
+            if (Array.isArray(data.recommendedPages)) {
+                const uniquePages = Array.from(new Set(data.recommendedPages));
+                setReferencePages(uniquePages);
+            }
+        } catch (err: unknown) {
+            // If all retries fail or a non-timeout error:
+            setAiError("Timeout error: Please try again later.");
+        } finally {
+            setAiLoading(false);
+        }
+    };
+
+    // 5. Display loading states
     if (roleLoading) {
         return <LoadingPage />;
     }
-    else if (docsLoading){
+    if (loading) {
         return <LoadingDoc />;
     }
+
+    // 6. Render
     return (
         <div className={styles.container}>
-            {/* Side Navigation */}
-            <aside className={styles.sidebar}>
-                <div className={styles.sidebarHeader}>
-                    <Link href="/employer/home">
-                        <button className={styles.logoContainer}>
-                            <Brain className={styles.logoIcon} />
-                            <span className={styles.logoText}>PDR AI</span>
-                        </button>
-                    </Link>
-
-                    {/* Search Bar */}
-                    <div className={styles.searchContainer}>
-                        <Search className={styles.searchIcon} />
-                        <input
-                            type="text"
-                            placeholder="Search documents..."
-                            className={styles.searchInput}
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                </div>
-
-                {/* Document List */}
-                <nav className={styles.docList}>
-                    {categories.map((category) => (
-                        <div key={category.name} className={styles.categoryGroup}>
-                            <div className={styles.categoryHeader}>
-                                {category.isOpen ? (
-                                    <ChevronDown className={styles.chevronIcon} />
-                                ) : (
-                                    <ChevronRight className={styles.chevronIcon} />
-                                )}
-                                <span className={styles.categoryName}>{category.name}</span>
-                            </div>
-                            {category.isOpen && (
-                                <div className={styles.categoryDocs}>
-                                    {category.documents.map((doc) => (
-                                        <div
-                                            key={doc.id}
-                                            className={`${styles.docItem} ${
-                                                selectedDoc && selectedDoc.id === doc.id
-                                                    ? styles.selected
-                                                    : ""
-                                            }`}
-                                        >
-                                            <button
-                                                onClick={() => setSelectedDoc(doc)}
-                                                className={styles.docButton}
-                                            >
-                                                <FileText className={styles.docIcon} />
-                                                <span className={styles.docName}>{doc.title}</span>
-                                            </button>
-                                            {/* Delete Button */}
-                                            <button
-                                                className={styles.deleteButton}
-                                                onClick={async (e) => {
-                                                    e.stopPropagation();
-                                                    try {
-                                                        await handleDeleteDocument(doc.id); // Wait for Promise to resolve
-                                                    } catch (error) {
-                                                        // Optionally handle the error
-                                                        console.error(error);
-                                                    }
-                                                }}
-                                            >
-                                                <Trash2 className={styles.trashIcon} />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </nav>
-
-                {/* Home Button */}
-                <div className={styles.sidebarFooter}>
-                    <Link href="/employer/home">
-                        <button className={styles.homeButton}>
-                            <Home className={styles.homeIcon} />
-                            <span>Home</span>
-                        </button>
-                    </Link>
-                </div>
-            </aside>
+            {/* Sidebar */}
+            <DocumentsSidebar
+                categories={categories}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                selectedDoc={selectedDoc}
+                setSelectedDoc={(doc) => {
+                    // Whenever we pick a doc, reset some states
+                    setSelectedDoc(doc);
+                    setPdfPageNumber(1);
+                    setAiAnswer("");
+                    setReferencePages([]);
+                }}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+            />
 
             {/* Main Content */}
             <main className={styles.mainContent}>
-                {selectedDoc && (
-                    <>
-                        {/* Document Title */}
-                        <div className={styles.docHeader}>
-                            <h1 className={styles.docTitle}>{selectedDoc.title}</h1>
-                        </div>
-
-                        {/* AI Summary */}
-                        {/*{selectedDoc.aiSummary ? (*/}
-                        {/*    <div className={styles.summaryContainer}>*/}
-                        {/*        <div className={styles.summaryHeader}>*/}
-                        {/*            <Brain className={styles.summaryIcon} />*/}
-                        {/*            <h2 className={styles.summaryTitle}>AI Summary</h2>*/}
-                        {/*        </div>*/}
-                        {/*        <p className={styles.summaryText}>{selectedDoc.aiSummary}</p>*/}
-                        {/*    </div>*/}
-                        {/*) : (*/}
-                        {/*    <div className={styles.summaryContainer}>*/}
-                        {/*        <div className={styles.summaryHeader}>*/}
-                        {/*            <Brain className={styles.summaryIcon} />*/}
-                        {/*            <h2 className={styles.summaryTitle}>AI Summary</h2>*/}
-                        {/*        </div>*/}
-                        {/*        <p className={styles.summaryText}>*/}
-                        {/*            AI Summary currently unavailable.*/}
-                        {/*        </p>*/}
-                        {/*    </div>*/}
-                        {/*)}*/}
-
-                        {/* PDF Viewer */}
-                        <div className={styles.pdfContainer}>
-                            <iframe
-                                src={selectedDoc.url}
-                                className={styles.pdfViewer}
-                                title={selectedDoc.title}
-                            />
-                        </div>
-                    </>
-                )}
+                <DocumentContent
+                    selectedDoc={selectedDoc}
+                    viewMode={viewMode}
+                    aiQuestion={aiQuestion}
+                    setAiQuestion={setAiQuestion}
+                    aiAnswer={aiAnswer}
+                    aiError={aiError}
+                    aiLoading={aiLoading}
+                    handleAiSearch={handleAiSearch}
+                    referencePages={referencePages}
+                    pdfPageNumber={pdfPageNumber}
+                    setPdfPageNumber={setPdfPageNumber}
+                />
             </main>
         </div>
     );
