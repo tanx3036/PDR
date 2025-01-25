@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
     FileText,
     Search,
@@ -9,9 +10,11 @@ import {
     ChevronRight,
     ChevronDown,
     LogOut,
+    Home,
 } from "lucide-react";
 import { SignOutButton, UserButton } from "@clerk/nextjs";
-import styles from "~/styles/employeeDocumentViewer.module.css";
+import styles from "~/styles/employerDocumentViewer.module.css";
+import { useRouter } from "next/navigation";
 
 interface DocumentType {
     id: number;
@@ -49,18 +52,19 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
                                                                       viewMode,
                                                                       setViewMode,
                                                                   }) => {
+    const router = useRouter();
     return (
         <aside className={styles.sidebar}>
             {/* Header */}
             <div className={styles.sidebarHeader}>
                 <button className={styles.logoContainer}>
-                    <Brain className={styles.logoIcon} />
+                    <Brain className={styles.logoIcon}/>
                     <span className={styles.logoText}>PDR AI</span>
                 </button>
 
                 {/* Search Bar */}
                 <div className={styles.searchContainer}>
-                    <Search className={styles.searchIcon} />
+                    <Search className={styles.searchIcon}/>
                     <input
                         type="text"
                         placeholder="Search documents..."
@@ -110,9 +114,9 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
                     <div key={category.name} className={styles.categoryGroup}>
                         <div className={styles.categoryHeader}>
                             {category.isOpen ? (
-                                <ChevronDown className={styles.chevronIcon} />
+                                <ChevronDown className={styles.chevronIcon}/>
                             ) : (
-                                <ChevronRight className={styles.chevronIcon} />
+                                <ChevronRight className={styles.chevronIcon}/>
                             )}
                             <span className={styles.categoryName}>{category.name}</span>
                         </div>
@@ -129,7 +133,7 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
                                                 : ""
                                         }`}
                                     >
-                                        <FileText className={styles.docIcon} />
+                                        <FileText className={styles.docIcon}/>
                                         <span className={styles.docName}>{doc.title}</span>
                                     </button>
                                 ))}
@@ -140,31 +144,13 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
             </nav>
 
             {/* Profile Section */}
-            <div className={styles.profileSection}>
-                <UserButton
-                    afterSignOutUrl="/sign-in"
-                    appearance={{
-                        variables: {
-                            colorPrimary: "#8B5CF6",
-                            colorText: "#4F46E5",
-                            borderRadius: "0.5rem",
-                            fontFamily: "Inter, sans-serif",
-                        },
-                        elements: {
-                            userButtonAvatarBox: "border-2 border-purple-300",
-                            userButtonTrigger:
-                                "hover:bg-purple-50 transition-colors p-1 flex items-center rounded-lg",
-                            userButtonPopoverCard: "shadow-md border border-gray-100",
-                            userButtonPopoverFooter: "bg-gray-50 border-t border-gray-100 p-2",
-                        },
-                    }}
-                />
-                <SignOutButton>
-                    <button className={styles.logoutButton}>
-                        <LogOut className={styles.logoutIcon} />
-                        <span>Logout</span>
+            <div className={styles.sidebarFooter}>
+                <Link href="/employer/home">
+                    <button className={styles.homeButton}>
+                        <Home className={styles.homeIcon}/>
+                        <span>Home</span>
                     </button>
-                </SignOutButton>
+                </Link>
             </div>
         </aside>
     );

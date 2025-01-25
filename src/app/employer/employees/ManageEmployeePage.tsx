@@ -50,7 +50,7 @@ const ManageEmployeesPage: React.FC = () => {
                 if (!response.ok) {
                     window.alert("Authentication failed! You are not an employer or owner.");
                     router.push("/");
-                    return;s
+                    return;
                 }
 
                 // Parse the JSON, which should contain the user's role

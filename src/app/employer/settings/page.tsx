@@ -15,6 +15,17 @@ import LoadingPage from "~/app/_components/loading";
 // Styles
 import styles from "../../../styles/employersettings.module.css";
 
+interface Company {
+    id: number;
+    name: string;
+    employerpasskey: string;
+    employeepasskey: string;
+    numberOfEmployees: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+
 const SettingsPage = () => {
     const router = useRouter();
 
@@ -113,35 +124,12 @@ const SettingsPage = () => {
                     throw new Error("Invalid response from server");
                 }
 
-                // Our expected response shape is:
-                // {
-                //   data: [
-                //     {
-                //       name: string;
-                //       employerpasskey: string;
-                //       employeepasskey: string;
-                //       numberOfEmployees: string;
-                //     }
-                //   ];
-                // }
-                const data = rawData as {
-                    data: {
-                        name: string;
-                        employerpasskey: string;
-                        employeepasskey: string;
-                        numberOfEmployees: string;
-                    }[];
-                };
+                const data = rawData as Company;
 
-                if (!data.data || data.data.length === 0) {
-                    throw new Error("No company data found");
-                }
-
-                const company = data.data[0];
-                setCompanyName(company.name ?? "");
-                setEmployerPasskey(company.employerpasskey ?? "");
-                setEmployeePasskey(company.employeepasskey ?? "");
-                setStaffCount(company.numberOfEmployees ?? "");
+                setCompanyName(data.name ?? "");
+                setEmployerPasskey(data.employerpasskey ?? "");
+                setEmployeePasskey(data.employeepasskey ?? "");
+                setStaffCount(data.numberOfEmployees ?? "");
 
                 setDisplayName(user?.fullName ?? "");
                 setEmail(user?.emailAddresses[0]?.emailAddress ?? "");
