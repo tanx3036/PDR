@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Clock, ChevronDown, ChevronUp } from "lucide-react";
+import dayjs from "dayjs";
 
 /**
  * Shared interface for QA history entries.
@@ -19,18 +20,22 @@ export interface QAHistoryEntry {
 interface QAHistoryProps {
     history: QAHistoryEntry[];
     onQuestionSelect: (question: string) => void;
+    documentTitle: string;
     selectedDoc: { title: string } | null;
     setPdfPageNumber: (page: number) => void;
 }
 
 const QAHistory: React.FC<QAHistoryProps> = ({
                                                  history,
+                                                 documentTitle,
                                                  onQuestionSelect,
                                                  setPdfPageNumber,
                                              }) => {
 
     console.log("history", history);
     const [expandedItems, setExpandedItems] = React.useState<Set<string>>(new Set());
+
+
 
     const toggleItem = (id: string) => {
         setExpandedItems((prev) => {
@@ -72,7 +77,7 @@ const QAHistory: React.FC<QAHistoryProps> = ({
                                     {item.question}
                                 </button>
                                 <div className="text-sm text-gray-500 mt-1">
-                                    {item.createdAt} • {item.documentTitle}
+                                    {dayjs(item.createdAt).format("M/D/YYYY, h:mm:ss A")?? ""} • {item.documentTitle}
                                 </div>
                             </div>
                         </div>
