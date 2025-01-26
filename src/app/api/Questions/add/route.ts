@@ -6,19 +6,23 @@ import { eq } from "drizzle-orm";
 type PostBody = {
     userId: string;
     question: string;
+    documentId: string;
     response: string;
+    pages: number[];
 };
 
 export async function POST(request: Request) {
     try {
-        const { userId, question, response } = (await request.json()) as PostBody;
+        const { userId, question, documentId, response, pages } = (await request.json()) as PostBody;
 
         // Insert new user
         await db.insert(ChatHistory).values({
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             UserId: userId,
+            documentId: documentId,
             question: question,
             response: response,
+            pages: pages,
         });
 
         return NextResponse.json({ success: true });
