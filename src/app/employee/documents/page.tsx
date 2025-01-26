@@ -13,6 +13,8 @@ import LoadingPage from "~/app/_components/loading";
 import { fetchWithRetries } from "./fetchWithRetries";
 import { DocumentsSidebar } from "./DocumentsSidebar";
 import { DocumentContent } from "./DocumentContent";
+import {QAHistoryEntry} from "~/app/employer/documents/ChatHistory";
+import {ViewMode} from "~/app/employee/documents/types";
 
 interface DocumentType {
     id: number;
@@ -28,13 +30,27 @@ interface CategoryGroup {
     documents: DocumentType[];
 }
 
-type ViewMode = "document-only" | "with-summary" | "with-ai-qa";
-
 interface LangChainResponse {
     success: boolean;
     summarizedAnswer: string;
     recommendedPages: number[];
 }
+
+interface chatHistoryProp{
+    id: string;
+    question: string;
+    response: string;
+    createdAt: string;
+    documentId: string;
+    documentTitle: string;
+    pages: number[];
+}
+
+interface fetchHistoryProp{
+    status: string;
+    chatHistory: chatHistoryProp[];
+}
+
 
 const DocumentViewer: React.FC = () => {
     const router = useRouter();
@@ -63,6 +79,51 @@ const DocumentViewer: React.FC = () => {
 
     // PDF page states
     const [pdfPageNumber, setPdfPageNumber] = useState<number>(1);
+
+    // Q&A History
+    const [qaHistory, setQaHistory] = useState<QAHistoryEntry[]>([]);
+
+
+    const saveToDatabase = async (Entry: QAHistoryEntry) => {
+        try {
+            const response = await fetch("/api/Questions/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId, documentId: Entry.documentId, documentTitle: Entry.documentTitle, question: Entry.question, response: Entry.response, pages: Entry.pages}),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to add Q&A to history");
+            }
+
+        } catch (error) {
+            console.error("Error checking employee role:", error);
+            window.alert("Authentication failed! You are not an employee.");
+            router.push("/");
+        } finally {
+            setRoleLoading(false);
+        }
+    };
+
+    const saveToHistory = async (question: string, response: string, pages: number[]) => {
+        // Example logic - you can adapt this to your real data
+        const newEntry: QAHistoryEntry = {
+            id: crypto.randomUUID(), // or any unique ID generator
+            question: question,
+            response: response,
+            documentId: selectedDoc!.id,
+            createdAt: new Date().toLocaleString(),
+            documentTitle: selectedDoc?.title ?? "",
+            pages: pages,
+        };
+
+        await saveToDatabase(newEntry);
+        setQaHistory((prev) => [...prev, newEntry]);
+    };
+
+
+
+
 
     // 1. Check Clerk Auth & Role
     useEffect(() => {
@@ -186,11 +247,14 @@ const DocumentViewer: React.FC = () => {
 
             setAiAnswer(data.summarizedAnswer);
 
-            // De-duplicate recommended pages
             if (Array.isArray(data.recommendedPages)) {
                 const uniquePages = Array.from(new Set(data.recommendedPages));
                 setReferencePages(uniquePages);
+
+                // Save Q&A to history
+                await saveToHistory(aiQuestion, data.summarizedAnswer, uniquePages);
             }
+
         } catch (err: unknown) {
             // If all retries fail or a non-timeout error:
             setAiError("Timeout error: Please try again later.");
@@ -198,6 +262,46 @@ const DocumentViewer: React.FC = () => {
             setAiLoading(false);
         }
     };
+
+
+
+
+    // 5. Fetch Q&A History
+    useEffect(() => {
+
+        const fetchHistory = async () => {
+            console.log("doc id", selectedDoc?.id)
+            try {
+
+                console.log("doc", selectedDoc)
+                const response = await fetch("/api/Questions/fetch", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId, documentId: selectedDoc?.id }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch Q&A history");
+                }
+
+                const data: unknown = await response.json();
+
+                const processedData = data as fetchHistoryProp;
+
+                console.log(processedData);
+
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                setQaHistory(processedData.chatHistory);
+            } catch (error) {
+                console.error("Error fetching Q&A history:", error);
+            }
+        };
+
+        fetchHistory().catch(console.error);
+    }, [userId, selectedDoc]);
+
+
 
     // 5. Display loading states
     if (roleLoading) {
@@ -241,6 +345,7 @@ const DocumentViewer: React.FC = () => {
                     referencePages={referencePages}
                     pdfPageNumber={pdfPageNumber}
                     setPdfPageNumber={setPdfPageNumber}
+                    qaHistory={qaHistory}
                 />
             </main>
         </div>
