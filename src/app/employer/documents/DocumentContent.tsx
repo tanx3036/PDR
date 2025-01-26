@@ -1,9 +1,12 @@
-// DocumentViewer/DocumentContent.tsx
 "use client";
 
 import React from "react";
-import { Brain } from "lucide-react";
+import { Brain, Clock } from "lucide-react";
 import styles from "~/styles/Employer/DocumentViewer.module.css";
+import { ViewMode } from "./types";
+
+// Import the QAHistory component AND the QAHistoryEntry interface
+import QAHistory, { QAHistoryEntry } from "./ChatHistory";
 
 interface DocumentType {
     id: number;
@@ -13,7 +16,6 @@ interface DocumentType {
     url: string;
 }
 
-type ViewMode = "document-only" | "with-summary" | "with-ai-qa";
 
 interface DocumentContentProps {
     selectedDoc: DocumentType | null;
@@ -27,6 +29,7 @@ interface DocumentContentProps {
     referencePages: number[];
     pdfPageNumber: number;
     setPdfPageNumber: React.Dispatch<React.SetStateAction<number>>;
+    qaHistory: QAHistoryEntry[]; // <-- Provide the Q&A history
 }
 
 export const DocumentContent: React.FC<DocumentContentProps> = ({
@@ -41,6 +44,7 @@ export const DocumentContent: React.FC<DocumentContentProps> = ({
                                                                     referencePages,
                                                                     pdfPageNumber,
                                                                     setPdfPageNumber,
+                                                                    qaHistory,
                                                                 }) => {
     // Helper to display PDF at a certain page
     const pdfSrcWithPage = (baseUrl: string, pageNumber: number) => {
@@ -114,6 +118,23 @@ export const DocumentContent: React.FC<DocumentContentProps> = ({
                             )}
                         </div>
                     )}
+                </div>
+            )}
+
+            {/* AI Q&A History Mode */}
+            {viewMode === "with-ai-qa-history" && (
+                <div className="mt-6">
+                    <div className={styles.summaryHeader}>
+                        <Clock className={styles.summaryIcon} />
+                        <h2 className={styles.summaryTitle}>Question History</h2>
+                    </div>
+
+                    <QAHistory
+                        history={qaHistory}
+                        onQuestionSelect={(question) => setAiQuestion(question)}
+                        selectedDoc={selectedDoc}
+                        setPdfPageNumber={setPdfPageNumber}
+                    />
                 </div>
             )}
 
