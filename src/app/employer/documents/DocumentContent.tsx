@@ -134,6 +134,7 @@ export const DocumentContent: React.FC<DocumentContentProps> = ({
                         onQuestionSelect={(question) => setAiQuestion(question)}
                         selectedDoc={selectedDoc}
                         setPdfPageNumber={setPdfPageNumber}
+                        documentTitle={selectedDoc.title}
                     />
                 </div>
             )}

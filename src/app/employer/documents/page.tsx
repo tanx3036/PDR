@@ -125,7 +125,7 @@ const DocumentViewer: React.FC = () => {
             const response = await fetch("/api/Questions/add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId, documentId: Entry.documentId, question: Entry.question, response: Entry.response, pages: Entry.pages}),
+                body: JSON.stringify({ userId, documentId: Entry.documentId, documentTitle: Entry.documentTitle, question: Entry.question, response: Entry.response, pages: Entry.pages}),
             });
 
             if (!response.ok) {
@@ -298,15 +298,16 @@ const DocumentViewer: React.FC = () => {
 
     // 5. Fetch Q&A History
     useEffect(() => {
-        if (!userId) return;
 
         const fetchHistory = async () => {
             console.log("doc id", selectedDoc?.id)
             try {
+
+                console.log("doc", selectedDoc)
                 const response = await fetch("/api/Questions/fetch", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ userId, documentId: 42 }),
+                    body: JSON.stringify({ userId, documentId: selectedDoc?.id }),
                 });
 
                 if (!response.ok) {
@@ -319,6 +320,8 @@ const DocumentViewer: React.FC = () => {
 
                 console.log(processedData);
 
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
                 setQaHistory(processedData.chatHistory);
             } catch (error) {
                 console.error("Error fetching Q&A history:", error);
@@ -326,7 +329,7 @@ const DocumentViewer: React.FC = () => {
         };
 
         fetchHistory().catch(console.error);
-    }, [userId]);
+    }, [userId, selectedDoc]);
 
 
 

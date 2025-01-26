@@ -97,6 +97,7 @@ export const ChatHistory = pgTable('chatHistory', {
     id: serial("id").primaryKey(),
     UserId: varchar("company id", {  length: 256 }).notNull(),
     documentId: varchar("document id", {  length: 256 }).notNull(),
+    documentTitle: varchar("document title", {  length: 256 }).notNull(),
     question: varchar("question", {length: 256}).notNull(),
     response: varchar("response", {length: 1024}).notNull(),
     pages: integer("pages").array().notNull(),
