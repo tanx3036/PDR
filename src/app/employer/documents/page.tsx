@@ -13,6 +13,8 @@ import { fetchWithRetries } from "./fetchWithRetries";
 import { DocumentsSidebar } from "./DocumentsSidebar";
 import { DocumentContent } from "./DocumentContent";
 
+import {ViewMode} from "~/app/employer/documents/types";
+
 // Import the same QAHistoryEntry interface (or define it here if you like)
 import { QAHistoryEntry } from "./ChatHistory";
 
@@ -31,7 +33,6 @@ interface CategoryGroup {
     documents: DocumentType[];
 }
 
-type ViewMode = "document-only" | "with-summary" | "with-ai-qa" | "with-ai-qa-history";
 
 interface LangChainResponse {
     success: boolean;
@@ -90,35 +91,6 @@ const DocumentViewer: React.FC = () => {
     /**
      * Utility to push the Q&A into our local history state
      */
-
-    /*
-    Database Schema:
-
-            export const ChatHistory = pgTable('chatHistory', {
-            id: serial("id").primaryKey(),
-            UserId: varchar("company id", {  length: 256 }).notNull(),
-            documentId: varchar("document id", {  length: 256 }).notNull(),
-            question: varchar("question", {length: 256}).notNull(),
-            response: varchar("response", {length: 1024}).notNull(),
-            pages: integer("pages").array().notNull(),
-            createdAt: timestamp("created_at", { withTimezone: true })
-                .default(sql`CURRENT_TIMESTAMP`)
-                .notNull(),
-            updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-                () => new Date()
-            ),
-        });
-
-        type PostBody = {
-            userId: string;
-            question: string;
-            documentId: string;
-            response: string;
-            pages: number[];
-        };
-
-     */
-
 
     const saveToDatabase = async (Entry: QAHistoryEntry) => {
         try {
@@ -330,8 +302,6 @@ const DocumentViewer: React.FC = () => {
 
         fetchHistory().catch(console.error);
     }, [userId, selectedDoc]);
-
-
 
 
 
