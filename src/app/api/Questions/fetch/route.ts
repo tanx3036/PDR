@@ -1,22 +1,28 @@
 import { NextResponse } from "next/server";
 import { db } from "~/server/db/index";
 import { ChatHistory } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import {and, eq} from "drizzle-orm";
 
 type PostBody = {
     userId: string;
+    documentId: string;
 };
 
 export async function POST(request: Request) {
     try {
         // Parse the request body for userId
-        const { userId } = (await request.json()) as PostBody;
+        const { userId, documentId } = (await request.json()) as PostBody;
+
+        console.log("userId", userId);
+        console.log("documentId", documentId);
 
         // Retrieve all chat history records for the specified user
         const userChatHistory = await db
             .select()
             .from(ChatHistory)
-            .where(eq(ChatHistory.UserId, userId));
+            .where(and(eq(ChatHistory.UserId, userId), eq(ChatHistory.documentId, documentId)));
+
+        console.log("user chat history", userChatHistory);
 
         // Return the results
         return NextResponse.json({

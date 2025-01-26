@@ -1,4 +1,3 @@
-// DocumentViewer/index.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -14,6 +13,10 @@ import { fetchWithRetries } from "./fetchWithRetries";
 import { DocumentsSidebar } from "./DocumentsSidebar";
 import { DocumentContent } from "./DocumentContent";
 
+// Import the same QAHistoryEntry interface (or define it here if you like)
+import { QAHistoryEntry } from "./ChatHistory";
+
+/** Some example or type definitions */
 interface DocumentType {
     id: number;
     title: string;
@@ -28,13 +31,30 @@ interface CategoryGroup {
     documents: DocumentType[];
 }
 
-type ViewMode = "document-only" | "with-summary" | "with-ai-qa";
+type ViewMode = "document-only" | "with-summary" | "with-ai-qa" | "with-ai-qa-history";
 
 interface LangChainResponse {
     success: boolean;
     summarizedAnswer: string;
     recommendedPages: number[];
 }
+
+interface chatHistoryProp{
+    id: string;
+    question: string;
+    response: string;
+    createdAt: string;
+    documentId: string;
+    documentTitle: string;
+    pages: number[];
+}
+
+interface fetchHistoryProp{
+    status: string;
+    chatHistory: chatHistoryProp[];
+}
+
+
 
 const DocumentViewer: React.FC = () => {
     const router = useRouter();
@@ -61,8 +81,81 @@ const DocumentViewer: React.FC = () => {
     const [aiLoading, setAiLoading] = useState(false);
     const [referencePages, setReferencePages] = useState<number[]>([]);
 
-    // PDF page states
+    // PDF page state
     const [pdfPageNumber, setPdfPageNumber] = useState<number>(1);
+
+    // Q&A History
+    const [qaHistory, setQaHistory] = useState<QAHistoryEntry[]>([]);
+
+    /**
+     * Utility to push the Q&A into our local history state
+     */
+
+    /*
+    Database Schema:
+
+            export const ChatHistory = pgTable('chatHistory', {
+            id: serial("id").primaryKey(),
+            UserId: varchar("company id", {  length: 256 }).notNull(),
+            documentId: varchar("document id", {  length: 256 }).notNull(),
+            question: varchar("question", {length: 256}).notNull(),
+            response: varchar("response", {length: 1024}).notNull(),
+            pages: integer("pages").array().notNull(),
+            createdAt: timestamp("created_at", { withTimezone: true })
+                .default(sql`CURRENT_TIMESTAMP`)
+                .notNull(),
+            updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+                () => new Date()
+            ),
+        });
+
+        type PostBody = {
+            userId: string;
+            question: string;
+            documentId: string;
+            response: string;
+            pages: number[];
+        };
+
+     */
+
+
+    const saveToDatabase = async (Entry: QAHistoryEntry) => {
+        try {
+            const response = await fetch("/api/Questions/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId, documentId: Entry.documentId, question: Entry.question, response: Entry.response, pages: Entry.pages}),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to add Q&A to history");
+            }
+
+        } catch (error) {
+            console.error("Error checking employee role:", error);
+            window.alert("Authentication failed! You are not an employee.");
+            router.push("/");
+        } finally {
+            setRoleLoading(false);
+        }
+    };
+
+    const saveToHistory = async (question: string, response: string, pages: number[]) => {
+        // Example logic - you can adapt this to your real data
+        const newEntry: QAHistoryEntry = {
+            id: crypto.randomUUID(), // or any unique ID generator
+            question: question,
+            response: response,
+            documentId: selectedDoc!.id,
+            createdAt: new Date().toLocaleString(),
+            documentTitle: selectedDoc?.title ?? "",
+            pages: pages,
+        };
+
+        await saveToDatabase(newEntry);
+        setQaHistory((prev) => [...prev, newEntry]);
+    };
 
     // 1. Check Clerk Auth & Role
     useEffect(() => {
@@ -103,7 +196,7 @@ const DocumentViewer: React.FC = () => {
         checkEmployeeRole().catch(console.error);
     }, [isLoaded, userId, router]);
 
-    // 2. Fetch documents for this employer
+    // 2. Fetch documents for this user
     useEffect(() => {
         if (!userId) return;
 
@@ -136,20 +229,21 @@ const DocumentViewer: React.FC = () => {
         fetchDocuments().catch(console.error);
     }, [userId]);
 
-    // 3. Build category groups
+    // 3. Build category groups from documents
     const categories: CategoryGroup[] = Object.values(
         documents.reduce((acc: Record<string, CategoryGroup>, doc) => {
-            // Filter by searchTerm in either "title" or "aiSummary"
+            // Filter by searchTerm in "title" or "aiSummary"
             const inTitle = doc.title.toLowerCase().includes(searchTerm.toLowerCase());
             const inSummary =
                 doc.aiSummary?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false;
 
+            // If not found in either, skip
             if (!inTitle && !inSummary) return acc;
 
             if (!acc[doc.category]) {
                 acc[doc.category] = {
                     name: doc.category,
-                    isOpen: true,
+                    isOpen: true, // or false if you want them closed by default
                     documents: [],
                 };
             }
@@ -165,7 +259,7 @@ const DocumentViewer: React.FC = () => {
         setAiAnswer("");
         setReferencePages([]);
 
-        if (!aiQuestion.trim()) return; // skip if empty question
+        if (!aiQuestion.trim()) return; // skip if empty
 
         try {
             setAiLoading(true);
@@ -181,23 +275,63 @@ const DocumentViewer: React.FC = () => {
                         question: aiQuestion,
                     }),
                 },
-                5
+                5 // up to 5 retries if it times out
             )) as LangChainResponse;
 
             setAiAnswer(data.summarizedAnswer);
 
-            // De-duplicate recommended pages
             if (Array.isArray(data.recommendedPages)) {
                 const uniquePages = Array.from(new Set(data.recommendedPages));
                 setReferencePages(uniquePages);
+
+                // Save Q&A to history
+                await saveToHistory(aiQuestion, data.summarizedAnswer, uniquePages);
             }
         } catch (err: unknown) {
-            // If all retries fail or a non-timeout error:
-            setAiError("Timeout error: Please try again later.");
+            setAiError("Timeout or fetch error: Please try again later.");
         } finally {
             setAiLoading(false);
         }
     };
+
+
+
+    // 5. Fetch Q&A History
+    useEffect(() => {
+        if (!userId) return;
+
+        const fetchHistory = async () => {
+            console.log("doc id", selectedDoc?.id)
+            try {
+                const response = await fetch("/api/Questions/fetch", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId, documentId: 42 }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch Q&A history");
+                }
+
+                const data: unknown = await response.json();
+
+                const processedData = data as fetchHistoryProp;
+
+                console.log(processedData);
+
+                setQaHistory(processedData.chatHistory);
+            } catch (error) {
+                console.error("Error fetching Q&A history:", error);
+            }
+        };
+
+        fetchHistory().catch(console.error);
+    }, [userId]);
+
+
+
+
+
 
     // 5. Display loading states
     if (roleLoading) {
@@ -217,7 +351,6 @@ const DocumentViewer: React.FC = () => {
                 setSearchTerm={setSearchTerm}
                 selectedDoc={selectedDoc}
                 setSelectedDoc={(doc) => {
-                    // Whenever we pick a doc, reset some states
                     setSelectedDoc(doc);
                     setPdfPageNumber(1);
                     setAiAnswer("");
@@ -241,6 +374,7 @@ const DocumentViewer: React.FC = () => {
                     referencePages={referencePages}
                     pdfPageNumber={pdfPageNumber}
                     setPdfPageNumber={setPdfPageNumber}
+                    qaHistory={qaHistory} // Pass the Q&A history here!
                 />
             </main>
         </div>

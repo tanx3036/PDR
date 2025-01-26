@@ -92,11 +92,14 @@ export const pdfChunks = pgTable("pdf_chunks", {
 });
 
 
+
 export const ChatHistory = pgTable('chatHistory', {
     id: serial("id").primaryKey(),
     UserId: varchar("company id", {  length: 256 }).notNull(),
+    documentId: varchar("document id", {  length: 256 }).notNull(),
     question: varchar("question", {length: 256}).notNull(),
     response: varchar("response", {length: 1024}).notNull(),
+    pages: integer("pages").array().notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
         .default(sql`CURRENT_TIMESTAMP`)
         .notNull(),
@@ -104,7 +107,6 @@ export const ChatHistory = pgTable('chatHistory', {
         () => new Date()
     ),
 });
-
 
 
 

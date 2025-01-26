@@ -1,4 +1,3 @@
-// DocumentViewer/DocumentsSidebar.tsx
 "use client";
 
 import React from "react";
@@ -9,12 +8,10 @@ import {
     Brain,
     ChevronRight,
     ChevronDown,
-    LogOut,
     Home,
 } from "lucide-react";
-import { SignOutButton, UserButton } from "@clerk/nextjs";
-import styles from "~/styles/Employer/DocumentViewer.module.css";
 import { useRouter } from "next/navigation";
+import styles from "~/styles/Employer/DocumentViewer.module.css";
 
 interface DocumentType {
     id: number;
@@ -31,7 +28,7 @@ interface CategoryGroup {
 }
 
 // Define our "view mode" type if you need typed usage
-type ViewMode = "document-only" | "with-summary" | "with-ai-qa";
+type ViewMode = "document-only" | "with-summary" | "with-ai-qa" | "with-ai-qa-history";
 
 interface DocumentsSidebarProps {
     categories: CategoryGroup[];
@@ -57,14 +54,17 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
         <aside className={styles.sidebar}>
             {/* Header */}
             <div className={styles.sidebarHeader}>
+
+                {/* Logo */}
                 <button className={styles.logoContainer}>
-                    <Brain className={styles.logoIcon}/>
+                    <Brain className={styles.logoIcon} />
                     <span className={styles.logoText}>PDR AI</span>
                 </button>
 
+
                 {/* Search Bar */}
                 <div className={styles.searchContainer}>
-                    <Search className={styles.searchIcon}/>
+                    <Search className={styles.searchIcon} />
                     <input
                         type="text"
                         placeholder="Search documents..."
@@ -73,6 +73,8 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
+
+
             </div>
 
             {/* View-Mode Buttons */}
@@ -86,18 +88,7 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
                     Document Only
                 </button>
 
-                {/*
-          If you still want the "with-summary" button, uncomment below:
-          <button
-            className={`${styles.viewModeButton} ${
-              viewMode === "with-summary" ? styles.activeViewMode : ""
-            }`}
-            onClick={() => setViewMode("with-summary")}
-          >
-            AI Summary + Doc
-          </button>
-        */}
-
+                {/* If you want a second button for an AI summary, you can add it here */}
                 <button
                     className={`${styles.viewModeButton} ${
                         viewMode === "with-ai-qa" ? styles.activeViewMode : ""
@@ -106,6 +97,17 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
                 >
                     AI Q&A + Doc
                 </button>
+
+                {/* AI Summary History*/}
+                <button
+                    className={`${styles.viewModeButton} ${
+                        viewMode === "with-ai-qa-history" ? styles.activeViewMode : ""
+                    }`}
+                    onClick={() => setViewMode("with-ai-qa-history")}
+                >
+                    AI Q&A History + Doc
+                </button>
+
             </div>
 
             {/* Document List */}
@@ -114,9 +116,9 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
                     <div key={category.name} className={styles.categoryGroup}>
                         <div className={styles.categoryHeader}>
                             {category.isOpen ? (
-                                <ChevronDown className={styles.chevronIcon}/>
+                                <ChevronDown className={styles.chevronIcon} />
                             ) : (
-                                <ChevronRight className={styles.chevronIcon}/>
+                                <ChevronRight className={styles.chevronIcon} />
                             )}
                             <span className={styles.categoryName}>{category.name}</span>
                         </div>
@@ -133,7 +135,7 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
                                                 : ""
                                         }`}
                                     >
-                                        <FileText className={styles.docIcon}/>
+                                        <FileText className={styles.docIcon} />
                                         <span className={styles.docName}>{doc.title}</span>
                                     </button>
                                 ))}
@@ -143,11 +145,11 @@ export const DocumentsSidebar: React.FC<DocumentsSidebarProps> = ({
                 ))}
             </nav>
 
-            {/* Profile Section */}
+            {/* Profile Section (go back home, etc.) */}
             <div className={styles.sidebarFooter}>
                 <Link href="/employer/home">
                     <button className={styles.homeButton}>
-                        <Home className={styles.homeIcon}/>
+                        <Home className={styles.homeIcon} />
                         <span>Home</span>
                     </button>
                 </Link>
