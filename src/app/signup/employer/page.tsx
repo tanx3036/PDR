@@ -20,7 +20,7 @@ interface SignInFormErrors {
     managerPasscode?: string;
 }
 
-interface SignUpFormData {
+interface SignUpFormDazta {
     companyName: string;
     managerPasscode: string;
     managerPasscodeConfirm: string;

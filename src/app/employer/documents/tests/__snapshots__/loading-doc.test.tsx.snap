@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Employer LoadingDoc Component should match snapshot 1`] = `
+<div>
+  <div
+    class="loadingContainer"
+  >
+    <aside
+      class="sidebar"
+    >
+      <div
+        class="sidebarHeader"
+      >
+        <a
+          href="/employer/home"
+        >
+          <button
+            class="logoContainer"
+          >
+            <div
+              data-testid="icon-brain"
+            >
+              Brain
+            </div>
+            <span
+              class="logoText"
+            >
+              PDR AI
+            </span>
+          </button>
+        </a>
+      </div>
+    </aside>
+    <main
+      class="mainLoadingContent"
+    >
+      <div
+        class="loadingContent"
+      >
+        <div
+          data-testid="icon-filetext"
+        >
+          File
+        </div>
+        <p
+          class="loadingText"
+        >
+          Loading documents...
+        </p>
+      </div>
+    </main>
+  </div>
+</div>
+`;

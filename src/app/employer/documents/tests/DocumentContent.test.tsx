@@ -1,0 +1,108 @@
+// src/app/employer/documents/tests/DocumentContent.test.tsx
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+// --- Corrected Paths ---
+import { DocumentContent } from '../DocumentContent'; // Component under test (one level up)
+// Import from LOCAL ChatHistory (based on component source)
+import QAHistory, { QAHistoryEntry } from '../ChatHistory';
+import { ViewMode } from '../types'; // Types (one level up)
+// --- End Corrected Paths ---
+
+// Mock the LOCAL QAHistory component
+jest.mock('../ChatHistory', () => ({
+    __esModule: true,
+    default: jest.fn((props) => <div data-testid="mock-qa-history">Mock QA History ({props.history?.length ?? 0} items)</div>),
+}));
+
+
+describe('Employer DocumentContent Component', () => { // Renamed describe
+  const mockSetAiQuestion = jest.fn();
+  const mockHandleAiSearch = jest.fn((e) => e?.preventDefault());
+  const mockSetPdfPageNumber = jest.fn();
+
+   const defaultDoc = { id: 1, title: 'Employer Doc Title', category: 'Employer', url: 'http://example.com/employer.pdf', aiSummary: 'Summary'};
+   const defaultProps = { selectedDoc: defaultDoc, viewMode: 'document-only' as ViewMode, aiQuestion: '', setAiQuestion: mockSetAiQuestion, aiAnswer: '', aiError: '', aiLoading: false, handleAiSearch: mockHandleAiSearch, referencePages: [], pdfPageNumber: 1, setPdfPageNumber: mockSetPdfPageNumber, qaHistory: [] as QAHistoryEntry[] };
+
+  beforeEach(() => { jest.clearAllMocks(); })
+
+  test('should render "Select a document" when selectedDoc is null', () => {
+    render(<DocumentContent {...defaultProps} selectedDoc={null} />);
+    expect(screen.getByRole('heading', { name: /select a document/i })).toBeInTheDocument();
+  });
+
+  test('should render document title and PDF viewer in document-only mode', () => {
+    render(<DocumentContent {...defaultProps} viewMode="document-only" />);
+    expect(screen.getByRole('heading', { name: defaultDoc.title })).toBeInTheDocument();
+    const iframe = screen.getByTitle(defaultDoc.title) as HTMLIFrameElement;
+    expect(iframe.src).toBe(`${defaultDoc.url}#page=1`);
+    expect(screen.queryByRole('heading', { name: /ai q&a/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /question history/i })).not.toBeInTheDocument();
+  });
+
+   test('should update iframe src when pdfPageNumber prop changes', () => {
+     const { rerender } = render(<DocumentContent {...defaultProps} pdfPageNumber={1} />);
+     const iframe = screen.getByTitle(defaultDoc.title) as HTMLIFrameElement;
+     expect(iframe.src).toBe(`${defaultDoc.url}#page=1`);
+     rerender(<DocumentContent {...defaultProps} pdfPageNumber={5} />);
+     const updatedIframe = screen.getByTitle(defaultDoc.title) as HTMLIFrameElement;
+     expect(updatedIframe.src).toBe(`${defaultDoc.url}#page=5`);
+   });
+
+  // --- Test AI Q&A View Mode ---
+  test('should render AI Q&A section in with-ai-qa mode', () => {
+    render(<DocumentContent {...defaultProps} viewMode="with-ai-qa" />);
+    expect(screen.getByRole('heading', { name: /ai q&a/i })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/ask a question/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /ask ai/i })).toBeInTheDocument();
+  });
+
+  test('should call setAiQuestion on input change', async () => {
+    const user = userEvent.setup(); render(<DocumentContent {...defaultProps} viewMode="with-ai-qa" />);
+    const input = screen.getByPlaceholderText(/ask a question/i); await user.type(input, 'test question');
+    expect(mockSetAiQuestion).toHaveBeenCalled();
+  });
+
+  test('should call handleAiSearch on form submit', async () => {
+     const user = userEvent.setup(); render(<DocumentContent {...defaultProps} viewMode="with-ai-qa" aiQuestion="test"/>);
+     const button = screen.getByRole('button', { name: /ask ai/i }); await user.click(button);
+     expect(mockHandleAiSearch).toHaveBeenCalledTimes(1);
+  });
+
+  test('should display AI answer and reference pages when provided', () => {
+    const answer = "This is the AI answer."; const pages = [2, 5];
+    render(<DocumentContent {...defaultProps} viewMode="with-ai-qa" aiAnswer={answer} referencePages={pages} />);
+    expect(screen.getByText(answer)).toBeInTheDocument(); expect(screen.getByText(/reference pages/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /page 2/i })).toBeInTheDocument(); expect(screen.getByRole('button', { name: /page 5/i })).toBeInTheDocument();
+  });
+
+   test('should call setPdfPageNumber when a reference page button is clicked', async () => {
+       const user = userEvent.setup(); const pages = [2, 5];
+       render(<DocumentContent {...defaultProps} viewMode="with-ai-qa" aiAnswer="Answer" referencePages={pages} />);
+       const pageButton = screen.getByRole('button', { name: /page 5/i }); await user.click(pageButton);
+       expect(mockSetPdfPageNumber).toHaveBeenCalledWith(5);
+   });
+
+  test('should display AI error message when provided', () => {
+    const error = "An error occurred."; render(<DocumentContent {...defaultProps} viewMode="with-ai-qa" aiError={error} />);
+    expect(screen.getByText(error)).toBeInTheDocument();
+  });
+
+   test('should display "Asking AI..." on button when aiLoading is true', () => {
+      render(<DocumentContent {...defaultProps} viewMode="with-ai-qa" aiLoading={true} />);
+      expect(screen.getByRole('button', { name: /asking ai/i })).toBeInTheDocument();
+  });
+
+  // --- Test AI Q&A History Mode ---
+  test('should render QA History section in with-ai-qa-history mode', () => {
+     const testDate = new Date().toISOString();
+     const history: QAHistoryEntry[] = [{ id: 'h1', question: 'Q1', response: 'A1', createdAt: testDate, documentId: 1, documentTitle: 'Doc 1', pages: [1] }];
+     render(<DocumentContent {...defaultProps} viewMode="with-ai-qa-history" qaHistory={history}/>);
+     expect(screen.getByRole('heading', { name: /question history/i })).toBeInTheDocument();
+     // Check if the mocked QAHistory component is rendered
+     expect(screen.getByTestId('mock-qa-history')).toBeInTheDocument();
+     expect(screen.getByTestId('mock-qa-history')).toHaveTextContent('Mock QA History (1 items)'); // Check prop passing
+     expect(screen.queryByRole('heading', { name: /ai q&a/i })).not.toBeInTheDocument();
+  });
+});

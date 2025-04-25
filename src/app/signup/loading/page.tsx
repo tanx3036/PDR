@@ -9,7 +9,7 @@ export default async function LoadingPage() {
     // 1) Get Clerk's userId server-side
     const { userId } = await auth();
     console.log('Server side Id:' + userId);
-
+    
     if(!userId) {
         redirect("/");
     }
