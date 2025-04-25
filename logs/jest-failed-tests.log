@@ -1,461 +1,9 @@
-Test Run At: 2025-04-25T20:59:49.419Z
+Test Run At: 2025-04-25T22:17:43.987Z
 Total Failed Tests: 45
 
 ==================================================
 
 Failure #1:
-  File: src/app/employer/pending-approval/test/page.test.tsx
-  Name: PendingApproval Component should render loading state initially if auth is not loaded
-  Error:
-Error: expect(element).not.toBeInTheDocument()
-
-expected document not to contain element, found <h1 class="title">Pending Approval</h1> instead
-    at Object.toBeInTheDocument (/Users/zora/pdr_ai_v2/src/app/employer/pending-approval/test/page.test.tsx:78:82)
-    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
-    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
-    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
-    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
-    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
-    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.01s
---------------------------------------------------
-
-Failure #2:
-  File: src/app/employer/pending-approval/test/page.test.tsx
-  Name: PendingApproval Component should fetch user info and display data on mount with userId
-  Error:
-TestingLibraryElementError: Unable to find an element with the text: Pending Inc.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-Ignored nodes: comments, script, style
-<body>
-  <div>
-    <div
-      class="container"
-    >
-      <div
-        data-testid="mock-navbar"
-      >
-        Mock Nav Bar
-      </div>
-      <main
-        class="main"
-      >
-        <div
-          class="statusCard"
-        >
-          <div
-            class="statusIconContainer"
-          >
-            <div
-              data-testid="icon-clock"
-            >
-              Clock
-            </div>
-          </div>
-          <h1
-            class="title"
-          >
-            Pending Approval
-          </h1>
-          <p
-            class="subtitle"
-          >
-            Your account is currently awaiting approval from your employer
-          </p>
-          <div
-            class="detailsContainer"
-          >
-            <h2
-              class="detailsTitle"
-            >
-              Application Details
-            </h2>
-            <div
-              class="detailsGrid"
-            >
-              <div
-                class="detailItem"
-              >
-                <div
-                  data-testid="icon-building"
-                >
-                  Building
-                </div>
-                <div
-                  class="detailContent"
-                >
-                  <span
-                    class="detailLabel"
-                  >
-                    Company
-                  </span>
-                  <span
-                    class="detailValue"
-                  />
-                </div>
-              </div>
-              <div
-                class="detailItem"
-              >
-                <div
-                  data-testid="icon-mail"
-                >
-                  Mail
-                </div>
-                <div
-                  class="detailContent"
-                >
-                  <span
-                    class="detailLabel"
-                  >
-                    Email
-                  </span>
-                  <span
-                    class="detailValue"
-                  />
-                </div>
-              </div>
-              <div
-                class="detailItem"
-              >
-                <div
-                  data-testid="icon-clock"
-                >
-                  Clock
-                </div>
-                <div
-                  class="detailContent"
-                >
-                  <span
-                    class="detailLabel"
-                  >
-                    Submission Date
-                  </span>
-                  <span
-                    class="detailValue"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="supportSection"
-          >
-            <p
-              class="supportText"
-            >
-              Need assistance? Contact support at
-               
-              <a
-                class="supportLink"
-                href="mailto:pdraionline@gmail.com"
-              >
-                pdraionline@gmail.com
-              </a>
-            </p>
-          </div>
-        </div>
-      </main>
-    </div>
-  </div>
-</body>
-    at Object.getElementError (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:37:19)
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
-    at Object.getByText (/Users/zora/pdr_ai_v2/src/app/employer/pending-approval/test/page.test.tsx:111:23)
-  Duration: 0.01s
---------------------------------------------------
-
-Failure #3:
-  File: src/app/employer/pending-approval/test/page.test.tsx
-  Name: PendingApproval Component should handle non-ok response, show alert, and redirect
-  Error:
-Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
-
-Expected: "Error checking employee role:", Any<Error>
-
-Number of calls: 0
-    at Object.toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/pending-approval/test/page.test.tsx:162:33)
-    at runNextTicks (node:internal/process/task_queues:65:5)
-    at listOnTimeout (node:internal/timers:555:9)
-    at processTimers (node:internal/timers:529:7)
-  Duration: 0.00s
---------------------------------------------------
-
-Failure #4:
-  File: src/app/employee/pending-approval/tests/page.test.tsx
-  Name: PendingApproval Component should render loading state initially if auth is not loaded
-  Error:
-Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
-
-Check the render method of `NavBar`.
-    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
-    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
-    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
-    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
-    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
-    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
-    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
-    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
-    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
-    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
-    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
-    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
-    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
-    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
-    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
-    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
-    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
-    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
-    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:76:15)
-    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
-    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
-    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
-    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
-    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
-    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.03s
---------------------------------------------------
-
-Failure #5:
-  File: src/app/employee/pending-approval/tests/page.test.tsx
-  Name: PendingApproval Component should not fetch data if userId is null
-  Error:
-Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
-
-Check the render method of `NavBar`.
-    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
-    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
-    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
-    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
-    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
-    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
-    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
-    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
-    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
-    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
-    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
-    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
-    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
-    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
-    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
-    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
-    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
-    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
-    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:85:15)
-    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
-    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
-    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
-    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
-    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
-    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.01s
---------------------------------------------------
-
-Failure #6:
-  File: src/app/employee/pending-approval/tests/page.test.tsx
-  Name: PendingApproval Component should fetch user info and display data on mount with userId
-  Error:
-Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
-
-Check the render method of `NavBar`.
-    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
-    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
-    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
-    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
-    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
-    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
-    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
-    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
-    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
-    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
-    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
-    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
-    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
-    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
-    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
-    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
-    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
-    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
-    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:92:15)
-    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
-    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
-    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
-    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
-    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
-    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.01s
---------------------------------------------------
-
-Failure #7:
-  File: src/app/employee/pending-approval/tests/page.test.tsx
-  Name: PendingApproval Component should handle fetch error, show alert, and redirect
-  Error:
-Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
-
-Check the render method of `NavBar`.
-    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
-    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
-    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
-    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
-    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
-    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
-    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
-    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
-    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
-    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
-    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
-    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
-    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
-    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
-    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
-    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
-    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
-    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
-    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:128:15)
-    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
-    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
-    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
-    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
-    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
-    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.00s
---------------------------------------------------
-
-Failure #8:
-  File: src/app/employee/pending-approval/tests/page.test.tsx
-  Name: PendingApproval Component should handle non-ok response, show alert, and redirect
-  Error:
-Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
-
-Check the render method of `NavBar`.
-    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
-    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
-    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
-    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
-    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
-    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
-    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
-    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
-    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
-    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
-    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
-    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
-    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
-    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
-    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
-    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
-    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
-    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
-    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:155:15)
-    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
-    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
-    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
-    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
-    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
-    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.00s
---------------------------------------------------
-
-Failure #9:
-  File: src/app/employee/pending-approval/tests/page.test.tsx
-  Name: PendingApproval Component should render support link correctly
-  Error:
-Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
-
-Check the render method of `NavBar`.
-    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
-    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
-    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
-    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
-    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
-    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
-    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
-    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
-    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
-    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
-    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
-    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
-    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
-    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
-    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
-    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
-    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
-    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
-    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:170:15)
-    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
-    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
-    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
-    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
-    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
-    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.00s
---------------------------------------------------
-
-Failure #10:
   File: src/app/employer/upload/tests/UploadForm.test.tsx
   Name: UploadForm Component should render initial state with dropzone and form fields
   Error:
@@ -658,10 +206,10 @@ Ignored nodes: comments, script, style
     at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
     at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
     at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.11s
+  Duration: 0.12s
 --------------------------------------------------
 
-Failure #11:
+Failure #2:
   File: src/app/employer/upload/tests/UploadForm.test.tsx
   Name: UploadForm Component should update form data on input change
   Error:
@@ -863,10 +411,10 @@ Ignored nodes: comments, script, style
     at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
     at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
     at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.07s
+  Duration: 0.06s
 --------------------------------------------------
 
-Failure #12:
+Failure #3:
   File: src/app/employer/upload/tests/UploadForm.test.tsx
   Name: UploadForm Component should submit form, call API, and redirect on success
   Error:
@@ -1071,7 +619,7 @@ Ignored nodes: comments, script, style
   Duration: 0.06s
 --------------------------------------------------
 
-Failure #13:
+Failure #4:
   File: src/app/employer/upload/tests/UploadForm.test.tsx
   Name: UploadForm Component should handle API error on submit
   Error:
@@ -1276,7 +824,7 @@ Ignored nodes: comments, script, style
   Duration: 0.06s
 --------------------------------------------------
 
-Failure #14:
+Failure #5:
   File: src/app/signup/employee/tests/page.test.tsx
   Name: EmployeeSignIn Page should handle other API errors gracefully (e.g., 500)
   Error:
@@ -1287,183 +835,20 @@ Received number of calls: 1
 
 1: "/employee/documents"
     at Object.toHaveBeenCalled (/Users/zora/pdr_ai_v2/src/app/signup/employee/tests/page.test.tsx:225:30)
-  Duration: 0.08s
+  Duration: 0.15s
 --------------------------------------------------
 
-Failure #15:
-  File: src/app/employer/documents/tests/ChatHistory.test.tsx
-  Name: QAHistory Component should render list of history items with questions, dates, and titles
+Failure #6:
+  File: src/app/signup/tests/page.test.tsx
+  Name: RoleSelection Component handles keyboard interaction for accessibility
   Error:
-TestingLibraryElementError: Unable to find an element with the text: Mocked Date 1/1/2024. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+Error: expect(element).toHaveClass("selected")
 
-Ignored nodes: comments, script, style
-<body>
-  <div>
-    <div
-      class="space-y-3 pb-2"
-    >
-      <div
-        class="bg-white rounded-lg shadow-sm p-4 border border-gray-200"
-      >
-        <div
-          class="flex items-start justify-between"
-        >
-          <div
-            class="flex items-start space-x-3 flex-grow"
-          >
-            <div
-              data-testid="icon-clock"
-            >
-              Clock
-            </div>
-            <div
-              class="flex-grow"
-            >
-              <button
-                class="text-left font-medium text-purple-600 hover:text-purple-700"
-              >
-                Question One?
-              </button>
-              <div
-                class="text-sm text-gray-500 mt-1"
-              >
-                Mocked Date 1/1/2024
-                 • 
-                Doc Alpha
-              </div>
-            </div>
-          </div>
-          <button
-            class="ml-2 text-gray-400 hover:text-gray-600"
-          >
-            <div
-              class="w-5 h-5"
-              data-testid="icon-chevron-down"
-            >
-              v
-            </div>
-          </button>
-        </div>
-      </div>
-      <div
-        class="bg-white rounded-lg shadow-sm p-4 border border-gray-200"
-      >
-        <div
-          class="flex items-start justify-between"
-        >
-          <div
-            class="flex items-start space-x-3 flex-grow"
-          >
-            <div
-              data-testid="icon-clock"
-            >
-              Clock
-            </div>
-            <div
-              class="flex-grow"
-            >
-              <button
-                class="text-left font-medium text-purple-600 hover:text-purple-700"
-              >
-                Question Two
-              </button>
-              <div
-                class="text-sm text-gray-500 mt-1"
-              >
-                Mocked Date 1/1/2024
-                 • 
-                Doc Alpha
-              </div>
-            </div>
-          </div>
-          <button
-            class="ml-2 text-gray-400 hover:text-gray-600"
-          >
-            <div
-              class="w-5 h-5"
-              data-testid="icon-chevron-down"
-            >
-              v
-            </div>
-          </button>
-        </div>
-      </div>
-      <div
-        class="bg-white rounded-lg shadow-sm p-4 border border-gray-200"
-      >
-        <div
-          class="flex items-start justify-between"
-        >
-          <div
-            class="flex items-start space-x-3 flex-grow"
-          >
-            <div
-              data-testid="icon-clock"
-            >
-              Clock
-            </div>
-            <div
-              class="flex-grow"
-            >
-              <button
-                class="text-left font-medium text-purple-600 hover:text-purple-700"
-              >
-                No Pages Item
-              </button>
-              <div
-                class="text-sm text-gray-500 mt-1"
-              >
-                Mocked Date 1/1/2024
-                 • 
-                Doc Beta
-              </div>
-            </div>
-          </div>
-          <button
-            class="ml-2 text-gray-400 hover:text-gray-600"
-          >
-            <div
-              class="w-5 h-5"
-              data-testid="icon-chevron-down"
-            >
-              v
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>
-    at Object.getElementError (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:37:19)
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
-    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
-    at Object.getAllByText (/Users/zora/pdr_ai_v2/src/app/employer/documents/tests/ChatHistory.test.tsx:77:19)
-    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
-    at new Promise (<anonymous>)
-    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
-    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
-    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
-    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
-    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
-    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
-    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.04s
---------------------------------------------------
-
-Failure #16:
-  File: src/app/employer/documents/tests/ChatHistory.test.tsx
-  Name: QAHistory Component should format date using dayjs with correct format string
-  Error:
-Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
-
-Expected number of calls: 3
-Received number of calls: 5
-    at Object.toHaveBeenCalledTimes (/Users/zora/pdr_ai_v2/src/app/employer/documents/tests/ChatHistory.test.tsx:144:26)
+Expected the element to have class:
+  selected
+Received:
+  roleCard
+    at Object.toHaveClass (/Users/zora/pdr_ai_v2/src/app/signup/tests/page.test.tsx:176:26)
     at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
     at new Promise (<anonymous>)
     at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
@@ -1480,7 +865,913 @@ Received number of calls: 5
   Duration: 0.00s
 --------------------------------------------------
 
+Failure #7:
+  File: src/app/signup/tests/page.test.tsx
+  Name: RoleSelection Component redirects to home page if role selection is null
+  Error:
+Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: "/"
+
+Number of calls: 0
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <div
+        class="container"
+      >
+        <nav
+          class="navbar"
+        >
+          <div
+            class="navContent"
+          >
+            <div
+              class="logoContainer"
+            >
+              <div
+                data-testid="mock-brain-icon"
+              >
+                Brain Icon
+              </div>
+              <span
+                class="logoText"
+              >
+                PDR AI
+              </span>
+            </div>
+          </div>
+        </nav>
+        <main
+          class="main"
+        >
+          <div
+            class="contentWrapper"
+          >
+            <h1
+              class="title"
+            >
+              Choose Your Role
+            </h1>
+            <p
+              class="subtitle"
+            >
+              Select how you will be using PDR AI
+            </p>
+            <div
+              class="cardsContainer"
+            >
+              <div
+                class="roleCard "
+                role="button"
+                tabindex="0"
+              >
+                <div
+                  class="iconWrapper"
+                >
+                  <div
+                    data-testid="mock-briefcase-icon"
+                  >
+                    Briefcase Icon
+                  </div>
+                </div>
+                <h2
+                  class="cardTitle"
+                >
+                  I'm an Employer
+                </h2>
+                <p
+                  class="cardDescription"
+                >
+                  Upload and manage documents, track analytics, and oversee document processing
+                </p>
+              </div>
+              <div
+                class="roleCard "
+                role="button"
+                tabindex="0"
+              >
+                <div
+                  class="iconWrapper"
+                >
+                  <div
+                    data-testid="mock-users-icon"
+                  >
+                    Users Icon
+                  </div>
+                </div>
+                <h2
+                  class="cardTitle"
+                >
+                  I'm an Employee
+                </h2>
+                <p
+                  class="cardDescription"
+                >
+                  Access and review documents and submit feedback.
+                </p>
+              </div>
+            </div>
+            <button
+              class="continueButton "
+              disabled=""
+            >
+              Continue
+              <div
+                data-testid="mock-arrow-right-icon"
+              >
+                Arrow Right Icon
+              </div>
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
+    at toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/signup/tests/page.test.tsx:201:31)
+    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
+    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
+    at listOnTimeout (node:internal/timers:594:17)
+    at processTimers (node:internal/timers:529:7)
+  Duration: 1.03s
+--------------------------------------------------
+
+Failure #8:
+  File: src/app/employee/documents/tests/DocumentViewer.test.tsx
+  Name: DocumentViewer Component (page.tsx) handleAiSearch should set error state if saveToDatabase fails
+  Error:
+Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: "Failed to add Q&A to history", Any<Object>
+Received: "Error checking employee role:", [Error: Failed to add Q&A to history]
+
+Number of calls: 1
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <div
+        class="container"
+      >
+        <div>
+          Mock Sidebar
+        </div>
+        <main
+          class="mainContent"
+        >
+          <div
+            data-testid="mock-content"
+          >
+            Mock Document Content
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
+    at toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/employee/documents/tests/DocumentViewer.test.tsx:126:33)
+    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
+    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
+    at listOnTimeout (node:internal/timers:594:17)
+    at processTimers (node:internal/timers:529:7)
+  Duration: 1.10s
+--------------------------------------------------
+
+Failure #9:
+  File: src/app/employer/upload/tests/page.test.tsx
+  Name: Employer Upload Page should handle category fetch error
+  Error:
+Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: "Error fetching categories:", Any<Error>
+Received: [Error: Fetch Cat Failed]
+
+Number of calls: 1
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <div
+        data-testid="mock-auth-check"
+      >
+        <nav
+          class="navbar"
+        >
+          <div
+            class="navContent"
+          >
+            <div
+              class="logoWrapper"
+            >
+              B
+              <span
+                class="logoText"
+              >
+                PDR AI
+              </span>
+            </div>
+            <button
+              class="homeButton"
+            >
+              H
+              Home
+            </button>
+          </div>
+        </nav>
+        <div
+          class="container"
+        >
+          <div
+            class="header"
+          >
+            <h1
+              class="title"
+            >
+              Upload New Document
+            </h1>
+            <p
+              class="subtitle"
+            >
+              Add a new document to your repository
+            </p>
+          </div>
+          <div
+            data-testid="mock-upload-form"
+          >
+            Upload Form
+          </div>
+          <div
+            data-testid="mock-category-management"
+          >
+            Category Management
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+    at toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/page.test.tsx:79:38)
+    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
+    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
+    at listOnTimeout (node:internal/timers:594:17)
+    at processTimers (node:internal/timers:529:7)
+  Duration: 1.03s
+--------------------------------------------------
+
+Failure #10:
+  File: src/app/employer/documents/tests/page.test.tsx
+  Name: Employer DocumentViewer Component (page.tsx) handleAiSearch should handle saveToDatabase error
+  Error:
+Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: "Error saving Q&A to history:", Any<Error>
+Received: "Error checking employee role:", [Error: Save DB Error]
+
+Number of calls: 1
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <div
+        class="container"
+      >
+        <div
+          data-testid="mock-employer-sidebar"
+        >
+          Mock Sidebar
+        </div>
+        <main
+          class="mainContent"
+        >
+          <div
+            data-testid="mock-employer-content"
+          >
+            Mock Document Content
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
+    at toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/documents/tests/page.test.tsx:263:31)
+    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
+    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
+    at listOnTimeout (node:internal/timers:594:17)
+    at processTimers (node:internal/timers:529:7)
+  Duration: 1.03s
+--------------------------------------------------
+
+Failure #11:
+  File: src/app/employer/upload/tests/CategoryManagement.test.tsx
+  Name: CategoryManagement Component should call onAddCategory and clear input on form submit
+  Error:
+Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+Expected number of calls: 1
+Received number of calls: 0
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <div
+        class="categoryManagement"
+      >
+        <h2>
+          Manage Categories
+        </h2>
+        <form
+          class="addCategoryForm"
+        >
+          <input
+            placeholder="New category name"
+            type="text"
+            value=""
+          />
+          <button
+            type="submit"
+          >
+            Add Category
+          </button>
+        </form>
+        <ul
+          class="categoryList"
+        >
+          <li
+            class="categoryListItem"
+          >
+            <span>
+              Reports
+            </span>
+            <button
+              class="removeCategoryBtn"
+              type="button"
+            >
+              <div
+                data-testid="icon-trash"
+              >
+                T
+              </div>
+            </button>
+          </li>
+          <li
+            class="categoryListItem"
+          >
+            <span>
+              Manuals
+            </span>
+            <button
+              class="removeCategoryBtn"
+              type="button"
+            >
+              <div
+                data-testid="icon-trash"
+              >
+                T
+              </div>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
+    at toHaveBeenCalledTimes (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/CategoryManagement.test.tsx:92:33)
+    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
+    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
+    at listOnTimeout (node:internal/timers:594:17)
+    at processTimers (node:internal/timers:529:7)
+  Duration: 1.07s
+--------------------------------------------------
+
+Failure #12:
+  File: src/app/employer/upload/tests/CategoryManagement.test.tsx
+  Name: CategoryManagement Component should not call onAddCategory if input is empty
+  Error:
+Error: expect(jest.fn()).not.toHaveBeenCalled()
+
+Expected number of calls: 0
+Received number of calls: 1
+
+1: "test-user-cat", ""
+    at Object.toHaveBeenCalled (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/CategoryManagement.test.tsx:101:39)
+  Duration: 0.05s
+--------------------------------------------------
+
+Failure #13:
+  File: src/app/employer/upload/tests/CategoryManagement.test.tsx
+  Name: CategoryManagement Component should call onRemoveCategory and router.refresh when remove button is clicked
+  Error:
+Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+Expected number of calls: 1
+Received number of calls: 0
+    at Object.toHaveBeenCalledTimes (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/CategoryManagement.test.tsx:130:28)
+  Duration: 0.02s
+--------------------------------------------------
+
+Failure #14:
+  File: src/app/employer/upload/tests/CategoryManagement.test.tsx
+  Name: CategoryManagement Component should not call onRemoveCategory if confirm returns false
+  Error:
+Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+Expected number of calls: 1
+Received number of calls: 0
+    at Object.toHaveBeenCalledTimes (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/CategoryManagement.test.tsx:155:29)
+  Duration: 0.02s
+--------------------------------------------------
+
+Failure #15:
+  File: src/app/employer/pending-approval/test/page.test.tsx
+  Name: PendingApproval Component should render loading state initially if auth is not loaded
+  Error:
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <h1 class="title">Pending Approval</h1> instead
+    at Object.toBeInTheDocument (/Users/zora/pdr_ai_v2/src/app/employer/pending-approval/test/page.test.tsx:78:82)
+    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
+  Duration: 0.05s
+--------------------------------------------------
+
+Failure #16:
+  File: src/app/employer/pending-approval/test/page.test.tsx
+  Name: PendingApproval Component should fetch user info and display data on mount with userId
+  Error:
+TestingLibraryElementError: Unable to find an element with the text: Pending Inc.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="container"
+    >
+      <div
+        data-testid="mock-navbar"
+      >
+        Mock Nav Bar
+      </div>
+      <main
+        class="main"
+      >
+        <div
+          class="statusCard"
+        >
+          <div
+            class="statusIconContainer"
+          >
+            <div
+              data-testid="icon-clock"
+            >
+              Clock
+            </div>
+          </div>
+          <h1
+            class="title"
+          >
+            Pending Approval
+          </h1>
+          <p
+            class="subtitle"
+          >
+            Your account is currently awaiting approval from your employer
+          </p>
+          <div
+            class="detailsContainer"
+          >
+            <h2
+              class="detailsTitle"
+            >
+              Application Details
+            </h2>
+            <div
+              class="detailsGrid"
+            >
+              <div
+                class="detailItem"
+              >
+                <div
+                  data-testid="icon-building"
+                >
+                  Building
+                </div>
+                <div
+                  class="detailContent"
+                >
+                  <span
+                    class="detailLabel"
+                  >
+                    Company
+                  </span>
+                  <span
+                    class="detailValue"
+                  />
+                </div>
+              </div>
+              <div
+                class="detailItem"
+              >
+                <div
+                  data-testid="icon-mail"
+                >
+                  Mail
+                </div>
+                <div
+                  class="detailContent"
+                >
+                  <span
+                    class="detailLabel"
+                  >
+                    Email
+                  </span>
+                  <span
+                    class="detailValue"
+                  />
+                </div>
+              </div>
+              <div
+                class="detailItem"
+              >
+                <div
+                  data-testid="icon-clock"
+                >
+                  Clock
+                </div>
+                <div
+                  class="detailContent"
+                >
+                  <span
+                    class="detailLabel"
+                  >
+                    Submission Date
+                  </span>
+                  <span
+                    class="detailValue"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="supportSection"
+          >
+            <p
+              class="supportText"
+            >
+              Need assistance? Contact support at
+               
+              <a
+                class="supportLink"
+                href="mailto:pdraionline@gmail.com"
+              >
+                pdraionline@gmail.com
+              </a>
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+    at Object.getElementError (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:37:19)
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+    at Object.getByText (/Users/zora/pdr_ai_v2/src/app/employer/pending-approval/test/page.test.tsx:111:23)
+  Duration: 0.01s
+--------------------------------------------------
+
 Failure #17:
+  File: src/app/employer/pending-approval/test/page.test.tsx
+  Name: PendingApproval Component should handle non-ok response, show alert, and redirect
+  Error:
+Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: "Error checking employee role:", Any<Error>
+
+Number of calls: 0
+    at Object.toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/pending-approval/test/page.test.tsx:162:33)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:555:9)
+    at processTimers (node:internal/timers:529:7)
+  Duration: 0.00s
+--------------------------------------------------
+
+Failure #18:
+  File: src/app/employee/pending-approval/tests/page.test.tsx
+  Name: PendingApproval Component should render loading state initially if auth is not loaded
+  Error:
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `NavBar`.
+    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
+    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
+    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
+    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
+    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
+    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
+    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
+    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
+    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
+    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:76:15)
+    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
+  Duration: 0.05s
+--------------------------------------------------
+
+Failure #19:
+  File: src/app/employee/pending-approval/tests/page.test.tsx
+  Name: PendingApproval Component should not fetch data if userId is null
+  Error:
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `NavBar`.
+    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
+    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
+    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
+    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
+    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
+    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
+    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
+    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
+    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
+    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:85:15)
+    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
+  Duration: 0.07s
+--------------------------------------------------
+
+Failure #20:
+  File: src/app/employee/pending-approval/tests/page.test.tsx
+  Name: PendingApproval Component should fetch user info and display data on mount with userId
+  Error:
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `NavBar`.
+    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
+    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
+    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
+    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
+    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
+    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
+    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
+    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
+    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
+    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:92:15)
+    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
+  Duration: 0.01s
+--------------------------------------------------
+
+Failure #21:
+  File: src/app/employee/pending-approval/tests/page.test.tsx
+  Name: PendingApproval Component should handle fetch error, show alert, and redirect
+  Error:
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `NavBar`.
+    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
+    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
+    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
+    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
+    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
+    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
+    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
+    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
+    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
+    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:128:15)
+    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
+  Duration: 0.00s
+--------------------------------------------------
+
+Failure #22:
+  File: src/app/employee/pending-approval/tests/page.test.tsx
+  Name: PendingApproval Component should handle non-ok response, show alert, and redirect
+  Error:
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `NavBar`.
+    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
+    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
+    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
+    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
+    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
+    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
+    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
+    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
+    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
+    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:155:15)
+    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
+  Duration: 0.00s
+--------------------------------------------------
+
+Failure #23:
+  File: src/app/employee/pending-approval/tests/page.test.tsx
+  Name: PendingApproval Component should render support link correctly
+  Error:
+Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `NavBar`.
+    at createFiberFromTypeAndProps (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28478:17)
+    at createFiberFromElement (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:28504:15)
+    at createChild (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13345:28)
+    at reconcileChildrenArray (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:13640:25)
+    at reconcileChildFibers (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:14057:16)
+    at reconcileChildren (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+    at updateHostComponent (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+    at beginWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+    at beginWork$1 (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+    at performConcurrentWorkOnRoot (/Users/zora/pdr_ai_v2/node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+    at flushActQueue (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2667:24)
+    at act (/Users/zora/pdr_ai_v2/node_modules/react/cjs/react.development.js:2582:11)
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/act-compat.js:47:25
+    at renderRoot (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:190:26)
+    at render (/Users/zora/pdr_ai_v2/node_modules/@testing-library/react/dist/pure.js:292:10)
+    at Object.<anonymous> (/Users/zora/pdr_ai_v2/src/app/employee/pending-approval/tests/page.test.tsx:170:15)
+    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
+  Duration: 0.00s
+--------------------------------------------------
+
+Failure #24:
+  File: src/app/employer/settings/tests/SettingsForm.test.tsx
+  Name: SettingsForm Component should call onChange handlers when inputs change
+  Error:
+Error: expect(jest.fn()).toHaveBeenLastCalledWith(...expected)
+
+Expected: "New Company"
+Received
+      11: "Test Companyn"
+->    12: "Test Companyy"
+
+Number of calls: 12
+    at Object.toHaveBeenLastCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/settings/tests/SettingsForm.test.tsx:57:37)
+  Duration: 0.06s
+--------------------------------------------------
+
+Failure #25:
   File: src/app/employee/documents/tests/ChatHistory.test.tsx
   Name: QAHistory Component should render list of history items with questions, dates, and titles
   Error:
@@ -1642,10 +1933,10 @@ Ignored nodes: comments, script, style
     at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
     at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
     at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.07s
+  Duration: 0.13s
 --------------------------------------------------
 
-Failure #18:
+Failure #26:
   File: src/app/employee/documents/tests/ChatHistory.test.tsx
   Name: QAHistory Component should format date using dayjs with correct format string
   Error:
@@ -1670,334 +1961,180 @@ Received number of calls: 5
   Duration: 0.00s
 --------------------------------------------------
 
-Failure #19:
-  File: src/app/employee/documents/tests/DocumentViewer.test.tsx
-  Name: DocumentViewer Component (page.tsx) handleAiSearch should set error state if saveToDatabase fails
+Failure #27:
+  File: src/app/employer/documents/tests/ChatHistory.test.tsx
+  Name: QAHistory Component should render list of history items with questions, dates, and titles
   Error:
-Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
-
-Expected: "Failed to add Q&A to history", Any<Object>
-Received: "Error checking employee role:", [Error: Failed to add Q&A to history]
-
-Number of calls: 1
+TestingLibraryElementError: Unable to find an element with the text: Mocked Date 1/1/2024. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
 
 Ignored nodes: comments, script, style
-<html>
-  <head />
-  <body>
-    <div>
+<body>
+  <div>
+    <div
+      class="space-y-3 pb-2"
+    >
       <div
-        class="container"
-      >
-        <div>
-          Mock Sidebar
-        </div>
-        <main
-          class="mainContent"
-        >
-          <div
-            data-testid="mock-content"
-          >
-            Mock Document Content
-          </div>
-        </main>
-      </div>
-    </div>
-  </body>
-</html>
-    at toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/employee/documents/tests/DocumentViewer.test.tsx:126:33)
-    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
-    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
-    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
-    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
-    at listOnTimeout (node:internal/timers:594:17)
-    at processTimers (node:internal/timers:529:7)
-  Duration: 1.07s
---------------------------------------------------
-
-Failure #20:
-  File: src/app/employer/documents/tests/page.test.tsx
-  Name: Employer DocumentViewer Component (page.tsx) handleAiSearch should handle saveToDatabase error
-  Error:
-Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
-
-Expected: "Error saving Q&A to history:", Any<Error>
-Received: "Error checking employee role:", [Error: Save DB Error]
-
-Number of calls: 1
-
-Ignored nodes: comments, script, style
-<html>
-  <head />
-  <body>
-    <div>
-      <div
-        class="container"
+        class="bg-white rounded-lg shadow-sm p-4 border border-gray-200"
       >
         <div
-          data-testid="mock-employer-sidebar"
-        >
-          Mock Sidebar
-        </div>
-        <main
-          class="mainContent"
+          class="flex items-start justify-between"
         >
           <div
-            data-testid="mock-employer-content"
-          >
-            Mock Document Content
-          </div>
-        </main>
-      </div>
-    </div>
-  </body>
-</html>
-    at toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/documents/tests/page.test.tsx:263:31)
-    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
-    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
-    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
-    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
-    at listOnTimeout (node:internal/timers:594:17)
-    at processTimers (node:internal/timers:529:7)
-  Duration: 1.01s
---------------------------------------------------
-
-Failure #21:
-  File: src/app/employer/upload/tests/page.test.tsx
-  Name: Employer Upload Page should handle category fetch error
-  Error:
-Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
-
-Expected: "Error fetching categories:", Any<Error>
-Received: [Error: Fetch Cat Failed]
-
-Number of calls: 1
-
-Ignored nodes: comments, script, style
-<html>
-  <head />
-  <body>
-    <div>
-      <div
-        data-testid="mock-auth-check"
-      >
-        <nav
-          class="navbar"
-        >
-          <div
-            class="navContent"
+            class="flex items-start space-x-3 flex-grow"
           >
             <div
-              class="logoWrapper"
+              data-testid="icon-clock"
             >
-              B
-              <span
-                class="logoText"
-              >
-                PDR AI
-              </span>
+              Clock
             </div>
-            <button
-              class="homeButton"
+            <div
+              class="flex-grow"
             >
-              H
-              Home
-            </button>
+              <button
+                class="text-left font-medium text-purple-600 hover:text-purple-700"
+              >
+                Question One?
+              </button>
+              <div
+                class="text-sm text-gray-500 mt-1"
+              >
+                Mocked Date 1/1/2024
+                 • 
+                Doc Alpha
+              </div>
+            </div>
           </div>
-        </nav>
+          <button
+            class="ml-2 text-gray-400 hover:text-gray-600"
+          >
+            <div
+              class="w-5 h-5"
+              data-testid="icon-chevron-down"
+            >
+              v
+            </div>
+          </button>
+        </div>
+      </div>
+      <div
+        class="bg-white rounded-lg shadow-sm p-4 border border-gray-200"
+      >
         <div
-          class="container"
+          class="flex items-start justify-between"
         >
           <div
-            class="header"
+            class="flex items-start space-x-3 flex-grow"
           >
-            <h1
-              class="title"
+            <div
+              data-testid="icon-clock"
             >
-              Upload New Document
-            </h1>
-            <p
-              class="subtitle"
+              Clock
+            </div>
+            <div
+              class="flex-grow"
             >
-              Add a new document to your repository
-            </p>
+              <button
+                class="text-left font-medium text-purple-600 hover:text-purple-700"
+              >
+                Question Two
+              </button>
+              <div
+                class="text-sm text-gray-500 mt-1"
+              >
+                Mocked Date 1/1/2024
+                 • 
+                Doc Alpha
+              </div>
+            </div>
           </div>
-          <div
-            data-testid="mock-upload-form"
+          <button
+            class="ml-2 text-gray-400 hover:text-gray-600"
           >
-            Upload Form
-          </div>
+            <div
+              class="w-5 h-5"
+              data-testid="icon-chevron-down"
+            >
+              v
+            </div>
+          </button>
+        </div>
+      </div>
+      <div
+        class="bg-white rounded-lg shadow-sm p-4 border border-gray-200"
+      >
+        <div
+          class="flex items-start justify-between"
+        >
           <div
-            data-testid="mock-category-management"
+            class="flex items-start space-x-3 flex-grow"
           >
-            Category Management
+            <div
+              data-testid="icon-clock"
+            >
+              Clock
+            </div>
+            <div
+              class="flex-grow"
+            >
+              <button
+                class="text-left font-medium text-purple-600 hover:text-purple-700"
+              >
+                No Pages Item
+              </button>
+              <div
+                class="text-sm text-gray-500 mt-1"
+              >
+                Mocked Date 1/1/2024
+                 • 
+                Doc Beta
+              </div>
+            </div>
           </div>
+          <button
+            class="ml-2 text-gray-400 hover:text-gray-600"
+          >
+            <div
+              class="w-5 h-5"
+              data-testid="icon-chevron-down"
+            >
+              v
+            </div>
+          </button>
         </div>
       </div>
     </div>
-  </body>
-</html>
-    at toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/page.test.tsx:79:38)
-    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
-    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
-    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
-    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
-    at listOnTimeout (node:internal/timers:594:17)
-    at processTimers (node:internal/timers:529:7)
-  Duration: 1.01s
+  </div>
+</body>
+    at Object.getElementError (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:37:19)
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+    at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+    at Object.getAllByText (/Users/zora/pdr_ai_v2/src/app/employer/documents/tests/ChatHistory.test.tsx:77:19)
+    at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
+  Duration: 0.11s
 --------------------------------------------------
 
-Failure #22:
-  File: src/app/employer/upload/tests/CategoryManagement.test.tsx
-  Name: CategoryManagement Component should call onAddCategory and clear input on form submit
+Failure #28:
+  File: src/app/employer/documents/tests/ChatHistory.test.tsx
+  Name: QAHistory Component should format date using dayjs with correct format string
   Error:
 Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
 
-Expected number of calls: 1
-Received number of calls: 0
-
-Ignored nodes: comments, script, style
-<html>
-  <head />
-  <body>
-    <div>
-      <div
-        class="categoryManagement"
-      >
-        <h2>
-          Manage Categories
-        </h2>
-        <form
-          class="addCategoryForm"
-        >
-          <input
-            placeholder="New category name"
-            type="text"
-            value=""
-          />
-          <button
-            type="submit"
-          >
-            Add Category
-          </button>
-        </form>
-        <ul
-          class="categoryList"
-        >
-          <li
-            class="categoryListItem"
-          >
-            <span>
-              Reports
-            </span>
-            <button
-              class="removeCategoryBtn"
-              type="button"
-            >
-              <div
-                data-testid="icon-trash"
-              >
-                T
-              </div>
-            </button>
-          </li>
-          <li
-            class="categoryListItem"
-          >
-            <span>
-              Manuals
-            </span>
-            <button
-              class="removeCategoryBtn"
-              type="button"
-            >
-              <div
-                data-testid="icon-trash"
-              >
-                T
-              </div>
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </body>
-</html>
-    at toHaveBeenCalledTimes (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/CategoryManagement.test.tsx:92:33)
-    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
-    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
-    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
-    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
-    at listOnTimeout (node:internal/timers:594:17)
-    at processTimers (node:internal/timers:529:7)
-  Duration: 1.06s
---------------------------------------------------
-
-Failure #23:
-  File: src/app/employer/upload/tests/CategoryManagement.test.tsx
-  Name: CategoryManagement Component should not call onAddCategory if input is empty
-  Error:
-Error: expect(jest.fn()).not.toHaveBeenCalled()
-
-Expected number of calls: 0
-Received number of calls: 1
-
-1: "test-user-cat", ""
-    at Object.toHaveBeenCalled (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/CategoryManagement.test.tsx:101:39)
-  Duration: 0.02s
---------------------------------------------------
-
-Failure #24:
-  File: src/app/employer/upload/tests/CategoryManagement.test.tsx
-  Name: CategoryManagement Component should call onRemoveCategory and router.refresh when remove button is clicked
-  Error:
-Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
-
-Expected number of calls: 1
-Received number of calls: 0
-    at Object.toHaveBeenCalledTimes (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/CategoryManagement.test.tsx:130:28)
-  Duration: 0.01s
---------------------------------------------------
-
-Failure #25:
-  File: src/app/employer/upload/tests/CategoryManagement.test.tsx
-  Name: CategoryManagement Component should not call onRemoveCategory if confirm returns false
-  Error:
-Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
-
-Expected number of calls: 1
-Received number of calls: 0
-    at Object.toHaveBeenCalledTimes (/Users/zora/pdr_ai_v2/src/app/employer/upload/tests/CategoryManagement.test.tsx:155:29)
-  Duration: 0.01s
---------------------------------------------------
-
-Failure #26:
-  File: src/app/employer/documents/tests/DocumentsSidebar.test.tsx
-  Name: Employer DocumentsSidebar Component should call setSearchTerm when search input changes
-  Error:
-Error: expect(jest.fn()).toHaveBeenLastCalledWith(...expected)
-
-Expected: "report"
-Received
-       5: "r"
-->     6: "t"
-
-Number of calls: 6
-    at Object.toHaveBeenLastCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/documents/tests/DocumentsSidebar.test.tsx:87:31)
-  Duration: 0.03s
---------------------------------------------------
-
-Failure #27:
-  File: src/app/signup/tests/page.test.tsx
-  Name: RoleSelection Component handles keyboard interaction for accessibility
-  Error:
-Error: expect(element).toHaveClass("selected")
-
-Expected the element to have class:
-  selected
-Received:
-  roleCard
-    at Object.toHaveClass (/Users/zora/pdr_ai_v2/src/app/signup/tests/page.test.tsx:176:26)
+Expected number of calls: 3
+Received number of calls: 5
+    at Object.toHaveBeenCalledTimes (/Users/zora/pdr_ai_v2/src/app/employer/documents/tests/ChatHistory.test.tsx:144:26)
     at Promise.then.completed (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:298:28)
     at new Promise (<anonymous>)
     at callAsyncCircusFn (/Users/zora/pdr_ai_v2/node_modules/jest-circus/build/utils.js:231:10)
@@ -2011,160 +2148,23 @@ Received:
     at runTestInternal (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:367:16)
     at runTest (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/runTest.js:444:34)
     at Object.worker (/Users/zora/pdr_ai_v2/node_modules/jest-runner/build/testWorker.js:106:12)
-  Duration: 0.01s
---------------------------------------------------
-
-Failure #28:
-  File: src/app/signup/tests/page.test.tsx
-  Name: RoleSelection Component redirects to home page if role selection is null
-  Error:
-Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
-
-Expected: "/"
-
-Number of calls: 0
-
-Ignored nodes: comments, script, style
-<html>
-  <head />
-  <body>
-    <div>
-      <div
-        class="container"
-      >
-        <nav
-          class="navbar"
-        >
-          <div
-            class="navContent"
-          >
-            <div
-              class="logoContainer"
-            >
-              <div
-                data-testid="mock-brain-icon"
-              >
-                Brain Icon
-              </div>
-              <span
-                class="logoText"
-              >
-                PDR AI
-              </span>
-            </div>
-          </div>
-        </nav>
-        <main
-          class="main"
-        >
-          <div
-            class="contentWrapper"
-          >
-            <h1
-              class="title"
-            >
-              Choose Your Role
-            </h1>
-            <p
-              class="subtitle"
-            >
-              Select how you will be using PDR AI
-            </p>
-            <div
-              class="cardsContainer"
-            >
-              <div
-                class="roleCard "
-                role="button"
-                tabindex="0"
-              >
-                <div
-                  class="iconWrapper"
-                >
-                  <div
-                    data-testid="mock-briefcase-icon"
-                  >
-                    Briefcase Icon
-                  </div>
-                </div>
-                <h2
-                  class="cardTitle"
-                >
-                  I'm an Employer
-                </h2>
-                <p
-                  class="cardDescription"
-                >
-                  Upload and manage documents, track analytics, and oversee document processing
-                </p>
-              </div>
-              <div
-                class="roleCard "
-                role="button"
-                tabindex="0"
-              >
-                <div
-                  class="iconWrapper"
-                >
-                  <div
-                    data-testid="mock-users-icon"
-                  >
-                    Users Icon
-                  </div>
-                </div>
-                <h2
-                  class="cardTitle"
-                >
-                  I'm an Employee
-                </h2>
-                <p
-                  class="cardDescription"
-                >
-                  Access and review documents and submit feedback.
-                </p>
-              </div>
-            </div>
-            <button
-              class="continueButton "
-              disabled=""
-            >
-              Continue
-              <div
-                data-testid="mock-arrow-right-icon"
-              >
-                Arrow Right Icon
-              </div>
-            </button>
-          </div>
-        </main>
-      </div>
-    </div>
-  </body>
-</html>
-    at toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/signup/tests/page.test.tsx:201:31)
-    at runWithExpensiveErrorDiagnosticsDisabled (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/config.js:47:12)
-    at checkCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
-    at checkRealTimersCallback (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
-    at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
-    at listOnTimeout (node:internal/timers:594:17)
-    at processTimers (node:internal/timers:529:7)
-  Duration: 1.01s
+  Duration: 0.00s
 --------------------------------------------------
 
 Failure #29:
-  File: src/app/employer/settings/tests/SettingsForm.test.tsx
-  Name: SettingsForm Component should call onChange handlers when inputs change
+  File: src/app/employer/documents/tests/DocumentsSidebar.test.tsx
+  Name: Employer DocumentsSidebar Component should call setSearchTerm when search input changes
   Error:
 Error: expect(jest.fn()).toHaveBeenLastCalledWith(...expected)
 
-Expected: "New Company"
+Expected: "report"
 Received
-      11: "Test Companyn"
-->    12: "Test Companyy"
+       5: "r"
+->     6: "t"
 
-Number of calls: 12
-    at Object.toHaveBeenLastCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/settings/tests/SettingsForm.test.tsx:57:37)
-  Duration: 0.07s
+Number of calls: 6
+    at Object.toHaveBeenLastCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/documents/tests/DocumentsSidebar.test.tsx:87:31)
+  Duration: 0.04s
 --------------------------------------------------
 
 Failure #30:
@@ -2247,7 +2247,7 @@ Ignored nodes: comments, script, style
     at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
     at listOnTimeout (node:internal/timers:594:17)
     at processTimers (node:internal/timers:529:7)
-  Duration: 1.01s
+  Duration: 1.07s
 --------------------------------------------------
 
 Failure #31:
@@ -2330,7 +2330,7 @@ Ignored nodes: comments, script, style
     at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
     at listOnTimeout (node:internal/timers:594:17)
     at processTimers (node:internal/timers:529:7)
-  Duration: 1.00s
+  Duration: 1.01s
 --------------------------------------------------
 
 Failure #32:
@@ -2344,7 +2344,7 @@ Received: [Error: Error updating settings]
 
 Number of calls: 1
     at Object.toHaveBeenCalledWith (/Users/zora/pdr_ai_v2/src/app/employer/settings/tests/page.test.tsx:204:34)
-  Duration: 0.01s
+  Duration: 0.02s
 --------------------------------------------------
 
 Failure #33:
@@ -2516,7 +2516,7 @@ Ignored nodes: comments, script, style
     at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
     at listOnTimeout (node:internal/timers:594:17)
     at processTimers (node:internal/timers:529:7)
-  Duration: 1.02s
+  Duration: 1.07s
 --------------------------------------------------
 
 Failure #35:
@@ -2605,7 +2605,7 @@ Ignored nodes: comments, script, style
     at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
     at listOnTimeout (node:internal/timers:594:17)
     at processTimers (node:internal/timers:529:7)
-  Duration: 1.00s
+  Duration: 1.02s
 --------------------------------------------------
 
 Failure #36:
@@ -2694,7 +2694,7 @@ Ignored nodes: comments, script, style
     at Timeout.task [as _onTimeout] (/Users/zora/pdr_ai_v2/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
     at listOnTimeout (node:internal/timers:594:17)
     at processTimers (node:internal/timers:529:7)
-  Duration: 1.04s
+  Duration: 1.08s
 --------------------------------------------------
 
 Failure #37:
@@ -2835,7 +2835,7 @@ Ignored nodes: comments, script, style
     at waitForWrapper (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
     at Object.findByRole (/Users/zora/pdr_ai_v2/src/app/employer/pdfTest/tests/page.test.tsx:63:29)
-  Duration: 1.07s
+  Duration: 1.08s
 --------------------------------------------------
 
 Failure #39:
@@ -2876,7 +2876,7 @@ Ignored nodes: comments, script, style
     at waitForWrapper (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
     at Object.findByRole (/Users/zora/pdr_ai_v2/src/app/employer/pdfTest/tests/page.test.tsx:95:29)
-  Duration: 1.06s
+  Duration: 1.10s
 --------------------------------------------------
 
 Failure #40:
@@ -2917,7 +2917,7 @@ Ignored nodes: comments, script, style
     at waitForWrapper (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
     at Object.findByRole (/Users/zora/pdr_ai_v2/src/app/employer/pdfTest/tests/page.test.tsx:115:29)
-  Duration: 1.05s
+  Duration: 1.09s
 --------------------------------------------------
 
 Failure #41:
@@ -2958,7 +2958,7 @@ Ignored nodes: comments, script, style
     at waitForWrapper (/Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at /Users/zora/pdr_ai_v2/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
     at Object.findByRole (/Users/zora/pdr_ai_v2/src/app/employer/pdfTest/tests/page.test.tsx:135:29)
-  Duration: 1.04s
+  Duration: 1.05s
 --------------------------------------------------
 
 Failure #42:
