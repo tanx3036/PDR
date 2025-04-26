@@ -1,14 +1,15 @@
 // src/app/api/Categories/Categories.integration.spec.ts
 
-import { POST as AddCategory } from "/AddCategories/route";
-import { POST as GetCategories } from "/GetCategories/route";
-import { DELETE as DeleteCategory } from "/DeleteCategories/route";
-import { db } from "../../../server/db/index";
-import { users, category } from "../../../server/db/schema";
+import { POST as AddCategory } from "~/app/api/Categories/AddCategories/route";
+import { POST as GetCategories } from "~/app/api/Categories/GetCategories/route";
+import { DELETE as DeleteCategory } from "~/app/api/Categories/DeleteCategories/route";
+
+import { db } from "~/server/db/index";
+import { users, category } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 
 // Mock db setup
-jest.mock("../../../../server/db/index", () => ({
+jest.mock("../../../server/db/index", () => ({
   db: {
     select: jest.fn().mockReturnThis(),
     from: jest.fn().mockReturnThis(),
@@ -19,7 +20,7 @@ jest.mock("../../../../server/db/index", () => ({
   },
 }));
 
-jest.mock("../../../../server/db/schema", () => ({
+jest.mock("../../../server/db/schema", () => ({
   users: { userId: "mockUserId" },
   category: { id: "mockCategoryId", companyId: "mockCompanyId" },
 }));
