@@ -12,7 +12,10 @@ const config = {
         '^~/(.*)$': '<rootDir>/src/$1',
     },
     transformIgnorePatterns: ['/node_modules/'],
-    collectCoverage: false,
+    collectCoverage: true,
+    collectCoverageFrom: [
+        'src/app/api/**/*.{ts,js}',
+    ],
     reporters: [
         'default',
         [
