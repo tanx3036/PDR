@@ -1,3 +1,9 @@
+How to run the test:
+npm install( to install all required package)
+npm run test:coverage (start Whitebox test)
+npm run test:api (start Integration Test)
+
+
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.

@@ -21,6 +21,7 @@ jest.mock("drizzle-orm", () => ({
   eq: jest.fn(),
 }));
 
+
 describe("approveEmployees POST API", () => {
   it("should update the user status and return 200", async () => {
     const mockRequest = {
